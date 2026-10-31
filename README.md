@@ -1,4 +1,4 @@
-# Goal-extension benchmark: GLLA vs pi-goal-x
+# Pi goal-extension benchmark: GLLA vs pi-goal-x
 
 An isolated, reproducible comparison of two goal-management extensions for
 [Pi](https://github.com/earendil-works/pi), the coding agent. Both extensions are Pi
