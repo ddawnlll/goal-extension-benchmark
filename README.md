@@ -1,15 +1,27 @@
 # Goal-extension benchmark: GLLA vs pi-goal-x
 
-An isolated, reproducible comparison of two goal-management extensions for the
-[Pi-Bolt](https://github.com/opensec-git/Pi-Bolt) coding agent, run on the same
-task, the same model, the same container limits and the same acceptance tests.
+An isolated, reproducible comparison of two goal-management extensions for
+[Pi](https://github.com/earendil-works/pi), the coding agent. Both extensions are Pi
+extensions; every run used [Pi-Bolt](https://github.com/opensec-git/Pi-Bolt), Pi's
+compiled fork, as the pinned runtime (Pi-Bolt 1.0.8 / Pi 1.4.0) so each competitor
+got an identical, isolated environment. Same task, same model, same container
+limits, same acceptance tests.
 
 Both extensions completed the task with working, independently verified
 implementations. **No overall winner is declared.** The measurements show a
 consistent speed difference and no measurable difference in acceptance-test
 quality; the reasons are set out below, with the uncertainty.
 
-<img src="assets/timings.svg" alt="Wall clock per run, with medians and ranges for the controlled pairs" width="920">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
+  <img src="assets/hero-light.svg" width="920" alt="Hero summary. GLLA's median wall clock is 660 seconds (range 622 to 699); pi-goal-x's is 364 seconds (range 298 to 430), 1.8 times less. Cost per run is 0.157 versus 0.049 US dollars; tokens per run are 233 thousand versus 96 thousand. All four controlled runs finished verified, with 16 of 16 tests passing and no manual interventions. No overall winner is declared.">
+</picture>
+
+<sub>Median and range of the two controlled pairs. Both extensions finished; neither is declared a winner.</sub>
+
+The charts are generated from the committed measurements and designed as one
+system — type, color, annotation and accessibility rules are in
+[`docs/DESIGN.md`](docs/DESIGN.md). Each exists in a light and a dark variant.
 
 ## Headline numbers
 
@@ -19,7 +31,7 @@ quality; the reasons are set out below, with the uncertainty.
 | Pair 1 (GLLA first) | 698.7 s | 297.7 s |
 | Pair 2 (pi-goal-x first) | 622.2 s | 430.0 s |
 | Input / output tokens (median) | 170.7k / 61.9k | 79.5k / 17.0k |
-| Nominal cost at list prices (median) | $0.157 | $0.050 |
+| Nominal cost at list prices (median) | $0.157 | $0.049 |
 | Model audit time (per run) | 154.8 s, 267.9 s | 80.8 s, 265.5 s |
 | Rework after a rejected audit | 41.8 s (in `r2`) | none |
 | Independent acceptance tests | 16/16, 16/16 | 16/16, 16/16 |
@@ -37,7 +49,10 @@ drafting and confirmation, coding and self-testing, contract reconciliation
 (everything between the completion claim and the audit actually running), the
 audit rounds, rework between audit rounds, and settlement.
 
-<img src="assets/phases.svg" alt="Stacked phases of every run" width="920">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/phases-dark.svg">
+  <img src="assets/phases-light.svg" width="920" alt="Stacked phase bars for six runs. GLLA r1 spends 211 seconds reconciling its verification contract before any audit runs. GLLA r2 spends 268 seconds in two audit rounds plus 42 seconds of rework after a rejection.">
+</picture>
 
 Two things stand out and both are consistent across pairs:
 
@@ -49,9 +64,17 @@ Two things stand out and both are consistent across pairs:
   in `r2` it is **two audit rounds** (110 s rejected, 42 s of repairs, 158 s
   approved).
 
-## Audit overhead
+## Audit overhead and model usage
 
-<img src="assets/audit-overhead.svg" alt="Model audit time and rework after a rejected audit, per run" width="920">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/efficiency-dark.svg">
+  <img src="assets/efficiency-light.svg" width="920" alt="Left: audit seconds and the share of each run, with 42 seconds of rework after GLLA's rejected audit in r2. Right: tokens in and out per run with nominal cost, from 80 thousand tokens for pi-goal-x r2 to 296 thousand for GLLA s0.">
+</picture>
+
+Left panel: the audit itself and the share of the whole run; the faded segment is
+repair after a rejected audit. Right panel: tokens in and out, with nominal cost
+at list prices (a nominal figure, not a bill). Token counts come from the Pi
+session transcripts.
 
 GLLA's independent auditor rejected one completion in `r2` with a real defect:
 the new escaping note had been added to the module docstring, which `argparse`
@@ -60,12 +83,8 @@ agent repaired it and the second audit approved. pi-goal-x made the same class o
 change in `r1` and its auditor approved it; that regression is visible only in
 the independent CLI-parity test (see below).
 
-## Model usage
-
-<img src="assets/efficiency.svg" alt="Input plus output tokens and nominal cost per run" width="920">
-
-Token counts come from the Pi session transcripts; cost is computed from the
-pinned model's list prices and is nominal, not a bill.
+The exploratory `s0` runs are shown for transparency; the controlled pairs are
+what every headline number uses.
 
 ## The two extensions, side by side
 
@@ -97,10 +116,18 @@ their dialogs.
 4. **Reliability** — settled without human intervention, audit rejections that
    led to real repairs, redundant verification after acceptance, stalls.
 
-The task was genuine and identical for both: harden `bench/report.py` in Pi-Bolt
+The task was genuine and identical for both: harden `bench/report.py` in the Pi
+checkout Pi-Bolt is built from
 so that every dynamic string inserted into generated SVG is escaped exactly once,
 without changing ordinary output or the CLI, with regression tests. The task text
 and its SHA-256 are in [`results/shared-task.md`](results/shared-task.md).
+
+## Every run, on one axis
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/timing-dark.svg">
+  <img src="assets/timing-light.svg" width="920" alt="Dot plot of all six runs. Controlled: GLLA 698.7 and 622.2 seconds, pi-goal-x 297.7 and 430.0 seconds. Exploratory, hollow: GLLA 956.0 and pi-goal-x 598.9 seconds.">
+</picture>
 
 ## The four controlled runs
 
@@ -149,7 +176,7 @@ indistinguishable on the acceptance suite.
 - **One host, one model.** No claim is made about other models, reasoning levels
   or hardware.
 - **The quality difference is one post-hoc check**, not a stable separation.
-- **Auditor-crash behaviour is untested.** The relay can inject slow, failing and
+- **Auditor-crash behavior is untested.** The relay can inject slow, failing and
   aborted audit calls; those scenarios were not run, so no claim is made about
   recovery from an auditor failure.
 - **The two campaigns are not directly comparable in absolute seconds**: `s0`
@@ -188,7 +215,7 @@ results/       per-run patches, metrics, blind evaluations, run logs, phase mode
 harness/       runner, model relay, preflight, collectors, container definitions
 evaluation/    frozen acceptance and adversarial tests, baseline artifacts
 tools/         chart generation, phase derivation, publication checks
-docs/          methodology, reproduction, security policy, attribution
+docs/          design system, methodology, reproduction, security policy, attribution
 ```
 
 The committed charts are generated from committed data: `tools/make_charts.py
@@ -196,7 +223,7 @@ The committed charts are generated from committed data: `tools/make_charts.py
 
 ## License and attribution
 
-Benchmark code and records: MIT (see [`LICENSE`](LICENSE)). Pi-Bolt, GLLA and
+Benchmark code and records: MIT (see [`LICENSE`](LICENSE)). Pi, Pi-Bolt, GLLA and
 pi-goal-x keep their own licenses and are not redistributed here; see
 [`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md). This is an independent evaluation,
 not affiliated with any of the projects.

@@ -1,5 +1,10 @@
 # Replication: GLLA vs pi-goal-x (clean controlled run)
 
+> **Framing note.** The extensions compared here are **Pi** extensions. Every run
+> used **Pi-Bolt 1.0.8**, a compiled fork of Pi 1.4.0, as the pinned, isolated
+> runtime; "Pi-Bolt" in these records always names that runtime, never the agent
+> the extensions are written for. Measurements below are unchanged.
+
 **Supersedes nothing.** The exploratory trial `s0` and its `FINAL_REPORT.md` are preserved unchanged; they remain the exploratory evidence. This report covers a new, controlled replication run on the same pinned infrastructure.
 
 **Primary answer.** Yes — the gap persisted after removing the relay confounder. With a stable relay, no host sleep, and four valid runs, pi-goal-x is consistently faster at producing an independently verified completion: median **363.9 s** vs **660.5 s** (1.8×), and it wins both pairs in both execution orders. It also uses roughly one third of the tokens and cost.

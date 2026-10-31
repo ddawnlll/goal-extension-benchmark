@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="428" viewBox="0 0 920 428" role="img" aria-label="Two panels. Audit seconds per run on the left with the share of the run; GLLA r2 adds 42 seconds of rework after a rejected audit. Tokens and nominal cost on the right; GLLA runs use about 230 thousand tokens, pi-goal-x runs 80 to 150 thousand.">
+<title>Audit overhead and model usage</title>
+<desc>Two panels. Audit seconds per run on the left with the share of the run; GLLA r2 adds 42 seconds of rework after a rejected audit. Tokens and nominal cost on the right; GLLA runs use about 230 thousand tokens, pi-goal-x runs 80 to 150 thousand.</desc>
+<rect x="0.0" y="0.0" width="920.0" height="428.0" fill="#0b1220"/>
+<text x="28.0" y="44.0" font-family="ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif" font-size="22" font-weight="600" fill="#f1f5f9" text-anchor="start">Audit overhead and model usage</text>
+<text x="28.0" y="68.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#c3cddd" text-anchor="start">left: time inside the audit and repair loop. right: tokens and cost per run.</text>
+<line x1="28.0" y1="84.0" x2="892.0" y2="84.0" stroke="#26334a" stroke-width="1"/>
+<text x="892.0" y="44.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="end">6 runs</text>
+<text x="28.0" y="108.0" font-family="ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#f1f5f9" text-anchor="start">Audit and repair</text>
+<text x="142.0" y="149.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#f1f5f9" text-anchor="end">GLLA r1</text>
+<rect x="156.0" y="136.0" width="132.0" height="18.0" fill="#a5b4fc" rx="2" opacity="0.9"/>
+<text x="222.0" y="149.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0b1220" text-anchor="middle">155</text>
+<text x="500.0" y="149.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#c3cddd" text-anchor="end">22%</text>
+<text x="142.0" y="195.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#f1f5f9" text-anchor="end">GLLA r2</text>
+<rect x="156.0" y="182.0" width="228.4" height="18.0" fill="#a5b4fc" rx="2" opacity="0.9"/>
+<text x="270.2" y="195.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0b1220" text-anchor="middle">268</text>
+<rect x="384.4" y="182.0" width="35.6" height="18.0" fill="#f1f5f9" rx="2" opacity="0.28"/>
+<text x="402.2" y="195.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="middle">42</text>
+<text x="500.0" y="195.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#c3cddd" text-anchor="end">50%</text>
+<text x="142.0" y="241.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#8fa0b8" text-anchor="end">GLLA s0</text>
+<rect x="156.0" y="228.0" width="236.2" height="18.0" fill="#a5b4fc" rx="2" opacity="0.9"/>
+<text x="274.1" y="241.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0b1220" text-anchor="middle">277</text>
+<text x="500.0" y="241.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#c3cddd" text-anchor="end">29%</text>
+<text x="142.0" y="299.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#f1f5f9" text-anchor="end">pi-goal-x r1</text>
+<rect x="156.0" y="286.0" width="68.9" height="18.0" fill="#fbbf24" rx="2" opacity="0.9"/>
+<text x="190.4" y="299.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0b1220" text-anchor="middle">81</text>
+<text x="500.0" y="299.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#c3cddd" text-anchor="end">27%</text>
+<text x="142.0" y="345.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#f1f5f9" text-anchor="end">pi-goal-x r2</text>
+<rect x="156.0" y="332.0" width="226.3" height="18.0" fill="#fbbf24" rx="2" opacity="0.9"/>
+<text x="269.2" y="345.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0b1220" text-anchor="middle">266</text>
+<text x="500.0" y="345.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#c3cddd" text-anchor="end">62%</text>
+<text x="142.0" y="391.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#8fa0b8" text-anchor="end">pi-goal-x s0</text>
+<rect x="156.0" y="378.0" width="212.3" height="18.0" fill="#fbbf24" rx="2" opacity="0.9"/>
+<text x="262.2" y="391.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0b1220" text-anchor="middle">249</text>
+<text x="500.0" y="391.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#c3cddd" text-anchor="end">42%</text>
+<text x="28.0" y="406.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">Bars are colored by extension; the faded segment is rework after a rejected audit. Percentages are of the whole run.</text>
+<line x1="552.0" y1="96.0" x2="552.0" y2="356.0" stroke="#26334a" stroke-width="1"/>
+<text x="576.0" y="108.0" font-family="ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#f1f5f9" text-anchor="start">Model usage</text>
+<text x="576.0" y="126.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">tokens in + out, then nominal cost · color is the extension</text>
+<rect x="640.0" y="152.0" width="124.7" height="14.0" fill="#a5b4fc" rx="2" opacity="0.9"/>
+<text x="810.0" y="163.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="start">230k</text>
+<text x="844.0" y="163.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">$0.167</text>
+<rect x="640.0" y="186.0" width="127.1" height="14.0" fill="#a5b4fc" rx="2" opacity="0.9"/>
+<text x="810.0" y="197.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="start">235k</text>
+<text x="844.0" y="197.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">$0.148</text>
+<rect x="640.0" y="220.0" width="160.0" height="14.0" fill="#a5b4fc" rx="2" opacity="0.9"/>
+<text x="810.0" y="231.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="start">296k</text>
+<text x="844.0" y="231.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">$0.219</text>
+<rect x="640.0" y="266.0" width="61.1" height="14.0" fill="#fbbf24" rx="2" opacity="0.9"/>
+<text x="810.0" y="277.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="start">113k</text>
+<text x="844.0" y="277.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">$0.058</text>
+<rect x="640.0" y="300.0" width="43.3" height="14.0" fill="#fbbf24" rx="2" opacity="0.9"/>
+<text x="810.0" y="311.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="start">80k</text>
+<text x="844.0" y="311.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">$0.041</text>
+<rect x="640.0" y="334.0" width="81.1" height="14.0" fill="#fbbf24" rx="2" opacity="0.9"/>
+<text x="810.0" y="345.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="start">150k</text>
+<text x="844.0" y="345.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#8fa0b8" text-anchor="start">$0.082</text>
+</svg>

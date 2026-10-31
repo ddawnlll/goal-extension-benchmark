@@ -1,5 +1,10 @@
 # GLLA vs pi-goal-x — Isolated End-to-End Benchmark
 
+> **Framing note.** The extensions compared here are **Pi** extensions. Every run
+> used **Pi-Bolt 1.0.8**, a compiled fork of Pi 1.4.0, as the pinned, isolated
+> runtime; "Pi-Bolt" in these records always names that runtime, never the agent
+> the extensions are written for. Measurements below are unchanged.
+
 **Trial:** `s0` (paired, sequential, same hardware, same day)
 **Benchmark root:** `$BENCH_ROOT` (created outside every existing project)
 **Task SHA-256:** `d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9` (`results/shared-task.md`)

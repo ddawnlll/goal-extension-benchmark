@@ -1,7 +1,9 @@
 # Methodology
 
-Two goal-management extensions for Pi-Bolt were run on an identical coding task
-in isolated containers. This document describes the design, the controls, the
+Two goal-management extensions for **Pi** were run on an identical coding task in
+isolated containers. The runtime was **Pi-Bolt 1.0.8**, a compiled fork of Pi 1.4.0
+that the extensions load into unchanged; Pi-Bolt is what makes the environment
+pinned, isolated and fast, not what the extensions are written for. This document describes the design, the controls, the
 instrumentation and the scoring, and states what the results can and cannot
 support.
 
@@ -17,7 +19,8 @@ Only one variable is intended to differ: the goal-management extension.
 
 | Held constant | Value |
 |---|---|
-| Agent runtime | Pi-Bolt release `bolt-v1.0.8`, linux-arm64, JIT off (SHA-256 `f5304867…`) |
+| Agent | Pi 1.4.0 (the extensions are Pi extensions) |
+| Runtime used | Pi-Bolt `bolt-v1.0.8`, linux-arm64, JIT off — a compiled fork of Pi 1.4.0 (SHA-256 `f5304867…`) |
 | Runtime commit | `fd4530c9611f0cffc18aa226c985fcc2603d2577` of `opensec-git/Pi-Bolt`, branch `pi-bolt` |
 | Coding model | `deepseek-v4.1-flash` through an OpenAI-compatible endpoint, one model for implementation and audit |
 | Thinking level | `high` (s0) / `low` (r1, r2), identical for both extensions within a campaign |
@@ -126,4 +129,4 @@ any drift above one second is reported.
   derived from the task text and applied blind, but it is still post-hoc.
 - **Fault injection was not run.** The relay can inject slow, failing and
   aborted audit calls; those scenarios (S1–S4 in the exploratory report) were
-  never executed, so no claim is made about auditor-crash behaviour.
+  never executed, so no claim is made about auditor-crash behavior.

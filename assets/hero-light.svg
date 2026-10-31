@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="430" viewBox="0 0 920 430" role="img" aria-label="Hero summary. GLLA median 660.5 seconds, range 622.2 to 698.7. pi-goal-x median 363.9 seconds, range 297.7 to 430.0. That is 1.8 times the wall clock. Cost per run: 0.157 dollars versus 0.049. Tokens: 233 thousand versus 96 thousand. Both passed 16 of 16 tests. No overall winner is declared.">
+<title>Same task. Same model. Same limits.</title>
+<desc>Hero summary. GLLA median 660.5 seconds, range 622.2 to 698.7. pi-goal-x median 363.9 seconds, range 297.7 to 430.0. That is 1.8 times the wall clock. Cost per run: 0.157 dollars versus 0.049. Tokens: 233 thousand versus 96 thousand. Both passed 16 of 16 tests. No overall winner is declared.</desc>
+<rect x="0.0" y="0.0" width="920.0" height="430.0" fill="#ffffff"/>
+<text x="28.0" y="44.0" font-family="ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif" font-size="22" font-weight="600" fill="#0f172a" text-anchor="start">Same task. Same model. Same limits.</text>
+<text x="28.0" y="68.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">Two Pi goal extensions, four controlled runs, sixteen independent tests each.</text>
+<line x1="28.0" y1="84.0" x2="892.0" y2="84.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="892.0" y="44.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="end">Pi 1.4.0 · Pi-Bolt 1.0.8 · deepseek-v4.1-flash</text>
+<text x="28.0" y="112.0" font-family="ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#0f172a" text-anchor="start">Wall clock to a verified completion</text>
+<line x1="122.0" y1="130.0" x2="122.0" y2="268.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="122.0" y="286.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="middle">0s</text>
+<line x1="271.2" y1="130.0" x2="271.2" y2="268.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="271.2" y="286.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="middle">300s</text>
+<line x1="420.4" y1="130.0" x2="420.4" y2="268.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="420.4" y="286.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="middle">600s</text>
+<text x="108.0" y="177.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#4338ca" text-anchor="end">GLLA</text>
+<line x1="431.5" y1="172.0" x2="469.5" y2="172.0" stroke="#4338ca" stroke-width="3" opacity="0.5"/>
+<line x1="431.5" y1="166.0" x2="431.5" y2="178.0" stroke="#4338ca" stroke-width="2"/>
+<line x1="469.5" y1="166.0" x2="469.5" y2="178.0" stroke="#4338ca" stroke-width="2"/>
+<circle cx="450.5" cy="172.0" r="6.5" fill="#ffffff" stroke="#4338ca" stroke-width="3"/>
+<text x="450.5" y="156.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13.5" font-weight="700" fill="#0f172a" text-anchor="middle">660 s</text>
+<text x="431.5" y="194.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">622.2–698.7 s</text>
+<text x="108.0" y="239.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#b45309" text-anchor="end">pi-goal-x</text>
+<line x1="270.1" y1="234.0" x2="335.9" y2="234.0" stroke="#b45309" stroke-width="3" opacity="0.5"/>
+<line x1="270.1" y1="228.0" x2="270.1" y2="240.0" stroke="#b45309" stroke-width="2"/>
+<line x1="335.9" y1="228.0" x2="335.9" y2="240.0" stroke="#b45309" stroke-width="2"/>
+<circle cx="303.0" cy="234.0" r="6.5" fill="#ffffff" stroke="#b45309" stroke-width="3"/>
+<text x="303.0" y="218.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13.5" font-weight="700" fill="#0f172a" text-anchor="middle">364 s</text>
+<text x="270.1" y="256.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">297.7–430.0 s</text>
+<path d="M122.5,306.6 L145.6,305.8 L168.4,306.8 L192.8,307.2 L216.3,307.5 L239.7,307.8 L264.2,307.3 L287.4,308.0 L310.4,308.0 L335.2,307.2 L358.8,307.6 L382.5,306.6 L404.8,307.1 L429.7,306.1 L452.0,305.4 L476.6,305.2 L500.8,305.4" fill="{none}" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<text x="122.0" y="326.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">lower is faster</text>
+<line x1="550.0" y1="104.0" x2="550.0" y2="340.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="580.0" y="112.0" font-family="ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#0f172a" text-anchor="start">In one number</text>
+<text x="580.0" y="196.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="72" font-weight="700" fill="#0f172a" text-anchor="start">1.8×</text>
+<path d="M577.3,208.5 L588.0,209.2 L596.1,207.7 L605.5,207.9 L616.7,207.8 L625.6,208.3 L634.4,209.1 L645.4,209.9 L652.6,209.1 L662.5,210.5 L673.9,210.0 L683.4,209.5 L693.3,209.4 L700.8,209.2 L711.0,208.6 L720.7,207.4 L729.6,207.1" fill="{none}" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<text x="580.0" y="236.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">the wall clock, median of the two</text>
+<text x="580.0" y="254.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">controlled pairs. Both finished verified.</text>
+<text x="580.0" y="294.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">cost per run, 3.2× less</text>
+<text x="780.0" y="294.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="end">$0.157</text>
+<text x="796.0" y="294.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">vs</text>
+<text x="876.0" y="294.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="end">$0.049</text>
+<text x="580.0" y="320.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">tokens per run, 2.4× fewer</text>
+<text x="780.0" y="320.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="end">233k</text>
+<text x="796.0" y="320.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">vs</text>
+<text x="876.0" y="320.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="end">96k</text>
+<rect x="580.0" y="360.0" width="250.0" height="26.0" fill="#f1f5f9" rx="13"/>
+<text x="592.0" y="377.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0f172a" text-anchor="start">No overall winner declared</text>
+<text x="28.0" y="408.0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#64748b" text-anchor="start">Controlled pairs r1–r2 · medians of two runs · exploratory s0 excluded from every summary</text>
+</svg>

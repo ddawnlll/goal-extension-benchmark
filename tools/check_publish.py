@@ -84,6 +84,8 @@ def main():
         if ".git" in md.parts:
             continue
         text = md.read_text(errors="replace")
+        # code fences show example markup; their paths are not repository links
+        text = re.sub(r"```.*?```", "", text, flags=re.S)
         for target in re.findall(r"\]\(([^)\s]+)\)", text) + re.findall(r'src="([^"]+)"', text):
             if target.startswith(("http://", "https://", "#", "mailto:")):
                 continue

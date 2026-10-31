@@ -10,8 +10,8 @@ here.
 
 | Project | Role | License | Pinned at |
 |---|---|---|---|
-| [Pi-Bolt](https://github.com/opensec-git/Pi-Bolt) | the agent runtime both competitors run inside; its `bench/report.py` is the task's subject | MIT | commit `fd4530c9611f0cffc18aa226c985fcc2603d2577`, release `bolt-v1.0.8` |
-| [Pi](https://github.com/earendil-works/pi) | upstream of Pi-Bolt | MIT | as vendored by the Pi-Bolt release |
+| [Pi](https://github.com/earendil-works/pi) | **the agent**: both extensions are Pi extensions and load into Pi unchanged | MIT | the version Pi-Bolt 1.0.8 is built on (Pi 1.4.0) |
+| [Pi-Bolt](https://github.com/opensec-git/Pi-Bolt) | **the runtime used for these runs**: a compiled fork of Pi, pinned so both competitors share one isolated binary; its `bench/report.py` is the task's subject | MIT | commit `fd4530c9611f0cffc18aa226c985fcc2603d2577`, release `bolt-v1.0.8` |
 | [pi-goal-list-loop-audit (GLLA)](https://github.com/DraconDev/pi-goal-list-loop-audit) | benchmarked extension | GPL-3.0 | `0.39.54`, commit `b1c36dc7389077f8b3409183277d12588cc60dae` |
 | [pi-goal-x](https://github.com/tmonk/pi-goal-x) | benchmarked extension | MIT | `0.34.1`, commit `b0fc15ebb658a1e9ea60ae65496717a780080f37` |
 
@@ -37,5 +37,5 @@ reproduced verbatim so that both runs can be checked against the same bytes
 ## No affiliation
 
 This is an independent evaluation. It is not affiliated with, endorsed by, or
-sponsored by the authors of Pi-Bolt, GLLA or pi-goal-x. Both extensions are
+sponsored by the authors of Pi, Pi-Bolt, GLLA or pi-goal-x. Both extensions are
 described from their public documentation and from what was observed in the runs.
