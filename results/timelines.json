@@ -1,0 +1,61 @@
+{
+ "glla": {
+  "name": "glla",
+  "total_elapsed_s": 955.969,
+  "goal_submitted_s": 0.0,
+  "goal_confirmed_s": 109.859,
+  "first_code_write_s": 165.224,
+  "last_code_write_s": 555.642,
+  "code_writes": 10,
+  "write_paths": [
+   "/home/agent/work/.github/workflows/ci.yml",
+   "/home/agent/work/bench/README.md",
+   "/home/agent/work/bench/report.py",
+   "/home/agent/work/bench/test_report.py"
+  ],
+  "test_commands": 29,
+  "first_test_s": 8.455,
+  "last_test_s": 665.039,
+  "first_audit_s": 676.9,
+  "last_audit_end_s": 925.4,
+  "audit_requests": 13,
+  "audit_wall_s": 94.9,
+  "longest_audit_s": 30.6,
+  "requests": 87,
+  "requests_failed": 20,
+  "first_status_complete_s": 954.396,
+  "first_completion_claim_s": 622.332,
+  "settled_s": 955.969,
+  "audit_span_after_last_write_s": 400.3,
+  "goal_status_records": 2
+ },
+ "goal-x": {
+  "name": "goal-x",
+  "total_elapsed_s": 598.866,
+  "goal_submitted_s": 0.0,
+  "goal_confirmed_s": 32.919,
+  "first_code_write_s": 76.018,
+  "last_code_write_s": 302.082,
+  "code_writes": 9,
+  "write_paths": [
+   "/home/agent/work/bench/README.md",
+   "/home/agent/work/bench/report.py",
+   "/home/agent/work/bench/test_report.py"
+  ],
+  "test_commands": 21,
+  "first_test_s": 2.853,
+  "last_test_s": 308.959,
+  "first_audit_s": 76.1,
+  "last_audit_end_s": 538.9,
+  "audit_requests": 20,
+  "audit_wall_s": 116.3,
+  "longest_audit_s": 22.0,
+  "requests": 23,
+  "requests_failed": 0,
+  "first_status_complete_s": 572.14,
+  "first_completion_claim_s": null,
+  "settled_s": 598.866,
+  "audit_span_after_last_write_s": 296.8,
+  "goal_status_records": 14
+ }
+}

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="378" viewBox="0 0 880 378" role="img" aria-label="CPU time: All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.1.0, medians.">
+<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
+<text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">CPU time</text>
+<text x="24" y="56" font-size="13.5" fill="#9198a1">All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.1.0, medians.</text>
+<text x="24" y="96" font-size="15" font-weight="600" fill="#f0f6fc">Interactive session: 5 prompts</text>
+<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 0.7.3</text>
+<path d="M133,114 h45.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-45.6 z" fill="#3987e5"/>
+<text x="190.6" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">309 ms</text>
+<text x="250.7" y="126.5" font-size="12.5" fill="#9198a1">3.0× less</text>
+<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
+<path d="M133,144 h142.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-142.8 z" fill="#6e7681"/>
+<text x="287.8" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">913 ms</text>
+<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 24</text>
+<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
+<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">1,312 ms</text>
+<line x1="133" y1="108" x2="133" y2="196" stroke="#3d444d"/>
+<text x="452" y="96" font-size="15" font-weight="600" fill="#f0f6fc">pi -p: one prompt</text>
+<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 0.7.3</text>
+<path d="M561,114 h23.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-23.9 z" fill="#3987e5"/>
+<text x="596.9" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">85 ms</text>
+<text x="648.9" y="126.5" font-size="12.5" fill="#9198a1">3.9× less</text>
+<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
+<path d="M561,144 h105.1 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-105.1 z" fill="#6e7681"/>
+<text x="678.1" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">333 ms</text>
+<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 24</text>
+<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
+<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">645 ms</text>
+<line x1="561" y1="108" x2="561" y2="196" stroke="#3d444d"/>
+<text x="24" y="246" font-size="15" font-weight="600" fill="#f0f6fc">pi --version</text>
+<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 0.7.3</text>
+<path d="M133,264 h5.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-5.2 z" fill="#3987e5"/>
+<text x="150.2" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">14 ms</text>
+<text x="202.2" y="276.5" font-size="12.5" fill="#9198a1">11× less</text>
+<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
+<path d="M133,294 h94.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-94.0 z" fill="#6e7681"/>
+<text x="239.0" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">150 ms</text>
+<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 24</text>
+<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
+<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">322 ms</text>
+<line x1="133" y1="258" x2="133" y2="346" stroke="#3d444d"/>
+<text x="452" y="246" font-size="15" font-weight="600" fill="#f0f6fc">Per prompt, 4.2M-token session</text>
+<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 0.7.3</text>
+<path d="M561,264 h76.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-76.0 z" fill="#3987e5"/>
+<text x="649.0" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">301 ms</text>
+<text x="709.1" y="276.5" font-size="12.5" fill="#9198a1">1.8× less</text>
+<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
+<path d="M561,294 h141.5 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-141.5 z" fill="#6e7681"/>
+<text x="714.5" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">548 ms</text>
+<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 24</text>
+<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
+<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">794 ms</text>
+<line x1="561" y1="258" x2="561" y2="346" stroke="#3d444d"/>
+</svg>

@@ -1,0 +1,52 @@
+{
+ "name": "glla",
+ "trial": "r1",
+ "baseline_sha": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+ "warmup": "OK",
+ "started_wall": 1793458815.220028,
+ "ended_wall": 1793459547.3875,
+ "started_utc": "2026-10-31T15:00:15Z",
+ "ended_utc": "2026-10-31T15:12:27Z",
+ "wall_seconds": 732.2,
+ "externally_verified_at_s": 235.7,
+ "verifier_samples": [
+  {
+   "t": 62.4,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 105.7,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 149.0,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 192.3,
+   "ok": false,
+   "detail": "1 failed, 8 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 235.7,
+   "ok": true,
+   "detail": "9 passed, 1 deselected, 2 warnings in 0.12s"
+  }
+ ],
+ "sleep_events": [],
+ "docker_gaps": [],
+ "relay": {
+  "requests": 49,
+  "failed": 0,
+  "failure_rate": 0.0
+ },
+ "exit_reason": "extension_state_terminal",
+ "oom_killed": false,
+ "container_exit_code": "0",
+ "memory_limit": "6g",
+ "invalid_reasons": [],
+ "valid": true
+}

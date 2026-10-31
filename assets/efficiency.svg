@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="352" viewBox="0 0 920 352" role="img" aria-label="Model usage per run">
+<rect width="920" height="352" fill="#ffffff"/>
+<rect x="0.5" y="0.5" width="919" height="351" fill="none" stroke="#e5e7eb"/>
+<text x="26.0" y="34.0" font-size="17" font-weight="650" fill="#111827" text-anchor="start">Model usage per run</text>
+<text x="26.0" y="55.0" font-size="12" font-weight="400" fill="#6b7280" text-anchor="start">input plus output tokens, and cost at list prices for the pinned model</text>
+<text x="190.0" y="96.0" font-size="11" font-weight="600" fill="#6b7280" text-anchor="start">tokens</text>
+<text x="572.0" y="96.0" font-size="11" font-weight="600" fill="#6b7280" text-anchor="start">nominal cost (USD)</text>
+<text x="176.0" y="126.0" font-size="12.5" font-weight="400" fill="#6b7280" text-anchor="end">GLLA  s0</text>
+<rect x="190.0" y="112.0" width="320.0" height="18.0" fill="#1d4ed8" rx="3"/>
+<text x="518.0" y="126.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">296k</text>
+<rect x="572.0" y="112.0" width="240.0" height="18.0" fill="#1d4ed8" rx="3"/>
+<text x="820.0" y="126.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">$0.219</text>
+<text x="176.0" y="158.0" font-size="12.5" font-weight="600" fill="#111827" text-anchor="end">GLLA  r1</text>
+<rect x="190.0" y="144.0" width="249.3" height="18.0" fill="#1d4ed8" rx="3"/>
+<text x="447.3" y="158.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">230k</text>
+<rect x="572.0" y="144.0" width="182.5" height="18.0" fill="#1d4ed8" rx="3"/>
+<text x="762.5" y="158.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">$0.167</text>
+<text x="176.0" y="190.0" font-size="12.5" font-weight="600" fill="#111827" text-anchor="end">GLLA  r2</text>
+<rect x="190.0" y="176.0" width="254.2" height="18.0" fill="#1d4ed8" rx="3"/>
+<text x="452.2" y="190.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">235k</text>
+<rect x="572.0" y="176.0" width="162.2" height="18.0" fill="#1d4ed8" rx="3"/>
+<text x="742.2" y="190.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">$0.148</text>
+<text x="176.0" y="222.0" font-size="12.5" font-weight="400" fill="#6b7280" text-anchor="end">pi-goal-x  s0</text>
+<rect x="190.0" y="208.0" width="162.1" height="18.0" fill="#c2410c" rx="3"/>
+<text x="360.1" y="222.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">150k</text>
+<rect x="572.0" y="208.0" width="89.9" height="18.0" fill="#c2410c" rx="3"/>
+<text x="669.9" y="222.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">$0.082</text>
+<text x="176.0" y="254.0" font-size="12.5" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x  r1</text>
+<rect x="190.0" y="240.0" width="122.2" height="18.0" fill="#c2410c" rx="3"/>
+<text x="320.2" y="254.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">113k</text>
+<rect x="572.0" y="240.0" width="63.6" height="18.0" fill="#c2410c" rx="3"/>
+<text x="643.6" y="254.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">$0.058</text>
+<text x="176.0" y="286.0" font-size="12.5" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x  r2</text>
+<rect x="190.0" y="272.0" width="86.7" height="18.0" fill="#c2410c" rx="3"/>
+<text x="284.7" y="286.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">80k</text>
+<rect x="572.0" y="272.0" width="44.7" height="18.0" fill="#c2410c" rx="3"/>
+<text x="624.7" y="286.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">$0.041</text>
+</svg>

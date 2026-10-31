@@ -1,0 +1,37 @@
+{
+ "name": "goal-x",
+ "trial": "r1",
+ "baseline_sha": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+ "warmup": "OK",
+ "started_wall": 1793459598.7094588,
+ "ended_wall": 1793459913.4417439,
+ "started_utc": "2026-10-31T15:13:18Z",
+ "ended_utc": "2026-10-31T15:18:33Z",
+ "wall_seconds": 314.7,
+ "externally_verified_at_s": 99.0,
+ "verifier_samples": [
+  {
+   "t": 55.5,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 99.0,
+   "ok": true,
+   "detail": "9 passed, 1 deselected, 2 warnings in 0.13s"
+  }
+ ],
+ "sleep_events": [],
+ "docker_gaps": [],
+ "relay": {
+  "requests": 27,
+  "failed": 0,
+  "failure_rate": 0.0
+ },
+ "exit_reason": "extension_state_terminal",
+ "oom_killed": false,
+ "container_exit_code": "0",
+ "memory_limit": "6g",
+ "invalid_reasons": [],
+ "valid": true
+}

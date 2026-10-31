@@ -1,0 +1,24 @@
+metric,glla,pi-goal-x
+Goal understanding /20,18,17
+Implementation /35,35,34
+Tests and evidence /20,19,17
+Maintainability /10,8,9
+Completion accuracy /15,15,15
+Total quality /100,95,92
+Goal setup time (s),109.9,32.9
+Implementation time (s),298.8,290.1
+Completion overhead (s),547.3,275.9
+Total elapsed time (s),956.0,598.9
+Model requests (relay),87,23
+Failed model requests (infrastructure),20,0
+Input tokens,"198,523","120,549"
+Output tokens,"97,141","29,258"
+Cached input tokens,"7,144,192","1,811,968"
+Nominal model cost (USD),0.219,0.082
+Audit attempts (model),1,1
+Audit rejections,1,0
+Independent tests passed,"10/10 frozen, 6/6 adversarial","10/10 frozen, 6/6 adversarial"
+Files changed,4,3
+False completion?,no,no
+Final classification,VERIFIED_COMPLETE,VERIFIED_COMPLETE
+Reliability score /100,82,90

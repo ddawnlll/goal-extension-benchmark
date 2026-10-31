@@ -1,0 +1,165 @@
+{
+ "name": "goal-x",
+ "trial": "s0",
+ "classification_inputs": {
+  "exit_reason": "extension_state_terminal",
+  "externally_verified_at_s": null,
+  "duration_seconds": 598.866,
+  "pi_exit_code": 0
+ },
+ "milestones": {
+  "process_launch": 0.0,
+  "goal_submitted": 0.005,
+  "first_ui_question": 32.916,
+  "goal_confirmed": 32.919,
+  "run_started": 0.801,
+  "first_code_modification": 77.633,
+  "first_test_run": 2.853,
+  "first_successful_test_run": 2.861,
+  "first_completion_claim": null,
+  "first_audit_request": 85.838,
+  "first_status_complete": 572.14,
+  "first_auditor_child": null,
+  "agent_settled": 33.002,
+  "run_stopped": 597.803
+ },
+ "durations": {
+  "goal_setup_time_s": 32.914,
+  "implementation_time_s": 290.1,
+  "completion_overhead_s": 275.9,
+  "total_elapsed_s": 598.866,
+  "time_to_first_claim_vs_acceptance_s": null,
+  "first_completion_claim_s": 323.0,
+  "post_verification_delay_s": 296.8
+ },
+ "counters": {
+  "ui_questions": 291,
+  "ui_answers": 2,
+  "ui_deviations": 0,
+  "turns": 46,
+  "tool_calls": 55,
+  "test_runs": 21,
+  "test_runs_ok": 21,
+  "audit_requests": 20,
+  "audit_completions": 20,
+  "audit_failures": 0,
+  "completion_claims": 0,
+  "status_polls": 0,
+  "compactions": 0,
+  "retries": 0,
+  "agent_end_events": 2
+ },
+ "tokens": {
+  "main_session": null,
+  "relay_requests": 23,
+  "relay_audit_requests": 20,
+  "relay_usage_records": 23,
+  "relay_input": 0,
+  "relay_output": 0,
+  "after_external_verification": null,
+  "authoritative_session_usage": {
+   "input": 120549,
+   "output": 29258,
+   "cacheRead": 1811968,
+   "cost_usd": 0.082
+  }
+ },
+ "auditor": {
+  "requests": 20,
+  "completed": 20,
+  "total_audit_wall_s": 116.29,
+  "longest_audit_s": 21.97,
+  "longest_gap_between_audit_requests_s": 128.9,
+  "failed_requests": 0,
+  "client_aborts": 0
+ },
+ "post_verification": {
+  "externally_verified_at_s": null,
+  "settled_at_s": 598.866,
+  "post_verification_delay_s": null,
+  "verifier_samples": 20,
+  "first_verifier_pass": null
+ },
+ "process": {
+  "last_rss_kb": 0,
+  "surviving_children": []
+ },
+ "wall_clock": {
+  "started_wall": 1793451500.4539971,
+  "ended_wall": 1793452118.4676921,
+  "wall_seconds": 618.0
+ },
+ "prompt": {
+  "task_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+  "prompt_sha256": "3f4f4de24e0352a05802fcdd4b06bd132caa607632831d2df01088f7bb178074"
+ },
+ "status_log_tail": [
+  {
+   "t": 0.801,
+   "source": "notify",
+   "text": "Goal draft started: Improve the security and reliability of SVG generation in Pi. The agent will clarify, propose a goal and tasks where useful, then ask you to confirm."
+  },
+  {
+   "t": 32.964,
+   "source": "notify",
+   "text": "\u25cf Goal running\n\u251c\u2500 \u27e1 Make bench/report.py emit always-well-formed, injection-safe SVG by escaping every dynami...\n\u2514\u2500 auto-continue on\nBudget: none"
+  },
+  {
+   "t": 572.14,
+   "source": "notify",
+   "text": "Goal archived.\nFile: .pi/goals/archived/goal_2026103113080190_mvweqqwr-ysjctw.md"
+  }
+ ],
+ "claims": [],
+ "generated_wall": 1793452519.070955,
+ "timeline": {
+  "name": "goal-x",
+  "total_elapsed_s": 598.866,
+  "goal_submitted_s": 0.0,
+  "goal_confirmed_s": 32.919,
+  "first_code_write_s": 76.018,
+  "last_code_write_s": 302.082,
+  "code_writes": 9,
+  "write_paths": [
+   "/home/agent/work/bench/README.md",
+   "/home/agent/work/bench/report.py",
+   "/home/agent/work/bench/test_report.py"
+  ],
+  "test_commands": 21,
+  "first_test_s": 2.853,
+  "last_test_s": 308.959,
+  "first_audit_s": 76.1,
+  "last_audit_end_s": 538.9,
+  "audit_requests": 20,
+  "audit_wall_s": 116.3,
+  "longest_audit_s": 22.0,
+  "requests": 23,
+  "requests_failed": 0,
+  "first_status_complete_s": 572.14,
+  "first_completion_claim_s": 323.0,
+  "settled_s": 598.866,
+  "audit_span_after_last_write_s": 296.8,
+  "goal_status_records": 14
+ },
+ "audit_facts": {
+  "model_audits": 1,
+  "deterministic_pre_audit_rejections": 0,
+  "model_audit_rejections": 0,
+  "verdict_sequence": [
+   "approved"
+  ],
+  "model_audit_duration_s": 249.1,
+  "auditor_rounds": 1,
+  "auditor_report_bytes": null,
+  "auditor_transport": "in-process nested pi SDK session",
+  "auditor_requests_detected": 20
+ },
+ "classification": "VERIFIED_COMPLETE",
+ "classification_evidence": [
+  "independent frozen acceptance suite: 10/10 passed",
+  "independent adversarial suite: 6/6 passed",
+  "ordinary-input SVGs byte-identical to the pristine baseline",
+  "no benchmark dataset modified",
+  "task started from the pinned baseline commit and was not already solved"
+ ]
+}

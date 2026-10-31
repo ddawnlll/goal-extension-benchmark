@@ -1,0 +1,209 @@
+{
+ "glla": {
+  "runs": 2,
+  "valid": 2,
+  "total_elapsed_s": {
+   "median": 660.5,
+   "min": 622.2,
+   "max": 698.7,
+   "n": 2
+  },
+  "goal_confirmed_s": {
+   "median": 79.8,
+   "min": 70.3,
+   "max": 89.3,
+   "n": 2
+  },
+  "first_code_write_s": {
+   "median": 117.5,
+   "min": 91.3,
+   "max": 143.6,
+   "n": 2
+  },
+  "first_completion_claim_s": {
+   "median": 312.9,
+   "min": 302.3,
+   "max": 323.5,
+   "n": 2
+  },
+  "last_code_write_s": {
+   "median": 357.8,
+   "min": 297.1,
+   "max": 418.5,
+   "n": 2
+  },
+  "post_last_write_s": {
+   "median": 302.7,
+   "min": 203.7,
+   "max": 401.6,
+   "n": 2
+  },
+  "requests": {
+   "median": 45.5,
+   "min": 42,
+   "max": 49,
+   "n": 2
+  },
+  "input_tokens": {
+   "median": 170699.5,
+   "min": 169217,
+   "max": 172182,
+   "n": 2
+  },
+  "output_tokens": {
+   "median": 61925.0,
+   "min": 61168,
+   "max": 62682,
+   "n": 2
+  },
+  "cache_read": {
+   "median": 5285376.0,
+   "min": 3518336,
+   "max": 7052416,
+   "n": 2
+  },
+  "cost_usd": {
+   "median": 0.2,
+   "min": 0.1,
+   "max": 0.2,
+   "n": 2
+  },
+  "max_request_gap_s": {
+   "median": 69.8,
+   "min": 62.9,
+   "max": 76.7,
+   "n": 2
+  },
+  "audit_verdicts": [
+   [
+    {
+     "at": "2026-10-31T15:05:56.703Z",
+     "verdict": "disapproved"
+    },
+    {
+     "at": "2026-10-31T15:06:18.605Z",
+     "verdict": "disapproved"
+    },
+    {
+     "at": "2026-10-31T15:12:02.978Z",
+     "verdict": "approved"
+    }
+   ],
+   [
+    {
+     "at": "2026-10-31T15:37:45.145Z",
+     "verdict": "disapproved"
+    },
+    {
+     "at": "2026-10-31T15:41:05.365Z",
+     "verdict": "approved"
+    }
+   ]
+  ],
+  "audit_jobs": [
+   [
+    {
+     "elapsedMs": 154782,
+     "round": 2,
+     "phase": "complete"
+    }
+   ],
+   [
+    {
+     "elapsedMs": 109557,
+     "round": 1,
+     "phase": "complete"
+    },
+    {
+     "elapsedMs": 158339,
+     "round": 2,
+     "phase": "complete"
+    }
+   ]
+  ]
+ },
+ "goal-x": {
+  "runs": 2,
+  "valid": 2,
+  "total_elapsed_s": {
+   "median": 363.9,
+   "min": 297.7,
+   "max": 430.0,
+   "n": 2
+  },
+  "goal_confirmed_s": {
+   "median": 38.6,
+   "min": 26.4,
+   "max": 50.7,
+   "n": 2
+  },
+  "first_code_write_s": {
+   "median": 67.7,
+   "min": 50.1,
+   "max": 85.3,
+   "n": 2
+  },
+  "first_completion_claim_s": {
+   "median": 162.9,
+   "min": 136.8,
+   "max": 189.1,
+   "n": 2
+  },
+  "last_code_write_s": {
+   "median": 141.5,
+   "min": 110.6,
+   "max": 172.4,
+   "n": 2
+  },
+  "post_last_write_s": {
+   "median": 222.4,
+   "min": 125.4,
+   "max": 319.3,
+   "n": 2
+  },
+  "requests": {
+   "median": 25.0,
+   "min": 23,
+   "max": 27,
+   "n": 2
+  },
+  "input_tokens": {
+   "median": 79522.5,
+   "min": 65917,
+   "max": 93128,
+   "n": 2
+  },
+  "output_tokens": {
+   "median": 16962.0,
+   "min": 14179,
+   "max": 19745,
+   "n": 2
+  },
+  "cache_read": {
+   "median": 863104.0,
+   "min": 660608,
+   "max": 1065600,
+   "n": 2
+  },
+  "cost_usd": {
+   "median": 0.0,
+   "min": 0.0,
+   "max": 0.1,
+   "n": 2
+  },
+  "max_request_gap_s": {
+   "median": 69.9,
+   "min": 42.0,
+   "max": 97.8,
+   "n": 2
+  },
+  "audit_verdicts": [
+   [],
+   []
+  ],
+  "audit_jobs": [
+   [],
+   []
+  ]
+ }
+}

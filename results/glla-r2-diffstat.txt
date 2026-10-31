@@ -1,0 +1,4 @@
+ bench/README.md          |  22 ++++-
+ bench/report.py          |  50 +++++++----
+ bench/test_report_svg.py | 227 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 283 insertions(+), 16 deletions(-)

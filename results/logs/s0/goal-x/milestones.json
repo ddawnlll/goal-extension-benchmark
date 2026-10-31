@@ -1,0 +1,98 @@
+{
+ "name": "goal-x",
+ "extension": "pi-goal-x",
+ "trial": "s0",
+ "started_wall": 1793451509.7967594,
+ "limit_seconds": 2700.0,
+ "process_launch": {
+  "t": 0.0,
+  "wall": 1793451509.797,
+  "cmd": [
+   "pi",
+   "--mode",
+   "rpc",
+   "--provider",
+   "local",
+   "--model",
+   "deepseek-v4.1-flash",
+   "--thinking",
+   "high",
+   "--session-dir",
+   "/home/agent/.pi/agent/sessions",
+   "--continue",
+   "--name",
+   "goal-x-s0",
+   "--no-approve"
+  ]
+ },
+ "pi_pid": {
+  "t": 0.005,
+  "wall": 1793451509.801,
+  "pid": 10
+ },
+ "goal_submitted": {
+  "t": 0.005,
+  "wall": 1793451509.801,
+  "prompt_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+  "chars": 1614
+ },
+ "run_started": {
+  "t": 0.801,
+  "wall": 1793451510.597
+ },
+ "first_test_run": {
+  "t": 2.853,
+  "wall": 1793451512.649,
+  "command": "find /home/agent/work -name report.py -not -path \"*/node_modules/*\" 2>/dev/null"
+ },
+ "first_successful_test_run": {
+  "t": 2.861,
+  "wall": 1793451512.658,
+  "durationMs": 15
+ },
+ "first_ui_question": {
+  "t": 32.916,
+  "wall": 1793451542.712,
+  "method": "select",
+  "text": "Completion auditor (currently enabled)   Enabled \u2014 require independent approval | Disabled \u2014 skip the completion audit"
+ },
+ "first_ui_answer": {
+  "t": 32.917,
+  "wall": 1793451542.713,
+  "method": "select"
+ },
+ "goal_confirmed": {
+  "t": 32.919,
+  "wall": 1793451542.715,
+  "method": "select",
+  "via": "extension_ui_select"
+ },
+ "agent_settled": {
+  "t": 33.002,
+  "wall": 1793451542.798
+ },
+ "settled_count": 2,
+ "first_code_modification": {
+  "t": 77.633,
+  "wall": 1793451587.429,
+  "files": [
+   " M bench/report.py"
+  ]
+ },
+ "first_audit_request": {
+  "t": 85.838,
+  "wall": 1793451595.635,
+  "id": "6c60135d"
+ },
+ "first_status_complete": {
+  "t": 572.14,
+  "wall": 1793452081.936,
+  "source": "notify",
+  "text": "Goal archived.\nFile: .pi/goals/archived/goal_2026103113080190_mvweqqwr-ysjctw.md"
+ },
+ "run_stopped": {
+  "t": 597.803,
+  "wall": 1793452107.599,
+  "reason": "extension_state_terminal"
+ }
+}

@@ -1,0 +1,311 @@
+{
+ "glla": [
+  {
+   "name": "glla",
+   "trial": "r1",
+   "started_utc": "2026-10-31T15:00:33Z",
+   "total_elapsed_s": 698.723,
+   "goal_confirmed_s": 89.341,
+   "first_code_write_s": 143.625,
+   "last_code_write_s": 297.1,
+   "code_writes": 12,
+   "test_commands": 13,
+   "first_test_s": 15.38,
+   "last_test_s": 522.278,
+   "first_completion_claim_s": 323.464,
+   "completion_tool": "complete_goal",
+   "requests": 49,
+   "requests_failed": 0,
+   "max_request_gap_s": 62.9,
+   "audit_verdicts": [
+    {
+     "at": "2026-10-31T15:05:56.703Z",
+     "verdict": "disapproved"
+    },
+    {
+     "at": "2026-10-31T15:06:18.605Z",
+     "verdict": "disapproved"
+    },
+    {
+     "at": "2026-10-31T15:12:02.978Z",
+     "verdict": "approved"
+    }
+   ],
+   "audit_jobs": [
+    {
+     "elapsedMs": 154782,
+     "round": 2,
+     "phase": "complete"
+    }
+   ],
+   "goal_events": [],
+   "counters": {
+    "ui_questions": 324,
+    "ui_answers": 3,
+    "ui_deviations": 0,
+    "turns": 92,
+    "tool_calls": 95,
+    "test_runs": 30,
+    "test_runs_ok": 30,
+    "audit_requests": 6,
+    "audit_completions": 6,
+    "audit_failures": 0,
+    "completion_claims": 0,
+    "status_polls": 0,
+    "compactions": 0,
+    "retries": 0,
+    "agent_end_events": 6
+   },
+   "exit_reason": "extension_state_terminal",
+   "tokens_main": null,
+   "tokens": {
+    "input": 169217,
+    "output": 61168,
+    "cacheRead": 7052416,
+    "cost": 0.16648119599999991,
+    "messages": 113,
+    "cost_usd_nominal": 0.1665
+   },
+   "valid": true,
+   "invalid_reasons": [],
+   "relay_failed": 0,
+   "relay_requests": 49,
+   "sleep_events": 0,
+   "externally_verified_at_s": 235.7
+  },
+  {
+   "name": "glla",
+   "trial": "r2",
+   "started_utc": "2026-10-31T15:30:52Z",
+   "total_elapsed_s": 622.177,
+   "goal_confirmed_s": 70.32,
+   "first_code_write_s": 91.345,
+   "last_code_write_s": 418.453,
+   "code_writes": 6,
+   "test_commands": 11,
+   "first_test_s": 14.596,
+   "last_test_s": 423.606,
+   "first_completion_claim_s": 302.34,
+   "completion_tool": "complete_goal",
+   "requests": 42,
+   "requests_failed": 0,
+   "max_request_gap_s": 76.7,
+   "audit_verdicts": [
+    {
+     "at": "2026-10-31T15:37:45.145Z",
+     "verdict": "disapproved"
+    },
+    {
+     "at": "2026-10-31T15:41:05.365Z",
+     "verdict": "approved"
+    }
+   ],
+   "audit_jobs": [
+    {
+     "elapsedMs": 109557,
+     "round": 1,
+     "phase": "complete"
+    },
+    {
+     "elapsedMs": 158339,
+     "round": 2,
+     "phase": "complete"
+    }
+   ],
+   "goal_events": [],
+   "counters": {
+    "ui_questions": 312,
+    "ui_answers": 1,
+    "ui_deviations": 0,
+    "turns": 46,
+    "tool_calls": 53,
+    "test_runs": 29,
+    "test_runs_ok": 26,
+    "audit_requests": 25,
+    "audit_completions": 25,
+    "audit_failures": 0,
+    "completion_claims": 0,
+    "status_polls": 0,
+    "compactions": 0,
+    "retries": 0,
+    "agent_end_events": 3
+   },
+   "exit_reason": "extension_state_terminal",
+   "tokens_main": null,
+   "tokens": {
+    "input": 172182,
+    "output": 62682,
+    "cacheRead": 3518336,
+    "cost": 0.14798301600000005,
+    "messages": 85,
+    "cost_usd_nominal": 0.148
+   },
+   "valid": true,
+   "invalid_reasons": [],
+   "relay_failed": 0,
+   "relay_requests": 42,
+   "sleep_events": 0,
+   "externally_verified_at_s": 148.1
+  }
+ ],
+ "goal-x": [
+  {
+   "name": "goal-x",
+   "trial": "r1",
+   "started_utc": "2026-10-31T15:13:29Z",
+   "total_elapsed_s": 297.744,
+   "goal_confirmed_s": 50.701,
+   "first_code_write_s": 85.296,
+   "last_code_write_s": 172.374,
+   "code_writes": 5,
+   "test_commands": 4,
+   "first_test_s": 138.617,
+   "last_test_s": 175.501,
+   "first_completion_claim_s": 189.061,
+   "completion_tool": "update_goal",
+   "requests": 27,
+   "requests_failed": 0,
+   "max_request_gap_s": 42.0,
+   "audit_verdicts": [],
+   "audit_jobs": [],
+   "goal_events": [
+    {
+     "type": "goal_created",
+     "at": "2026-10-31T15:14:20.221Z"
+    },
+    {
+     "type": "completion_requested",
+     "at": "2026-10-31T15:16:38.563Z"
+    },
+    {
+     "type": "audit_started",
+     "at": "2026-10-31T15:16:38.564Z"
+    },
+    {
+     "type": "audit_result",
+     "at": "2026-10-31T15:17:59.355Z"
+    },
+    {
+     "type": "goal_completed",
+     "at": "2026-10-31T15:17:59.376Z"
+    },
+    {
+     "type": "goal_archived",
+     "at": "2026-10-31T15:17:59.376Z"
+    }
+   ],
+   "counters": {
+    "ui_questions": 217,
+    "ui_answers": 2,
+    "ui_deviations": 0,
+    "turns": 35,
+    "tool_calls": 45,
+    "test_runs": 20,
+    "test_runs_ok": 20,
+    "audit_requests": 20,
+    "audit_completions": 20,
+    "audit_failures": 0,
+    "completion_claims": 0,
+    "status_polls": 0,
+    "compactions": 0,
+    "retries": 0,
+    "agent_end_events": 2
+   },
+   "exit_reason": "extension_state_terminal",
+   "tokens_main": null,
+   "tokens": {
+    "input": 93128,
+    "output": 19745,
+    "cacheRead": 1065600,
+    "cost": 0.058025999999999994,
+    "messages": 36,
+    "cost_usd_nominal": 0.058
+   },
+   "valid": true,
+   "invalid_reasons": [],
+   "relay_failed": 0,
+   "relay_requests": 27,
+   "sleep_events": 0,
+   "externally_verified_at_s": 99.0
+  },
+  {
+   "name": "goal-x",
+   "trial": "r2",
+   "started_utc": "2026-10-31T15:22:40Z",
+   "total_elapsed_s": 429.996,
+   "goal_confirmed_s": 26.432,
+   "first_code_write_s": 50.085,
+   "last_code_write_s": 110.647,
+   "code_writes": 5,
+   "test_commands": 4,
+   "first_test_s": 18.885,
+   "last_test_s": 115.559,
+   "first_completion_claim_s": 136.836,
+   "completion_tool": "update_goal",
+   "requests": 23,
+   "requests_failed": 0,
+   "max_request_gap_s": 97.8,
+   "audit_verdicts": [],
+   "audit_jobs": [],
+   "goal_events": [
+    {
+     "type": "goal_created",
+     "at": "2026-10-31T15:23:06.990Z"
+    },
+    {
+     "type": "completion_requested",
+     "at": "2026-10-31T15:24:57.376Z"
+    },
+    {
+     "type": "audit_started",
+     "at": "2026-10-31T15:24:57.377Z"
+    },
+    {
+     "type": "audit_result",
+     "at": "2026-10-31T15:29:22.884Z"
+    },
+    {
+     "type": "goal_completed",
+     "at": "2026-10-31T15:29:22.903Z"
+    },
+    {
+     "type": "goal_archived",
+     "at": "2026-10-31T15:29:22.903Z"
+    }
+   ],
+   "counters": {
+    "ui_questions": 161,
+    "ui_answers": 2,
+    "ui_deviations": 0,
+    "turns": 26,
+    "tool_calls": 33,
+    "test_runs": 15,
+    "test_runs_ok": 15,
+    "audit_requests": 17,
+    "audit_completions": 17,
+    "audit_failures": 0,
+    "completion_claims": 0,
+    "status_polls": 0,
+    "compactions": 0,
+    "retries": 0,
+    "agent_end_events": 2
+   },
+   "exit_reason": "extension_state_terminal",
+   "tokens_main": null,
+   "tokens": {
+    "input": 65917,
+    "output": 14179,
+    "cacheRead": 660608,
+    "cost": 0.04075354799999999,
+    "messages": 27,
+    "cost_usd_nominal": 0.0408
+   },
+   "valid": true,
+   "invalid_reasons": [],
+   "relay_failed": 0,
+   "relay_requests": 23,
+   "sleep_events": 0,
+   "externally_verified_at_s": 98.9
+  }
+ ]
+}

@@ -1,0 +1,172 @@
+{
+ "name": "glla",
+ "trial": "s0",
+ "baseline_sha": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+ "warmup": "OK",
+ "started_wall": 1793450513.255967,
+ "ended_wall": 1793451500.359256,
+ "wall_seconds": 987.1,
+ "externally_verified_at_s": null,
+ "verifier_samples": [
+  {
+   "t": 44.3,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 74.8,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 105.2,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 135.6,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 166.0,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 196.3,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 226.7,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 257.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 287.4,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 317.8,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.18s"
+  },
+  {
+   "t": 348.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 378.5,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 408.9,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 439.4,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 469.8,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 500.2,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 530.6,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.18s"
+  },
+  {
+   "t": 561.0,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 591.6,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.29s"
+  },
+  {
+   "t": 622.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 652.7,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.18s"
+  },
+  {
+   "t": 683.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 713.5,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.18s"
+  },
+  {
+   "t": 743.9,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 774.3,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 804.7,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 835.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 865.4,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 895.9,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.18s"
+  },
+  {
+   "t": 926.3,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 956.7,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.17s"
+  },
+  {
+   "t": 987.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.18s"
+  }
+ ]
+}

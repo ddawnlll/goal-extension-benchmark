@@ -1,0 +1,75 @@
+{
+ "trial": "r2",
+ "anonymization": {
+  "goal-x": "C1",
+  "glla": "C2"
+ },
+ "candidates": {
+  "glla": {
+   "anonymous_id": "C2",
+   "tests": {
+    "frozen": {
+     "passed": 10,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 10 passed, 2 warnings in 0.77s ========================"
+    },
+    "adversarial": {
+     "passed": 6,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 6 passed, 2 warnings in 0.01s ========================="
+    }
+   },
+   "changed": [
+    {
+     "status": "M",
+     "path": "bench/README.md"
+    },
+    {
+     "status": "M",
+     "path": "bench/report.py"
+    },
+    {
+     "status": "A",
+     "path": "bench/test_report_svg.py"
+    }
+   ],
+   "datasets_modified": [],
+   "out_of_scope": []
+  },
+  "goal-x": {
+   "anonymous_id": "C1",
+   "tests": {
+    "frozen": {
+     "passed": 10,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 10 passed, 2 warnings in 0.63s ========================"
+    },
+    "adversarial": {
+     "passed": 6,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 6 passed, 2 warnings in 0.02s ========================="
+    }
+   },
+   "changed": [
+    {
+     "status": "M",
+     "path": "bench/README.md"
+    },
+    {
+     "status": "M",
+     "path": "bench/report.py"
+    },
+    {
+     "status": "A",
+     "path": "bench/test_report.py"
+    }
+   ],
+   "datasets_modified": [],
+   "out_of_scope": []
+  }
+ }
+}

@@ -1,0 +1,255 @@
+{
+ "started_utc": "2026-10-31T13:27:24Z",
+ "competitors": {
+  "glla": {
+   "summary": {
+    "n": 12,
+    "ok": 12,
+    "failed": 0,
+    "median_latency_s": 1.379,
+    "max_latency_s": 6.209
+   },
+   "records": [
+    {
+     "i": 0,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 700,
+     "ok": true,
+     "latency_s": 1.208
+    },
+    {
+     "i": 0,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 4209,
+     "ok": true,
+     "latency_s": 1.617
+    },
+    {
+     "i": 0,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 69054,
+     "ok": true,
+     "latency_s": 6.195
+    },
+    {
+     "i": 1,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 713,
+     "ok": true,
+     "latency_s": 1.094
+    },
+    {
+     "i": 1,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 7400,
+     "ok": true,
+     "latency_s": 1.53
+    },
+    {
+     "i": 1,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 71633,
+     "ok": true,
+     "latency_s": 6.209
+    },
+    {
+     "i": 2,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 635,
+     "ok": true,
+     "latency_s": 1.166
+    },
+    {
+     "i": 2,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 5308,
+     "ok": true,
+     "latency_s": 1.079
+    },
+    {
+     "i": 2,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 70430,
+     "ok": true,
+     "latency_s": 6.103
+    },
+    {
+     "i": 3,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 679,
+     "ok": true,
+     "latency_s": 1.111
+    },
+    {
+     "i": 3,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 5560,
+     "ok": true,
+     "latency_s": 1.228
+    },
+    {
+     "i": 3,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 63660,
+     "ok": true,
+     "latency_s": 5.329
+    }
+   ],
+   "relay_requests": 13,
+   "relay_failures": 0,
+   "reasoning_effort_seen": [
+    "low"
+   ]
+  },
+  "goal-x": {
+   "summary": {
+    "n": 12,
+    "ok": 12,
+    "failed": 0,
+    "median_latency_s": 1.2,
+    "max_latency_s": 6.258
+   },
+   "records": [
+    {
+     "i": 0,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 635,
+     "ok": true,
+     "latency_s": 0.863
+    },
+    {
+     "i": 0,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 5560,
+     "ok": true,
+     "latency_s": 1.03
+    },
+    {
+     "i": 0,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 68594,
+     "ok": true,
+     "latency_s": 5.717
+    },
+    {
+     "i": 1,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 635,
+     "ok": true,
+     "latency_s": 0.781
+    },
+    {
+     "i": 1,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 5816,
+     "ok": true,
+     "latency_s": 1.024
+    },
+    {
+     "i": 1,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 71309,
+     "ok": true,
+     "latency_s": 5.611
+    },
+    {
+     "i": 2,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 635,
+     "ok": true,
+     "latency_s": 1.194
+    },
+    {
+     "i": 2,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 5816,
+     "ok": true,
+     "latency_s": 1.207
+    },
+    {
+     "i": 2,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 75474,
+     "ok": true,
+     "latency_s": 6.258
+    },
+    {
+     "i": 3,
+     "shape": "small",
+     "bytes": 146,
+     "status": 200,
+     "bytes_out": 635,
+     "ok": true,
+     "latency_s": 0.747
+    },
+    {
+     "i": 3,
+     "shape": "tools",
+     "bytes": 14377,
+     "status": 200,
+     "bytes_out": 5526,
+     "ok": true,
+     "latency_s": 1.206
+    },
+    {
+     "i": 3,
+     "shape": "long",
+     "bytes": 193,
+     "status": 200,
+     "bytes_out": 72779,
+     "ok": true,
+     "latency_s": 5.918
+    }
+   ],
+   "relay_requests": 13,
+   "relay_failures": 0,
+   "reasoning_effort_seen": [
+    "low"
+   ]
+  }
+ },
+ "stable": true,
+ "finished_utc": "2026-10-31T13:28:52Z"
+}

@@ -1,0 +1,21 @@
+ bench/README.md                                    |  13 +-
+ bench/fixtures/report-golden/bench-cpu-dark.svg    |  53 +++++
+ bench/fixtures/report-golden/bench-cpu-light.svg   |  53 +++++
+ bench/fixtures/report-golden/bench-hero-dark.svg   |  54 +++++
+ bench/fixtures/report-golden/bench-hero-light.svg  |  54 +++++
+ bench/fixtures/report-golden/bench-long-dark.svg   |  56 +++++
+ bench/fixtures/report-golden/bench-long-light.svg  |  56 +++++
+ bench/fixtures/report-golden/bench-memory-dark.svg |  77 +++++++
+ .../fixtures/report-golden/bench-memory-light.svg  |  77 +++++++
+ .../fixtures/report-golden/bench-plugins-dark.svg  |  33 +++
+ .../fixtures/report-golden/bench-plugins-light.svg |  33 +++
+ bench/fixtures/report-golden/bench-speed-dark.svg  |  53 +++++
+ bench/fixtures/report-golden/bench-speed-light.svg |  53 +++++
+ bench/fixtures/report/environment.txt              |   5 +
+ bench/fixtures/report/large_write-1.txt            |  14 ++
+ bench/fixtures/report/large_write-2.txt            |  14 ++
+ bench/fixtures/report/long_answer-1.txt            |  14 ++
+ bench/fixtures/report/long_answer-2.txt            |  14 ++
+ bench/report.py                                    |  50 +++--
+ bench/test_report.py                               | 232 +++++++++++++++++++++
+ 20 files changed, 992 insertions(+), 16 deletions(-)

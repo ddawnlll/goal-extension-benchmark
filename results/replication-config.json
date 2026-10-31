@@ -1,0 +1,50 @@
+{
+ "replication_of": "results/FINAL_REPORT.md (trial s0, preserved unchanged)",
+ "started_utc": "2026-10-31T13:25:00Z",
+ "purpose": "clean controlled replication: remove the relay confounder of s0 and test whether the speed gap persists",
+ "changes_vs_exploratory": {
+  "thinking_level": "low for both competitors (exploratory used high); requested by operator; constant across arms",
+  "memory_limit": "6g for both (exploratory 4g). At 4 GiB two GLLA containers were killed mid-audit with no final state; at 6 GiB GLLA completed with ExitCode 0 and OOMKilled=false in a diagnostic run. Exact kill cause at 4 GiB was not captured (container removed before inspect).",
+  "relay": "unchanged image goalbench/relay:1 (decoupled reader, no forced Connection: close); no code changes after preflight",
+  "collection": "per-run volume snapshot immediately after each run (the exploratory collection read both trials from one volume)"
+ },
+ "pinned": {
+  "pi_bolt_release": "bolt-v1.0.8 linux-arm64",
+  "pi_bolt_sha256": "f530486723c7ab9004aca51f6f9494b95861fba7287c05ae8804647d63077de1",
+  "baseline_commit": "fd4530c9611f0cffc18aa226c985fcc2603d2577",
+  "task_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+  "glla": "0.39.54 b1c36dc7389077f8b3409183277d12588cc60dae",
+  "pi_goal_x": "0.34.1 b0fc15ebb658a1e9ea60ae65496717a780080f37",
+  "model": "deepseek-v4.1-flash (deepseek-v4.1-flash id), reasoning effort low, 1M context, max output 32768 per models.json"
+ },
+ "images": {
+  "base": "sha256:8969f50278ecb346c7fbb3811c0abbb76c07778d0e59cdf4fc9400acd5425963",
+  "relay": "sha256:b9376fbc45a3237856434d994f5c2747d4eb43909dd65bed0a8c3b6d8aef50e1",
+  "eval": "sha256:12d080e1c677c98d42e30d405ec013090655370e535bf5dce1393e59e0b207d1"
+ },
+ "isolation": "unchanged from s0: per-competitor internal network + relay, read-only rootfs, non-root, cap-drop, 2 CPU, pids 512, fresh volume per run",
+ "preflight": "results/replication-preflight.json (24/24 requests succeeded, 0 relay failures, reasoning_effort=low observed upstream)",
+ "trials": {
+  "r1": {
+   "order": [
+    "glla",
+    "goal-x"
+   ],
+   "utc": [
+    "2026-10-31T15:00:15Z",
+    "2026-10-31T15:22:30Z"
+   ]
+  },
+  "r2": {
+   "order": [
+    "goal-x",
+    "glla"
+   ],
+   "utc": [
+    "2026-10-31T15:22:30Z",
+    "2026-10-31T15:30:37Z"
+   ]
+  }
+ },
+ "sleep_monitor": "pmset -g log polled every 20s during each run; any new Sleep/Wake entry marks the run invalid"
+}

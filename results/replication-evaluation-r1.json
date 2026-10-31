@@ -1,0 +1,212 @@
+{
+ "trial": "r1",
+ "anonymization": {
+  "goal-x": "C1",
+  "glla": "C2"
+ },
+ "candidates": {
+  "glla": {
+   "anonymous_id": "C2",
+   "tests": {
+    "frozen": {
+     "passed": 10,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 10 passed, 2 warnings in 0.74s ========================"
+    },
+    "adversarial": {
+     "passed": 6,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 6 passed, 2 warnings in 0.01s ========================="
+    }
+   },
+   "changed": [
+    {
+     "status": "M",
+     "path": "bench/README.md"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-cpu-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-cpu-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-hero-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-hero-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-long-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-long-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-memory-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-memory-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-plugins-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-plugins-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-speed-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-speed-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/environment.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/large_write-1.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/large_write-2.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/long_answer-1.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/long_answer-2.txt"
+    },
+    {
+     "status": "M",
+     "path": "bench/report.py"
+    },
+    {
+     "status": "A",
+     "path": "bench/test_report.py"
+    }
+   ],
+   "datasets_modified": [],
+   "out_of_scope": [
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-cpu-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-cpu-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-hero-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-hero-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-long-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-long-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-memory-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-memory-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-plugins-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-plugins-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-speed-dark.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report-golden/bench-speed-light.svg"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/environment.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/large_write-1.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/large_write-2.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/long_answer-1.txt"
+    },
+    {
+     "status": "A",
+     "path": "bench/fixtures/report/long_answer-2.txt"
+    }
+   ]
+  },
+  "goal-x": {
+   "anonymous_id": "C1",
+   "tests": {
+    "frozen": {
+     "passed": 10,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 10 passed, 2 warnings in 0.66s ========================"
+    },
+    "adversarial": {
+     "passed": 6,
+     "failed": 0,
+     "failures": [],
+     "summary": "======================== 6 passed, 2 warnings in 0.01s ========================="
+    }
+   },
+   "changed": [
+    {
+     "status": "M",
+     "path": "bench/README.md"
+    },
+    {
+     "status": "M",
+     "path": "bench/report.py"
+    },
+    {
+     "status": "A",
+     "path": "bench/test_report.py"
+    }
+   ],
+   "datasets_modified": [],
+   "out_of_scope": []
+  }
+ }
+}

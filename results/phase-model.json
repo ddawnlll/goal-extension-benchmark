@@ -1,0 +1,161 @@
+{
+ "generated_from": [
+  "results/logs",
+  "results/audit-records",
+  "results/replication-timelines.json",
+  "results/*-metrics.json"
+ ],
+ "runs": [
+  {
+   "extension": "glla",
+   "trial": "s0",
+   "label": "GLLA s0",
+   "total_s": 956.0,
+   "segments": {
+    "drafting": 109.9,
+    "coding": 298.8,
+    "reconciliation": 267.9,
+    "audit": 277.1,
+    "rework": 0.0,
+    "settlement": 2.3
+   },
+   "drift_s": -0.0,
+   "audit_spans_s": [
+    277.1
+   ],
+   "tokens": {
+    "input": 198523,
+    "output": 97141,
+    "cost": 0.219
+   },
+   "exit_reason": "extension_state_terminal",
+   "started_utc": null
+  },
+  {
+   "extension": "goal-x",
+   "trial": "s0",
+   "label": "pi-goal-x s0",
+   "total_s": 598.9,
+   "segments": {
+    "drafting": 32.9,
+    "coding": 290.1,
+    "reconciliation": -0.0,
+    "audit": 249.1,
+    "rework": 0.0,
+    "settlement": 26.8
+   },
+   "drift_s": -0.0,
+   "audit_spans_s": [
+    249.1
+   ],
+   "tokens": {
+    "input": 120549,
+    "output": 29258,
+    "cost": 0.082
+   },
+   "exit_reason": "extension_state_terminal",
+   "started_utc": null
+  },
+  {
+   "extension": "glla",
+   "trial": "r1",
+   "label": "GLLA r1",
+   "total_s": 698.7,
+   "segments": {
+    "drafting": 89.3,
+    "coding": 234.1,
+    "reconciliation": 211.5,
+    "audit": 154.8,
+    "rework": 0.0,
+    "settlement": 9.0
+   },
+   "drift_s": 0.0,
+   "audit_spans_s": [
+    154.8
+   ],
+   "tokens": {
+    "input": 169217,
+    "output": 61168,
+    "cost": 0.1665
+   },
+   "exit_reason": "extension_state_terminal",
+   "started_utc": "2026-10-31T15:00:33Z"
+  },
+  {
+   "extension": "goal-x",
+   "trial": "r1",
+   "label": "pi-goal-x r1",
+   "total_s": 297.7,
+   "segments": {
+    "drafting": 50.7,
+    "coding": 138.4,
+    "reconciliation": 0.5,
+    "audit": 80.8,
+    "rework": 0.0,
+    "settlement": 27.4
+   },
+   "drift_s": -0.1,
+   "audit_spans_s": [
+    80.8
+   ],
+   "tokens": {
+    "input": 93128,
+    "output": 19745,
+    "cost": 0.058
+   },
+   "exit_reason": "extension_state_terminal",
+   "started_utc": "2026-10-31T15:13:29Z"
+  },
+  {
+   "extension": "glla",
+   "trial": "r2",
+   "label": "GLLA r2",
+   "total_s": 622.2,
+   "segments": {
+    "drafting": 70.3,
+    "coding": 232.0,
+    "reconciliation": 1.2,
+    "audit": 267.9,
+    "rework": 41.8,
+    "settlement": 9.0
+   },
+   "drift_s": -0.0,
+   "audit_spans_s": [
+    109.6,
+    158.3
+   ],
+   "tokens": {
+    "input": 172182,
+    "output": 62682,
+    "cost": 0.148
+   },
+   "exit_reason": "extension_state_terminal",
+   "started_utc": "2026-10-31T15:30:52Z"
+  },
+  {
+   "extension": "goal-x",
+   "trial": "r2",
+   "label": "pi-goal-x r2",
+   "total_s": 430.0,
+   "segments": {
+    "drafting": 26.4,
+    "coding": 110.4,
+    "reconciliation": 0.5,
+    "audit": 265.5,
+    "rework": 0.0,
+    "settlement": 27.1
+   },
+   "drift_s": 0.1,
+   "audit_spans_s": [
+    265.5
+   ],
+   "tokens": {
+    "input": 65917,
+    "output": 14179,
+    "cost": 0.0408
+   },
+   "exit_reason": "extension_state_terminal",
+   "started_utc": "2026-10-31T15:22:40Z"
+  }
+ ]
+}

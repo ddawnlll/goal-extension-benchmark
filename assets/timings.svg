@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420" role="img" aria-label="Wall clock to an independently verified completion">
+<rect width="920" height="420" fill="#ffffff"/>
+<rect x="0.5" y="0.5" width="919" height="419" fill="none" stroke="#e5e7eb"/>
+<text x="26.0" y="34.0" font-size="17" font-weight="650" fill="#111827" text-anchor="start">Wall clock to an independently verified completion</text>
+<text x="26.0" y="55.0" font-size="12" font-weight="400" fill="#6b7280" text-anchor="start">seconds per run; lower is better. The shaded runs are the exploratory trial.</text>
+<defs><pattern id="exploratory" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#ffffff"/><line x1="0" y1="0" x2="0" y2="6" stroke="#9ca3af" stroke-width="2"/></pattern></defs>
+<text x="190.0" y="84.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">0</text>
+<line x1="345.0" y1="90" x2="345.0" y2="290" stroke="#e5e7eb"/>
+<text x="345.0" y="84.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="middle">239 s</text>
+<line x1="500.0" y1="90" x2="500.0" y2="290" stroke="#e5e7eb"/>
+<text x="500.0" y="84.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="middle">478 s</text>
+<line x1="655.0" y1="90" x2="655.0" y2="290" stroke="#e5e7eb"/>
+<text x="655.0" y="84.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="middle">717 s</text>
+<line x1="810.0" y1="90" x2="810.0" y2="290" stroke="#e5e7eb"/>
+<text x="810.0" y="84.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="middle">956 s</text>
+<text x="176.0" y="115.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="end">GLLA  s0</text>
+<rect x="190.0" y="100.0" width="620.0" height="22.0" fill="#1d4ed8" rx="3"/>
+<rect x="190.0" y="100.0" width="620.0" height="22.0" fill="url(#exploratory)" rx="3"/>
+<text x="818.0" y="116.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">956.0 s</text>
+<text x="176.0" y="149.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">GLLA  r1</text>
+<rect x="190.0" y="134.0" width="453.1" height="22.0" fill="#1d4ed8" rx="3"/>
+<text x="651.1" y="150.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">698.7 s</text>
+<text x="176.0" y="183.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">GLLA  r2</text>
+<rect x="190.0" y="168.0" width="403.5" height="22.0" fill="#1d4ed8" rx="3"/>
+<text x="601.5" y="184.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">622.2 s</text>
+<text x="176.0" y="217.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="end">pi-goal-x  s0</text>
+<rect x="190.0" y="202.0" width="388.4" height="22.0" fill="#c2410c" rx="3"/>
+<rect x="190.0" y="202.0" width="388.4" height="22.0" fill="url(#exploratory)" rx="3"/>
+<text x="586.4" y="218.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">598.9 s</text>
+<text x="176.0" y="251.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x  r1</text>
+<rect x="190.0" y="236.0" width="193.1" height="22.0" fill="#c2410c" rx="3"/>
+<text x="391.1" y="252.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">297.7 s</text>
+<text x="176.0" y="285.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x  r2</text>
+<rect x="190.0" y="270.0" width="278.9" height="22.0" fill="#c2410c" rx="3"/>
+<text x="476.9" y="286.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">430.0 s</text>
+<line x1="26" y1="308" x2="894" y2="308" stroke="#e5e7eb"/>
+<text x="26.0" y="328.0" font-size="12" font-weight="650" fill="#111827" text-anchor="start">Controlled pairs only (r1, r2)</text>
+<text x="176.0" y="357.0" font-size="12" font-weight="600" fill="#111827" text-anchor="end">GLLA</text>
+<line x1="190" y1="352" x2="643.1" y2="352" stroke="#1d4ed8" stroke-width="4"/>
+<line x1="190" y1="346" x2="190" y2="358" stroke="#1d4ed8" stroke-width="2"/>
+<line x1="643.1" y1="346" x2="643.1" y2="358" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="618.4" cy="352" r="6" fill="#ffffff" stroke="#1d4ed8" stroke-width="3"/>
+<text x="653.1" y="357.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">median 660.5 s  (range 622.2–698.7)</text>
+<text x="176.0" y="383.0" font-size="12" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x</text>
+<line x1="190" y1="378" x2="468.9" y2="378" stroke="#c2410c" stroke-width="4"/>
+<line x1="190" y1="372" x2="190" y2="384" stroke="#c2410c" stroke-width="2"/>
+<line x1="468.9" y1="372" x2="468.9" y2="384" stroke="#c2410c" stroke-width="2"/>
+<circle cx="426.0" cy="378" r="6" fill="#ffffff" stroke="#c2410c" stroke-width="3"/>
+<text x="478.9" y="383.0" font-size="12" font-weight="600" fill="#111827" text-anchor="start">median 363.9 s  (range 297.7–430.0)</text>
+</svg>

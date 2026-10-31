@@ -1,0 +1,25 @@
+metric,glla (r1 / r2),pi-goal-x (r1 / r2)
+Runs (valid),2 (2),2 (2)
+"Total elapsed, s",698.7 / 622.2,297.7 / 430.0
+"Median total elapsed, s",660.5,363.9
+"Range, s",622.2–698.7,297.7–430.0
+"Drafting/confirmation, s",89.3 / 70.3,50.7 / 26.4
+"Coding + self-testing, s",234.2 / 232.0,138.4 / 110.4
+"Deterministic-contract reconciliation, s",188.5 / 0,0 / 0
+"Model audit time, s",154.8 / 267.9,80.8 / 265.5
+"Redundant auditing after acceptance, s",0 / 0,0 / 0
+"Settlement tail after approval, s",10 / 9,28 / 28
+Model requests,49 / 42,27 / 23
+Relay failures,0 / 0,0 / 0
+Input tokens,"169,217 / 172,182","93,128 / 65,917"
+Output tokens,"61,168 / 62,682","19,745 / 14,179"
+Cached input tokens,"7,052,416 / 3,518,336","1,065,600 / 660,608"
+"Nominal cost, USD",0.167 / 0.148,0.058 / 0.041
+Audit verdicts,2 deterministic + 1 model / 0 deterministic + 2 model,1 model / 1 model
+Audit rejections (model),0 / 1,0 / 0
+Independent tests (frozen+adversarial),16/16 / 16/16,16/16 / 16/16
+CLI parity (--help byte-identical),pass / pass,FAIL / pass
+Changed files,19 / 3,3 / 3
+Manual interventions,0 / 0,0 / 0
+Container OOM kills,0 / 0,0 / 0
+Final classification,VERIFIED_COMPLETE / VERIFIED_COMPLETE,VERIFIED_COMPLETE / VERIFIED_COMPLETE

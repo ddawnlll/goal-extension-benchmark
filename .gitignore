@@ -1,0 +1,20 @@
+# Local, machine-specific, or large inputs. The benchmark pins these by version
+# and hash instead of vendoring them.
+harness/runtime/
+harness/.secrets/
+harness/.tmp/
+harness/.tmp-*
+*/workspace/
+competitors/_glla-src/
+competitors/_goalx-src/
+results/diagnostics/*/workspace/
+results/invalid/*/workspace/
+
+# Archives and build output
+*.tar.xz
+*.tar.gz
+*.zip
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store

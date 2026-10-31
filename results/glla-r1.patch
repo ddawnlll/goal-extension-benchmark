@@ -1,0 +1,1209 @@
+diff --git a/bench/README.md b/bench/README.md
+index 566c327bb..1c8040b57 100644
+--- a/bench/README.md
++++ b/bench/README.md
+@@ -27,13 +27,24 @@ throwaway Pi home, so runs are isolated from your Pi configuration and from each
+ | `run-suite.sh` | Runs all of the benchmarks above into one results folder, then `report.py`: what the README and docs/BENCHMARKS.md show. |
+ | `run-suite.ps1` | The same on Windows: Pi-Bolt, Pi on stock Bun, Node 22 and Node 24; `conpty_check.py` for `tmux_check.py`, and `pauses.py` (frames and GC pauses), `long_answer.py` and `large_write.py` too. Writes `environment.txt` (CPU, Windows build, Defender, power) and `summary.md`. |
+ | `report.py` | Draws the charts (light and dark SVG) and prints the tables, from a results folder. |
++| `test_report.py` | The SVG writer's tests: escaping, injection, Unicode, and the charts of `fixtures/report` against `fixtures/report-golden`. `python3 -m unittest bench/test_report.py -v`, standard library only. |
+ | `fake_model.py`, `fake_model_tools.py`, `fake_model_stress.py` | The scripted OpenAI-compatible model servers the tools start. |
+ | `harness.py` | Shared pieces: build parsing, model server, Pi home, pseudo-terminal, CPU and memory readings. |
+-| `fixtures/` | Four Pi source files (MIT, from Pi) that the scripted model asks Pi to read. |
++| `fixtures/` | Four Pi source files (MIT, from Pi) that the scripted model asks Pi to read. `report/`, a small synthetic results folder `test_report.py` draws charts from; `report-golden/`, those charts as they were drawn before text escaping was added. |
+ | `floor/floor.c` | The process floor (`benchmark.py --floor`): a minimal native program that takes Pi's arguments and answers each scenario as Pi does. |
+ 
+ `results/` holds the published runs: the raw JSONL of each tool, with a note on what was compared.
+ 
++## Text in the charts
++
++The charts are SVG documents, and the text in them is not all written by `report.py`: a build's column name comes from `--label`
++or `environment.txt`, the panel and step names from the results' JSONL, and the plugin names from `plugins.jsonl`. Such text is
++escaped once, where it is written into the markup (`esc` for text, the same for attribute values such as `aria-label`): `&`, `<`,
++`>`, `"` and `'` become entities, code points XML forbids even escaped are dropped, and everything else — Unicode, the en dash and
++the multiplication sign included — is written as it is. A label cannot end a text node, open an element or an attribute, or add a
++script. The layout still measures the unescaped text, so ordinary charts come out byte for byte as before; `test_report.py` pins
++that against the golden charts and parses every generated document with `xml.etree`.
++
+ Requires Python 3.9+; `tmux_check.py` also needs tmux. Pin runs to idle cores with `--cpus` for stable figures. See
+ [docs/BENCHMARKS.md](../docs/BENCHMARKS.md) for methodology and results.
+ 
+diff --git a/bench/fixtures/report-golden/bench-cpu-dark.svg b/bench/fixtures/report-golden/bench-cpu-dark.svg
+new file mode 100644
+index 000000000..8fc22ed3a
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-cpu-dark.svg
+@@ -0,0 +1,53 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="378" viewBox="0 0 880 378" role="img" aria-label="CPU time: All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">CPU time</text>
++<text x="24" y="56" font-size="13.5" fill="#9198a1">All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#f0f6fc">Interactive session: 5 prompts</text>
++<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,114 h66.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.6 z" fill="#3987e5"/>
++<text x="211.6" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">302 ms</text>
++<text x="271.7" y="126.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,144 h136.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.8 z" fill="#6e7681"/>
++<text x="281.8" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">602 ms</text>
++<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">902 ms</text>
++<line x1="133" y1="108" x2="133" y2="196" stroke="#3d444d"/>
++<text x="452" y="96" font-size="15" font-weight="600" fill="#f0f6fc">pi -p: one prompt</text>
++<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,114 h68.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-68.2 z" fill="#3987e5"/>
++<text x="641.2" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">52 ms</text>
++<text x="693.3" y="126.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,144 h137.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-137.6 z" fill="#6e7681"/>
++<text x="710.6" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">102 ms</text>
++<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">152 ms</text>
++<line x1="561" y1="108" x2="561" y2="196" stroke="#3d444d"/>
++<text x="24" y="246" font-size="15" font-weight="600" fill="#f0f6fc">pi --version</text>
++<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,264 h70.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-70.0 z" fill="#3987e5"/>
++<text x="215.0" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">27 ms</text>
++<text x="267.1" y="276.5" font-size="12.5" fill="#9198a1">1.9× less</text>
++<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,294 h138.5 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-138.5 z" fill="#6e7681"/>
++<text x="283.5" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">52 ms</text>
++<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">77 ms</text>
++<line x1="133" y1="258" x2="133" y2="346" stroke="#3d444d"/>
++<text x="452" y="246" font-size="15" font-weight="600" fill="#f0f6fc">Per prompt, 1.4M-token session</text>
++<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,264 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#3987e5"/>
++<text x="639.3" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">50 ms</text>
++<text x="691.4" y="276.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,294 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#6e7681"/>
++<text x="709.7" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">100 ms</text>
++<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">150 ms</text>
++<line x1="561" y1="258" x2="561" y2="346" stroke="#3d444d"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-cpu-light.svg b/bench/fixtures/report-golden/bench-cpu-light.svg
+new file mode 100644
+index 000000000..1dcf636d5
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-cpu-light.svg
+@@ -0,0 +1,53 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="378" viewBox="0 0 880 378" role="img" aria-label="CPU time: All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">CPU time</text>
++<text x="24" y="56" font-size="13.5" fill="#59636e">All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#1f2328">Interactive session: 5 prompts</text>
++<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,114 h66.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.6 z" fill="#2a78d6"/>
++<text x="211.6" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">302 ms</text>
++<text x="271.7" y="126.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,144 h136.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.8 z" fill="#848d97"/>
++<text x="281.8" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">602 ms</text>
++<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">902 ms</text>
++<line x1="133" y1="108" x2="133" y2="196" stroke="#d1d9e0"/>
++<text x="452" y="96" font-size="15" font-weight="600" fill="#1f2328">pi -p: one prompt</text>
++<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,114 h68.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-68.2 z" fill="#2a78d6"/>
++<text x="641.2" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">52 ms</text>
++<text x="693.3" y="126.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,144 h137.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-137.6 z" fill="#848d97"/>
++<text x="710.6" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">102 ms</text>
++<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">152 ms</text>
++<line x1="561" y1="108" x2="561" y2="196" stroke="#d1d9e0"/>
++<text x="24" y="246" font-size="15" font-weight="600" fill="#1f2328">pi --version</text>
++<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,264 h70.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-70.0 z" fill="#2a78d6"/>
++<text x="215.0" y="276.5" font-size="13.5" font-weight="650" fill="#1f2328">27 ms</text>
++<text x="267.1" y="276.5" font-size="12.5" fill="#59636e">1.9× less</text>
++<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,294 h138.5 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-138.5 z" fill="#848d97"/>
++<text x="283.5" y="306.5" font-size="13.5" font-weight="400" fill="#1f2328">52 ms</text>
++<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">77 ms</text>
++<line x1="133" y1="258" x2="133" y2="346" stroke="#d1d9e0"/>
++<text x="452" y="246" font-size="15" font-weight="600" fill="#1f2328">Per prompt, 1.4M-token session</text>
++<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,264 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#2a78d6"/>
++<text x="639.3" y="276.5" font-size="13.5" font-weight="650" fill="#1f2328">50 ms</text>
++<text x="691.4" y="276.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,294 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#848d97"/>
++<text x="709.7" y="306.5" font-size="13.5" font-weight="400" fill="#1f2328">100 ms</text>
++<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">150 ms</text>
++<line x1="561" y1="258" x2="561" y2="346" stroke="#d1d9e0"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-hero-dark.svg b/bench/fixtures/report-golden/bench-hero-dark.svg
+new file mode 100644
+index 000000000..f519deb65
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-hero-dark.svg
+@@ -0,0 +1,54 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="214" viewBox="0 0 880 214" role="img" aria-label="Pi-Bolt compared with Bun and Node">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24.0" y="22" font-size="13" font-weight="600" fill="#9198a1">Ready to type</text>
++<text x="24.0" y="62" font-size="36" font-weight="700" fill="#f0f6fc">202<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">ms</tspan></text>
++<text x="24.0" y="88" font-size="13" font-weight="600" fill="#f0f6fc">2.0× faster than Bun</text>
++<text x="24.0" y="118" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="211.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">202 ms</text>
++<rect x="24.0" y="125" width="62.7" height="6" rx="3" fill="#3987e5"/>
++<text x="24.0" y="148" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="211.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">402 ms</text>
++<rect x="24.0" y="155" width="124.9" height="6" rx="3" fill="#6e7681"/>
++<text x="24.0" y="178" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="211.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">602 ms</text>
++<rect x="24.0" y="185" width="187.0" height="6" rx="3" fill="#6e7681"/>
++<line x1="225.0" y1="10" x2="225.0" y2="202" stroke="#3d444d"/>
++<text x="239.0" y="22" font-size="13" font-weight="600" fill="#9198a1">CPU per session</text>
++<text x="239.0" y="62" font-size="36" font-weight="700" fill="#f0f6fc">302<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">ms</tspan></text>
++<text x="239.0" y="88" font-size="13" font-weight="600" fill="#f0f6fc">2.0× less than Bun</text>
++<text x="239.0" y="118" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="426.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">302 ms</text>
++<rect x="239.0" y="125" width="62.6" height="6" rx="3" fill="#3987e5"/>
++<text x="239.0" y="148" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="426.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">602 ms</text>
++<rect x="239.0" y="155" width="124.8" height="6" rx="3" fill="#6e7681"/>
++<text x="239.0" y="178" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="426.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">902 ms</text>
++<rect x="239.0" y="185" width="187.0" height="6" rx="3" fill="#6e7681"/>
++<line x1="440.0" y1="10" x2="440.0" y2="202" stroke="#3d444d"/>
++<text x="454.0" y="22" font-size="13" font-weight="600" fill="#9198a1">CPU while streaming</text>
++<text x="454.0" y="62" font-size="36" font-weight="700" fill="#f0f6fc">50<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">ms</tspan></text>
++<text x="454.0" y="88" font-size="13" font-weight="600" fill="#f0f6fc">2.0× less than Bun</text>
++<text x="454.0" y="118" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="641.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">50 ms</text>
++<rect x="454.0" y="125" width="62.7" height="6" rx="3" fill="#3987e5"/>
++<text x="454.0" y="148" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="641.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">100 ms</text>
++<rect x="454.0" y="155" width="124.9" height="6" rx="3" fill="#6e7681"/>
++<text x="454.0" y="178" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="641.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">150 ms</text>
++<rect x="454.0" y="185" width="187.0" height="6" rx="3" fill="#6e7681"/>
++<line x1="655.0" y1="10" x2="655.0" y2="202" stroke="#3d444d"/>
++<text x="669.0" y="22" font-size="13" font-weight="600" fill="#9198a1">Memory, long session</text>
++<text x="669.0" y="62" font-size="36" font-weight="700" fill="#f0f6fc">50<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">MB</tspan></text>
++<text x="669.0" y="88" font-size="13" font-weight="600" fill="#f0f6fc">2.0× less than Bun</text>
++<text x="669.0" y="118" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="856.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">50 MB</text>
++<rect x="669.0" y="125" width="62.3" height="6" rx="3" fill="#3987e5"/>
++<text x="669.0" y="148" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="856.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">100 MB</text>
++<rect x="669.0" y="155" width="124.7" height="6" rx="3" fill="#6e7681"/>
++<text x="669.0" y="178" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="856.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">150 MB</text>
++<rect x="669.0" y="185" width="187.0" height="6" rx="3" fill="#6e7681"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-hero-light.svg b/bench/fixtures/report-golden/bench-hero-light.svg
+new file mode 100644
+index 000000000..8d646e836
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-hero-light.svg
+@@ -0,0 +1,54 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="214" viewBox="0 0 880 214" role="img" aria-label="Pi-Bolt compared with Bun and Node">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24.0" y="22" font-size="13" font-weight="600" fill="#59636e">Ready to type</text>
++<text x="24.0" y="62" font-size="36" font-weight="700" fill="#1f2328">202<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">ms</tspan></text>
++<text x="24.0" y="88" font-size="13" font-weight="600" fill="#1f2328">2.0× faster than Bun</text>
++<text x="24.0" y="118" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="211.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">202 ms</text>
++<rect x="24.0" y="125" width="62.7" height="6" rx="3" fill="#2a78d6"/>
++<text x="24.0" y="148" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="211.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">402 ms</text>
++<rect x="24.0" y="155" width="124.9" height="6" rx="3" fill="#848d97"/>
++<text x="24.0" y="178" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="211.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">602 ms</text>
++<rect x="24.0" y="185" width="187.0" height="6" rx="3" fill="#848d97"/>
++<line x1="225.0" y1="10" x2="225.0" y2="202" stroke="#d1d9e0"/>
++<text x="239.0" y="22" font-size="13" font-weight="600" fill="#59636e">CPU per session</text>
++<text x="239.0" y="62" font-size="36" font-weight="700" fill="#1f2328">302<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">ms</tspan></text>
++<text x="239.0" y="88" font-size="13" font-weight="600" fill="#1f2328">2.0× less than Bun</text>
++<text x="239.0" y="118" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="426.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">302 ms</text>
++<rect x="239.0" y="125" width="62.6" height="6" rx="3" fill="#2a78d6"/>
++<text x="239.0" y="148" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="426.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">602 ms</text>
++<rect x="239.0" y="155" width="124.8" height="6" rx="3" fill="#848d97"/>
++<text x="239.0" y="178" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="426.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">902 ms</text>
++<rect x="239.0" y="185" width="187.0" height="6" rx="3" fill="#848d97"/>
++<line x1="440.0" y1="10" x2="440.0" y2="202" stroke="#d1d9e0"/>
++<text x="454.0" y="22" font-size="13" font-weight="600" fill="#59636e">CPU while streaming</text>
++<text x="454.0" y="62" font-size="36" font-weight="700" fill="#1f2328">50<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">ms</tspan></text>
++<text x="454.0" y="88" font-size="13" font-weight="600" fill="#1f2328">2.0× less than Bun</text>
++<text x="454.0" y="118" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="641.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">50 ms</text>
++<rect x="454.0" y="125" width="62.7" height="6" rx="3" fill="#2a78d6"/>
++<text x="454.0" y="148" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="641.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">100 ms</text>
++<rect x="454.0" y="155" width="124.9" height="6" rx="3" fill="#848d97"/>
++<text x="454.0" y="178" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="641.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">150 ms</text>
++<rect x="454.0" y="185" width="187.0" height="6" rx="3" fill="#848d97"/>
++<line x1="655.0" y1="10" x2="655.0" y2="202" stroke="#d1d9e0"/>
++<text x="669.0" y="22" font-size="13" font-weight="600" fill="#59636e">Memory, long session</text>
++<text x="669.0" y="62" font-size="36" font-weight="700" fill="#1f2328">50<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">MB</tspan></text>
++<text x="669.0" y="88" font-size="13" font-weight="600" fill="#1f2328">2.0× less than Bun</text>
++<text x="669.0" y="118" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="856.0" y="118" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">50 MB</text>
++<rect x="669.0" y="125" width="62.3" height="6" rx="3" fill="#2a78d6"/>
++<text x="669.0" y="148" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="856.0" y="148" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">100 MB</text>
++<rect x="669.0" y="155" width="124.7" height="6" rx="3" fill="#848d97"/>
++<text x="669.0" y="178" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="856.0" y="178" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">150 MB</text>
++<rect x="669.0" y="185" width="187.0" height="6" rx="3" fill="#848d97"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-long-dark.svg b/bench/fixtures/report-golden/bench-long-dark.svg
+new file mode 100644
+index 000000000..ec441ad01
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-long-dark.svg
+@@ -0,0 +1,56 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="280" viewBox="0 0 880 280" role="img" aria-label="Long answers and large files">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">Long answers and large files</text>
++<text x="24" y="54" font-size="13.5" fill="#9198a1">Answers streamed at 1,200 characters a second; a file written through a tool call. Lower is better.</text>
++<text x="24.0" y="88" font-size="13" font-weight="600" fill="#9198a1">CPU, 20,000-char answer</text>
++<text x="24.0" y="128" font-size="36" font-weight="700" fill="#f0f6fc">0.3<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">s</tspan></text>
++<text x="24.0" y="154" font-size="13" font-weight="600" fill="#f0f6fc">2.0× less than Bun</text>
++<text x="24.0" y="184" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="211.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">0.3 s</text>
++<rect x="24.0" y="191" width="62.7" height="6" rx="3" fill="#3987e5"/>
++<text x="24.0" y="214" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="211.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">0.5 s</text>
++<rect x="24.0" y="221" width="124.3" height="6" rx="3" fill="#6e7681"/>
++<text x="24.0" y="244" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="211.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">0.8 s</text>
++<rect x="24.0" y="251" width="187.0" height="6" rx="3" fill="#6e7681"/>
++<line x1="225.0" y1="76" x2="225.0" y2="268" stroke="#3d444d"/>
++<text x="239.0" y="88" font-size="13" font-weight="600" fill="#9198a1">CPU, 60,000-char answer</text>
++<text x="239.0" y="128" font-size="36" font-weight="700" fill="#f0f6fc">0.8<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">s</tspan></text>
++<text x="239.0" y="154" font-size="13" font-weight="600" fill="#f0f6fc">2.0× less than Bun</text>
++<text x="239.0" y="184" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="426.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">0.8 s</text>
++<rect x="239.0" y="191" width="62.5" height="6" rx="3" fill="#3987e5"/>
++<text x="239.0" y="214" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="426.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">1.6 s</text>
++<rect x="239.0" y="221" width="124.5" height="6" rx="3" fill="#6e7681"/>
++<text x="239.0" y="244" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="426.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">2.4 s</text>
++<rect x="239.0" y="251" width="187.0" height="6" rx="3" fill="#6e7681"/>
++<line x1="440.0" y1="76" x2="440.0" y2="268" stroke="#3d444d"/>
++<text x="454.0" y="88" font-size="13" font-weight="600" fill="#9198a1">Share of a core, streaming</text>
++<text x="454.0" y="128" font-size="36" font-weight="700" fill="#f0f6fc">25%</text>
++<text x="454.0" y="154" font-size="13" font-weight="600" fill="#f0f6fc">same as Bun</text>
++<text x="454.0" y="184" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="641.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">25%</text>
++<rect x="454.0" y="191" width="187.0" height="6" rx="3" fill="#3987e5"/>
++<text x="454.0" y="214" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="641.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">25%</text>
++<rect x="454.0" y="221" width="186.4" height="6" rx="3" fill="#6e7681"/>
++<text x="454.0" y="244" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="641.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">25%</text>
++<rect x="454.0" y="251" width="186.6" height="6" rx="3" fill="#6e7681"/>
++<line x1="655.0" y1="76" x2="655.0" y2="268" stroke="#3d444d"/>
++<text x="669.0" y="88" font-size="13" font-weight="600" fill="#9198a1">Writing a 200 KB file</text>
++<text x="669.0" y="128" font-size="36" font-weight="700" fill="#f0f6fc">0.6<tspan font-size="16" font-weight="600" fill="#9198a1" dx="5">s</tspan></text>
++<text x="669.0" y="154" font-size="13" font-weight="600" fill="#f0f6fc">1.9× faster than Bun</text>
++<text x="669.0" y="184" font-size="12.5" font-weight="650" fill="#f0f6fc">Pi-Bolt 1.0.0</text>
++<text x="856.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#f0f6fc">0.6 s</text>
++<rect x="669.0" y="191" width="64.3" height="6" rx="3" fill="#3987e5"/>
++<text x="669.0" y="214" font-size="12.5" font-weight="400" fill="#9198a1">Bun 1.4.2</text>
++<text x="856.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">1.1 s</text>
++<rect x="669.0" y="221" width="122.7" height="6" rx="3" fill="#6e7681"/>
++<text x="669.0" y="244" font-size="12.5" font-weight="400" fill="#9198a1">Node 22</text>
++<text x="856.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#9198a1">1.6 s</text>
++<rect x="669.0" y="251" width="187.0" height="6" rx="3" fill="#6e7681"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-long-light.svg b/bench/fixtures/report-golden/bench-long-light.svg
+new file mode 100644
+index 000000000..31af3fdb0
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-long-light.svg
+@@ -0,0 +1,56 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="280" viewBox="0 0 880 280" role="img" aria-label="Long answers and large files">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">Long answers and large files</text>
++<text x="24" y="54" font-size="13.5" fill="#59636e">Answers streamed at 1,200 characters a second; a file written through a tool call. Lower is better.</text>
++<text x="24.0" y="88" font-size="13" font-weight="600" fill="#59636e">CPU, 20,000-char answer</text>
++<text x="24.0" y="128" font-size="36" font-weight="700" fill="#1f2328">0.3<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">s</tspan></text>
++<text x="24.0" y="154" font-size="13" font-weight="600" fill="#1f2328">2.0× less than Bun</text>
++<text x="24.0" y="184" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="211.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">0.3 s</text>
++<rect x="24.0" y="191" width="62.7" height="6" rx="3" fill="#2a78d6"/>
++<text x="24.0" y="214" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="211.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">0.5 s</text>
++<rect x="24.0" y="221" width="124.3" height="6" rx="3" fill="#848d97"/>
++<text x="24.0" y="244" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="211.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">0.8 s</text>
++<rect x="24.0" y="251" width="187.0" height="6" rx="3" fill="#848d97"/>
++<line x1="225.0" y1="76" x2="225.0" y2="268" stroke="#d1d9e0"/>
++<text x="239.0" y="88" font-size="13" font-weight="600" fill="#59636e">CPU, 60,000-char answer</text>
++<text x="239.0" y="128" font-size="36" font-weight="700" fill="#1f2328">0.8<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">s</tspan></text>
++<text x="239.0" y="154" font-size="13" font-weight="600" fill="#1f2328">2.0× less than Bun</text>
++<text x="239.0" y="184" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="426.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">0.8 s</text>
++<rect x="239.0" y="191" width="62.5" height="6" rx="3" fill="#2a78d6"/>
++<text x="239.0" y="214" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="426.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">1.6 s</text>
++<rect x="239.0" y="221" width="124.5" height="6" rx="3" fill="#848d97"/>
++<text x="239.0" y="244" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="426.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">2.4 s</text>
++<rect x="239.0" y="251" width="187.0" height="6" rx="3" fill="#848d97"/>
++<line x1="440.0" y1="76" x2="440.0" y2="268" stroke="#d1d9e0"/>
++<text x="454.0" y="88" font-size="13" font-weight="600" fill="#59636e">Share of a core, streaming</text>
++<text x="454.0" y="128" font-size="36" font-weight="700" fill="#1f2328">25%</text>
++<text x="454.0" y="154" font-size="13" font-weight="600" fill="#1f2328">same as Bun</text>
++<text x="454.0" y="184" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="641.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">25%</text>
++<rect x="454.0" y="191" width="187.0" height="6" rx="3" fill="#2a78d6"/>
++<text x="454.0" y="214" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="641.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">25%</text>
++<rect x="454.0" y="221" width="186.4" height="6" rx="3" fill="#848d97"/>
++<text x="454.0" y="244" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="641.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">25%</text>
++<rect x="454.0" y="251" width="186.6" height="6" rx="3" fill="#848d97"/>
++<line x1="655.0" y1="76" x2="655.0" y2="268" stroke="#d1d9e0"/>
++<text x="669.0" y="88" font-size="13" font-weight="600" fill="#59636e">Writing a 200 KB file</text>
++<text x="669.0" y="128" font-size="36" font-weight="700" fill="#1f2328">0.6<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">s</tspan></text>
++<text x="669.0" y="154" font-size="13" font-weight="600" fill="#1f2328">1.9× faster than Bun</text>
++<text x="669.0" y="184" font-size="12.5" font-weight="650" fill="#1f2328">Pi-Bolt 1.0.0</text>
++<text x="856.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">0.6 s</text>
++<rect x="669.0" y="191" width="64.3" height="6" rx="3" fill="#2a78d6"/>
++<text x="669.0" y="214" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
++<text x="856.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">1.1 s</text>
++<rect x="669.0" y="221" width="122.7" height="6" rx="3" fill="#848d97"/>
++<text x="669.0" y="244" font-size="12.5" font-weight="400" fill="#59636e">Node 22</text>
++<text x="856.0" y="244" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">1.6 s</text>
++<rect x="669.0" y="251" width="187.0" height="6" rx="3" fill="#848d97"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-memory-dark.svg b/bench/fixtures/report-golden/bench-memory-dark.svg
+new file mode 100644
+index 000000000..7d13ee164
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-memory-dark.svg
+@@ -0,0 +1,77 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="528" viewBox="0 0 880 528" role="img" aria-label="Memory and streaming: Lower is better. Own memory = private dirty pages. Ratios compare Pi-Bolt with Bun.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">Memory and streaming</text>
++<text x="24" y="56" font-size="13.5" fill="#9198a1">Lower is better. Own memory = private dirty pages. Ratios compare Pi-Bolt with Bun.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#f0f6fc">Peak memory, interactive session</text>
++<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,114 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#3987e5"/>
++<text x="211.3" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">100 MB</text>
++<text x="271.4" y="126.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,144 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#6e7681"/>
++<text x="281.7" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">200 MB</text>
++<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">300 MB</text>
++<line x1="133" y1="108" x2="133" y2="196" stroke="#3d444d"/>
++<text x="452" y="96" font-size="15" font-weight="600" fill="#f0f6fc">Peak own memory, interactive session</text>
++<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,114 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#3987e5"/>
++<text x="639.3" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">50 MB</text>
++<text x="691.4" y="126.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,144 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#6e7681"/>
++<text x="709.7" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">100 MB</text>
++<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">150 MB</text>
++<line x1="561" y1="108" x2="561" y2="196" stroke="#3d444d"/>
++<text x="24" y="246" font-size="15" font-weight="600" fill="#f0f6fc">Own memory, tmux session</text>
++<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,264 h66.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.8 z" fill="#3987e5"/>
++<text x="211.8" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">50 MB</text>
++<text x="263.9" y="276.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,294 h136.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.9 z" fill="#6e7681"/>
++<text x="281.9" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">100 MB</text>
++<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">150 MB</text>
++<line x1="133" y1="258" x2="133" y2="346" stroke="#3d444d"/>
++<text x="452" y="246" font-size="15" font-weight="600" fill="#f0f6fc">Own memory, end of 1.4M-token session</text>
++<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,264 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#3987e5"/>
++<text x="639.3" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">50 MB</text>
++<text x="691.4" y="276.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,294 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#6e7681"/>
++<text x="709.7" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">100 MB</text>
++<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">150 MB</text>
++<line x1="561" y1="258" x2="561" y2="346" stroke="#3d444d"/>
++<text x="24" y="396" font-size="15" font-weight="600" fill="#f0f6fc">Streaming replies (tmux), CPU</text>
++<text x="123" y="426.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,414 h66.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.8 z" fill="#3987e5"/>
++<text x="211.8" y="426.5" font-size="13.5" font-weight="650" fill="#f0f6fc">50 ms</text>
++<text x="263.9" y="426.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="123" y="456.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,444 h136.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.9 z" fill="#6e7681"/>
++<text x="281.9" y="456.5" font-size="13.5" font-weight="400" fill="#f0f6fc">100 ms</text>
++<text x="123" y="486.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,474 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="486.5" font-size="13.5" font-weight="400" fill="#f0f6fc">150 ms</text>
++<line x1="133" y1="408" x2="133" y2="496" stroke="#3d444d"/>
++<text x="452" y="396" font-size="15" font-weight="600" fill="#f0f6fc">Frame time p99, streaming replies (tmux)</text>
++<text x="551" y="426.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,414 h67.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-67.3 z" fill="#3987e5"/>
++<text x="640.3" y="426.5" font-size="13.5" font-weight="650" fill="#f0f6fc">26 ms</text>
++<text x="692.3" y="426.5" font-size="12.5" fill="#9198a1">2.0× less</text>
++<text x="551" y="456.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,444 h137.1 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-137.1 z" fill="#6e7681"/>
++<text x="710.1" y="456.5" font-size="13.5" font-weight="400" fill="#f0f6fc">50 ms</text>
++<text x="551" y="486.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,474 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="486.5" font-size="13.5" font-weight="400" fill="#f0f6fc">76 ms</text>
++<line x1="561" y1="408" x2="561" y2="496" stroke="#3d444d"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-memory-light.svg b/bench/fixtures/report-golden/bench-memory-light.svg
+new file mode 100644
+index 000000000..d0c84dc8f
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-memory-light.svg
+@@ -0,0 +1,77 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="528" viewBox="0 0 880 528" role="img" aria-label="Memory and streaming: Lower is better. Own memory = private dirty pages. Ratios compare Pi-Bolt with Bun.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">Memory and streaming</text>
++<text x="24" y="56" font-size="13.5" fill="#59636e">Lower is better. Own memory = private dirty pages. Ratios compare Pi-Bolt with Bun.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#1f2328">Peak memory, interactive session</text>
++<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,114 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#2a78d6"/>
++<text x="211.3" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">100 MB</text>
++<text x="271.4" y="126.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,144 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#848d97"/>
++<text x="281.7" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">200 MB</text>
++<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">300 MB</text>
++<line x1="133" y1="108" x2="133" y2="196" stroke="#d1d9e0"/>
++<text x="452" y="96" font-size="15" font-weight="600" fill="#1f2328">Peak own memory, interactive session</text>
++<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,114 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#2a78d6"/>
++<text x="639.3" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">50 MB</text>
++<text x="691.4" y="126.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,144 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#848d97"/>
++<text x="709.7" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">100 MB</text>
++<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">150 MB</text>
++<line x1="561" y1="108" x2="561" y2="196" stroke="#d1d9e0"/>
++<text x="24" y="246" font-size="15" font-weight="600" fill="#1f2328">Own memory, tmux session</text>
++<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,264 h66.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.8 z" fill="#2a78d6"/>
++<text x="211.8" y="276.5" font-size="13.5" font-weight="650" fill="#1f2328">50 MB</text>
++<text x="263.9" y="276.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,294 h136.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.9 z" fill="#848d97"/>
++<text x="281.9" y="306.5" font-size="13.5" font-weight="400" fill="#1f2328">100 MB</text>
++<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">150 MB</text>
++<line x1="133" y1="258" x2="133" y2="346" stroke="#d1d9e0"/>
++<text x="452" y="246" font-size="15" font-weight="600" fill="#1f2328">Own memory, end of 1.4M-token session</text>
++<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,264 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#2a78d6"/>
++<text x="639.3" y="276.5" font-size="13.5" font-weight="650" fill="#1f2328">50 MB</text>
++<text x="691.4" y="276.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,294 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#848d97"/>
++<text x="709.7" y="306.5" font-size="13.5" font-weight="400" fill="#1f2328">100 MB</text>
++<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">150 MB</text>
++<line x1="561" y1="258" x2="561" y2="346" stroke="#d1d9e0"/>
++<text x="24" y="396" font-size="15" font-weight="600" fill="#1f2328">Streaming replies (tmux), CPU</text>
++<text x="123" y="426.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,414 h66.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.8 z" fill="#2a78d6"/>
++<text x="211.8" y="426.5" font-size="13.5" font-weight="650" fill="#1f2328">50 ms</text>
++<text x="263.9" y="426.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="123" y="456.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,444 h136.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.9 z" fill="#848d97"/>
++<text x="281.9" y="456.5" font-size="13.5" font-weight="400" fill="#1f2328">100 ms</text>
++<text x="123" y="486.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,474 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="486.5" font-size="13.5" font-weight="400" fill="#1f2328">150 ms</text>
++<line x1="133" y1="408" x2="133" y2="496" stroke="#d1d9e0"/>
++<text x="452" y="396" font-size="15" font-weight="600" fill="#1f2328">Frame time p99, streaming replies (tmux)</text>
++<text x="551" y="426.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,414 h67.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-67.3 z" fill="#2a78d6"/>
++<text x="640.3" y="426.5" font-size="13.5" font-weight="650" fill="#1f2328">26 ms</text>
++<text x="692.3" y="426.5" font-size="12.5" fill="#59636e">2.0× less</text>
++<text x="551" y="456.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,444 h137.1 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-137.1 z" fill="#848d97"/>
++<text x="710.1" y="456.5" font-size="13.5" font-weight="400" fill="#1f2328">50 ms</text>
++<text x="551" y="486.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,474 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="486.5" font-size="13.5" font-weight="400" fill="#1f2328">76 ms</text>
++<line x1="561" y1="408" x2="561" y2="496" stroke="#d1d9e0"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-plugins-dark.svg b/bench/fixtures/report-golden/bench-plugins-dark.svg
+new file mode 100644
+index 000000000..a57313ca9
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-plugins-dark.svg
+@@ -0,0 +1,33 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="438" viewBox="0 0 880 438" role="img" aria-label="Plugins: A Pi extension compiled into the executable vs loaded at run time. Lower is better.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">Plugins</text>
++<text x="24" y="56" font-size="13.5" fill="#9198a1">A Pi extension compiled into the executable vs loaded at run time. Lower is better.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#f0f6fc">Hot loop in the plugin (/words)</text>
++<text x="216" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0, compiled in</text>
++<path d="M226,114 h178.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-178.3 z" fill="#3987e5"/>
++<text x="416.3" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">401 ms</text>
++<text x="216" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0, run time</text>
++<path d="M226,144 h269.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-269.2 z" fill="#3987e5"/>
++<text x="507.2" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">601 ms</text>
++<text x="216" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2, compiled in</text>
++<path d="M226,174 h360.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-360.2 z" fill="#6e7681"/>
++<text x="598.2" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">801 ms</text>
++<text x="216" y="216.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2, run time</text>
++<path d="M226,204 h542.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-542.0 z" fill="#6e7681"/>
++<text x="780.0" y="216.5" font-size="13.5" font-weight="400" fill="#f0f6fc">1,201 ms</text>
++<line x1="226" y1="108" x2="226" y2="226" stroke="#3d444d"/>
++<text x="24" y="276" font-size="15" font-weight="600" fill="#f0f6fc">Launch to interactive</text>
++<text x="216" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0, compiled in</text>
++<path d="M226,294 h178.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-178.3 z" fill="#3987e5"/>
++<text x="416.3" y="306.5" font-size="13.5" font-weight="650" fill="#f0f6fc">200 ms</text>
++<text x="216" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0, run time</text>
++<path d="M226,324 h269.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-269.2 z" fill="#3987e5"/>
++<text x="507.2" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">300 ms</text>
++<text x="216" y="366.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2, compiled in</text>
++<path d="M226,354 h360.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-360.2 z" fill="#6e7681"/>
++<text x="598.2" y="366.5" font-size="13.5" font-weight="400" fill="#f0f6fc">400 ms</text>
++<text x="216" y="396.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2, run time</text>
++<path d="M226,384 h542.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-542.0 z" fill="#6e7681"/>
++<text x="780.0" y="396.5" font-size="13.5" font-weight="400" fill="#f0f6fc">600 ms</text>
++<line x1="226" y1="288" x2="226" y2="406" stroke="#3d444d"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-plugins-light.svg b/bench/fixtures/report-golden/bench-plugins-light.svg
+new file mode 100644
+index 000000000..858efd55e
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-plugins-light.svg
+@@ -0,0 +1,33 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="438" viewBox="0 0 880 438" role="img" aria-label="Plugins: A Pi extension compiled into the executable vs loaded at run time. Lower is better.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">Plugins</text>
++<text x="24" y="56" font-size="13.5" fill="#59636e">A Pi extension compiled into the executable vs loaded at run time. Lower is better.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#1f2328">Hot loop in the plugin (/words)</text>
++<text x="216" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0, compiled in</text>
++<path d="M226,114 h178.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-178.3 z" fill="#2a78d6"/>
++<text x="416.3" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">401 ms</text>
++<text x="216" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0, run time</text>
++<path d="M226,144 h269.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-269.2 z" fill="#2a78d6"/>
++<text x="507.2" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">601 ms</text>
++<text x="216" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2, compiled in</text>
++<path d="M226,174 h360.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-360.2 z" fill="#848d97"/>
++<text x="598.2" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">801 ms</text>
++<text x="216" y="216.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2, run time</text>
++<path d="M226,204 h542.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-542.0 z" fill="#848d97"/>
++<text x="780.0" y="216.5" font-size="13.5" font-weight="400" fill="#1f2328">1,201 ms</text>
++<line x1="226" y1="108" x2="226" y2="226" stroke="#d1d9e0"/>
++<text x="24" y="276" font-size="15" font-weight="600" fill="#1f2328">Launch to interactive</text>
++<text x="216" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0, compiled in</text>
++<path d="M226,294 h178.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-178.3 z" fill="#2a78d6"/>
++<text x="416.3" y="306.5" font-size="13.5" font-weight="650" fill="#1f2328">200 ms</text>
++<text x="216" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0, run time</text>
++<path d="M226,324 h269.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-269.2 z" fill="#2a78d6"/>
++<text x="507.2" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">300 ms</text>
++<text x="216" y="366.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2, compiled in</text>
++<path d="M226,354 h360.2 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-360.2 z" fill="#848d97"/>
++<text x="598.2" y="366.5" font-size="13.5" font-weight="400" fill="#1f2328">400 ms</text>
++<text x="216" y="396.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2, run time</text>
++<path d="M226,384 h542.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-542.0 z" fill="#848d97"/>
++<text x="780.0" y="396.5" font-size="13.5" font-weight="400" fill="#1f2328">600 ms</text>
++<line x1="226" y1="288" x2="226" y2="406" stroke="#d1d9e0"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-speed-dark.svg b/bench/fixtures/report-golden/bench-speed-dark.svg
+new file mode 100644
+index 000000000..9a36b25d2
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-speed-dark.svg
+@@ -0,0 +1,53 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="378" viewBox="0 0 880 378" role="img" aria-label="Time: Wall-clock time, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">Time</text>
++<text x="24" y="56" font-size="13.5" fill="#9198a1">Wall-clock time, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#f0f6fc">Launch to interactive (TUI)</text>
++<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,114 h66.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.8 z" fill="#3987e5"/>
++<text x="211.8" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">202 ms</text>
++<text x="271.9" y="126.5" font-size="12.5" fill="#9198a1">2.0× faster</text>
++<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,144 h136.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.9 z" fill="#6e7681"/>
++<text x="281.9" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">402 ms</text>
++<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">602 ms</text>
++<line x1="133" y1="108" x2="133" y2="196" stroke="#3d444d"/>
++<text x="452" y="96" font-size="15" font-weight="600" fill="#f0f6fc">pi --version</text>
++<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,114 h67.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-67.3 z" fill="#3987e5"/>
++<text x="640.3" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">102 ms</text>
++<text x="700.3" y="126.5" font-size="12.5" fill="#9198a1">2.0× faster</text>
++<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,144 h137.1 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-137.1 z" fill="#6e7681"/>
++<text x="710.1" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">202 ms</text>
++<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#f0f6fc">302 ms</text>
++<line x1="561" y1="108" x2="561" y2="196" stroke="#3d444d"/>
++<text x="24" y="246" font-size="15" font-weight="600" fill="#f0f6fc">pi -p: one prompt, 4 tool calls</text>
++<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M133,264 h66.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.6 z" fill="#3987e5"/>
++<text x="211.6" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">402 ms</text>
++<text x="271.6" y="276.5" font-size="12.5" fill="#9198a1">2.0× faster</text>
++<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M133,294 h136.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.8 z" fill="#6e7681"/>
++<text x="281.8" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">802 ms</text>
++<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">1,202 ms</text>
++<line x1="133" y1="258" x2="133" y2="346" stroke="#3d444d"/>
++<text x="452" y="246" font-size="15" font-weight="600" fill="#f0f6fc">Time per prompt, 1.4M-token session</text>
++<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#9198a1">Pi-Bolt 1.0.0</text>
++<path d="M561,264 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#3987e5"/>
++<text x="639.3" y="276.5" font-size="13.5" font-weight="650" fill="#f0f6fc">200 ms</text>
++<text x="699.4" y="276.5" font-size="12.5" fill="#9198a1">2.0× faster</text>
++<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
++<path d="M561,294 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#6e7681"/>
++<text x="709.7" y="306.5" font-size="13.5" font-weight="400" fill="#f0f6fc">400 ms</text>
++<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#9198a1">Node 22</text>
++<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#6e7681"/>
++<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#f0f6fc">600 ms</text>
++<line x1="561" y1="258" x2="561" y2="346" stroke="#3d444d"/>
++</svg>
+diff --git a/bench/fixtures/report-golden/bench-speed-light.svg b/bench/fixtures/report-golden/bench-speed-light.svg
+new file mode 100644
+index 000000000..059a49f43
+--- /dev/null
++++ b/bench/fixtures/report-golden/bench-speed-light.svg
+@@ -0,0 +1,53 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="880" height="378" viewBox="0 0 880 378" role="img" aria-label="Time: Wall-clock time, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">Time</text>
++<text x="24" y="56" font-size="13.5" fill="#59636e">Wall-clock time, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.0.0, medians.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#1f2328">Launch to interactive (TUI)</text>
++<text x="123" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,114 h66.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.8 z" fill="#2a78d6"/>
++<text x="211.8" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">202 ms</text>
++<text x="271.9" y="126.5" font-size="12.5" fill="#59636e">2.0× faster</text>
++<text x="123" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,144 h136.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.9 z" fill="#848d97"/>
++<text x="281.9" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">402 ms</text>
++<text x="123" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">602 ms</text>
++<line x1="133" y1="108" x2="133" y2="196" stroke="#d1d9e0"/>
++<text x="452" y="96" font-size="15" font-weight="600" fill="#1f2328">pi --version</text>
++<text x="551" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,114 h67.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-67.3 z" fill="#2a78d6"/>
++<text x="640.3" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">102 ms</text>
++<text x="700.3" y="126.5" font-size="12.5" fill="#59636e">2.0× faster</text>
++<text x="551" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,144 h137.1 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-137.1 z" fill="#848d97"/>
++<text x="710.1" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">202 ms</text>
++<text x="551" y="186.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,174 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="186.5" font-size="13.5" font-weight="400" fill="#1f2328">302 ms</text>
++<line x1="561" y1="108" x2="561" y2="196" stroke="#d1d9e0"/>
++<text x="24" y="246" font-size="15" font-weight="600" fill="#1f2328">pi -p: one prompt, 4 tool calls</text>
++<text x="123" y="276.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M133,264 h66.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.6 z" fill="#2a78d6"/>
++<text x="211.6" y="276.5" font-size="13.5" font-weight="650" fill="#1f2328">402 ms</text>
++<text x="271.6" y="276.5" font-size="12.5" fill="#59636e">2.0× faster</text>
++<text x="123" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M133,294 h136.8 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.8 z" fill="#848d97"/>
++<text x="281.8" y="306.5" font-size="13.5" font-weight="400" fill="#1f2328">802 ms</text>
++<text x="123" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M133,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="352.0" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">1,202 ms</text>
++<line x1="133" y1="258" x2="133" y2="346" stroke="#d1d9e0"/>
++<text x="452" y="246" font-size="15" font-weight="600" fill="#1f2328">Time per prompt, 1.4M-token session</text>
++<text x="551" y="276.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt 1.0.0</text>
++<path d="M561,264 h66.3 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-66.3 z" fill="#2a78d6"/>
++<text x="639.3" y="276.5" font-size="13.5" font-weight="650" fill="#1f2328">200 ms</text>
++<text x="699.4" y="276.5" font-size="12.5" fill="#59636e">2.0× faster</text>
++<text x="551" y="306.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M561,294 h136.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-136.7 z" fill="#848d97"/>
++<text x="709.7" y="306.5" font-size="13.5" font-weight="400" fill="#1f2328">400 ms</text>
++<text x="551" y="336.5" font-size="13.5" text-anchor="end" fill="#59636e">Node 22</text>
++<path d="M561,324 h207.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-207.0 z" fill="#848d97"/>
++<text x="780.0" y="336.5" font-size="13.5" font-weight="400" fill="#1f2328">600 ms</text>
++<line x1="561" y1="258" x2="561" y2="346" stroke="#d1d9e0"/>
++</svg>
+diff --git a/bench/fixtures/report/environment.txt b/bench/fixtures/report/environment.txt
+new file mode 100644
+index 000000000..841296fe7
+--- /dev/null
++++ b/bench/fixtures/report/environment.txt
+@@ -0,0 +1,5 @@
++date: 2026-01-01T00:00Z
++Linux 6.0.0 x86_64
++pi-bolt: 1.0.0, Pi 1.0.0 (Pi-Bolt 1.0.0, linux-x64, JIT off)
++bun: Pi 1.0.0 as released, on stock Bun 1.4.2
++node: Pi as released, on Node v22.19.0
+diff --git a/bench/fixtures/report/large_write-1.txt b/bench/fixtures/report/large_write-1.txt
+new file mode 100644
+index 000000000..621d2be44
+--- /dev/null
++++ b/bench/fixtures/report/large_write-1.txt
+@@ -0,0 +1,14 @@
++build           file   wall s    cpu s  result
++
++pi-bolt        50 KB      0.1     0.03  ok
++
++pi-bolt       200 KB      0.5     0.12  ok
++
++bun            50 KB      0.2     0.06  ok
++
++bun           200 KB      1.0     0.25  ok
++
++node           50 KB      0.4     0.09  ok
++
++node          200 KB      1.5     0.38  ok
++
+diff --git a/bench/fixtures/report/large_write-2.txt b/bench/fixtures/report/large_write-2.txt
+new file mode 100644
+index 000000000..07589d137
+--- /dev/null
++++ b/bench/fixtures/report/large_write-2.txt
+@@ -0,0 +1,14 @@
++build           file   wall s    cpu s  result
++
++pi-bolt        50 KB      0.1     0.03  ok
++
++pi-bolt       200 KB      0.6     0.14  ok
++
++bun            50 KB      0.3     0.07  ok
++
++bun           200 KB      1.1     0.28  ok
++
++node           50 KB      0.4     0.10  ok
++
++node          200 KB      1.7     0.41  ok
++
+diff --git a/bench/fixtures/report/long_answer-1.txt b/bench/fixtures/report/long_answer-1.txt
+new file mode 100644
+index 000000000..1ad40b19d
+--- /dev/null
++++ b/bench/fixtures/report/long_answer-1.txt
+@@ -0,0 +1,14 @@
++build        characters   wall s    cpu s  of a core  own MB
++
++pi-bolt           20000      1.0     0.25        25%     100
++
++pi-bolt           60000      3.0     0.75        25%     100
++
++bun               20000      2.0     0.50        25%     200
++
++bun               60000      6.0     1.50        25%     200
++
++node              20000      3.0     0.75        25%     300
++
++node              60000      9.0     2.25        25%     300
++
+diff --git a/bench/fixtures/report/long_answer-2.txt b/bench/fixtures/report/long_answer-2.txt
+new file mode 100644
+index 000000000..f1ccd3a5a
+--- /dev/null
++++ b/bench/fixtures/report/long_answer-2.txt
+@@ -0,0 +1,14 @@
++build        characters   wall s    cpu s  of a core  own MB
++
++pi-bolt           20000      1.1     0.28        28%     100
++
++pi-bolt           60000      3.3     0.83        28%     100
++
++bun               20000      2.2     0.55        28%     200
++
++bun               60000      6.6     1.65        28%     200
++
++node              20000      3.3     0.83        28%     300
++
++node              60000      9.9     2.48        28%     300
++
+diff --git a/bench/report.py b/bench/report.py
+index 0b12b4e76..f8b7f4df8 100755
+--- a/bench/report.py
++++ b/bench/report.py
+@@ -78,6 +78,23 @@ def is_release(build):
+     return build.startswith("pi-bolt-") and build[8:9].isdigit()
+ 
+ 
++# Code points XML 1.0 forbids even escaped (control characters, the surrogates, the two noncharacters): dropped, so a document
++# made from a hostile label still parses.
++ILLEGAL_XML = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f\ud800-\udfff\ufffe\uffff]")
++
++
++def esc(text):
++    """Text and attribute values for the SVG: escaped once, here, at the point of writing it into the markup, so a label or a
++    name from the results (a build, a step, a plugin) cannot end a text node or open an element, an attribute or a script.
++    Legitimate Unicode, the en dash and the multiplication sign included, is written as it is."""
++    return (ILLEGAL_XML.sub("", str(text)).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
++            .replace('"', "&quot;").replace("'", "&#x27;"))
++
++
++# The same escapes cover text content and double-quoted attribute values; named for what the call site is writing.
++attr = esc
++
++
+ def text_width(text, size):
+     """About how wide a line of the system sans is: 0.56 em a character (digits and lowercase), enough to place a note."""
+     return 0.53 * size * len(text)
+@@ -111,15 +128,16 @@ def chart(title, subtitle, panels, builds, theme, path):
+     rows = (len(panels) + columns - 1) // columns
+     head = 78
+     height = head + rows * panel_h
++    label = attr(f"{title}: {subtitle}")
+     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
+-           f'aria-label="{title}: {subtitle}">',
++           f'aria-label="{label}">',
+            f'<style>text{{font-family:{FONT}}}</style>',
+-           f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{title}</text>',
+-           f'<text x="{pad}" y="56" font-size="13.5" fill="{t["muted"]}">{subtitle}</text>']
++           f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{esc(title)}</text>',
++           f'<text x="{pad}" y="56" font-size="13.5" fill="{t["muted"]}">{esc(subtitle)}</text>']
+     for p, (name, unit, values, kind) in enumerate(panels):
+         x0 = pad + (p % columns) * (col_w + pad)
+         y0 = head + (p // columns) * panel_h
+-        out.append(f'<text x="{x0}" y="{y0 + 18}" font-size="15" font-weight="600" fill="{t["text"]}">{name}</text>')
++        out.append(f'<text x="{x0}" y="{y0 + 18}" font-size="15" font-weight="600" fill="{t["text"]}">{esc(name)}</text>')
+         top = max(v for v in values.values() if v is not None)
+         bar_x = x0 + label_w
+         # Room after the longest bar for its value; Pi-Bolt's ratio sits after its own, shorter bar.
+@@ -129,7 +147,7 @@ def chart(title, subtitle, panels, builds, theme, path):
+             v = values.get(b)
+             y = y0 + 36 + i * row_h
+             mid = y + bar_h / 2 + 4.5
+-            out.append(f'<text x="{bar_x - 10}" y="{mid:.1f}" font-size="{label_size}" text-anchor="end" fill="{t["muted"]}">{LABELS.get(b, b)}</text>')
++            out.append(f'<text x="{bar_x - 10}" y="{mid:.1f}" font-size="{label_size}" text-anchor="end" fill="{t["muted"]}">{esc(LABELS.get(b, b))}</text>')
+             if v is None:
+                 continue
+             w = max(4, bar_w * v / top)
+@@ -137,13 +155,13 @@ def chart(title, subtitle, panels, builds, theme, path):
+             out.append(f'<path d="M{bar_x},{y} h{w - 4:.1f} a4,4 0 0 1 4,4 v{bar_h - 8} a4,4 0 0 1 -4,4 h{-(w - 4):.1f} z" fill="{color_of(b, i, theme)}"/>')
+             weight = "650" if i == 0 else "400"
+             value = fmt(v, unit)
+-            out.append(f'<text x="{bar_x + w + 8:.1f}" y="{mid:.1f}" font-size="{value_size}" font-weight="{weight}" fill="{t["text"]}">{value}</text>')
++            out.append(f'<text x="{bar_x + w + 8:.1f}" y="{mid:.1f}" font-size="{value_size}" font-weight="{weight}" fill="{t["text"]}">{esc(value)}</text>')
+             note = ratio_text(v, base, kind) if i == 0 else None
+             if note:
+                 # (After the value, which is bold: wider than text_width says.)
+                 px = bar_x + w + 8 + text_width(value, value_size) * 1.12 + 12
+                 if px + text_width(note, 12.5) <= x0 + col_w:  # (only where it fits in its panel)
+-                    out.append(f'<text x="{px:.1f}" y="{mid:.1f}" font-size="12.5" fill="{t["muted"]}">{note}</text>')
++                    out.append(f'<text x="{px:.1f}" y="{mid:.1f}" font-size="12.5" fill="{t["muted"]}">{esc(note)}</text>')
+         out.append(f'<line x1="{bar_x}" y1="{y0 + 30}" x2="{bar_x}" y2="{y0 + 36 + len(builds) * row_h - 8}" stroke="{t["rule"]}"/>')
+     out.append("</svg>")
+     path.write_text("\n".join(out) + "\n")
+@@ -168,12 +186,13 @@ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+     bars_y = 96 + 18 * len(compare)
+     tile_h = bars_y + 30 * len(builds)
+     height = top + tile_h + 10
++    label = attr(title or "Pi-Bolt compared with Bun and Node")
+     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
+-           f'aria-label="{title or "Pi-Bolt compared with Bun and Node"}">',
++           f'aria-label="{label}">',
+            f'<style>text{{font-family:{FONT}}}</style>']
+     if title:
+-        out.append(f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{title}</text>')
+-        out.append(f'<text x="{pad}" y="54" font-size="13.5" fill="{t["muted"]}">{subtitle or ""}</text>')
++        out.append(f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{esc(title)}</text>')
++        out.append(f'<text x="{pad}" y="54" font-size="13.5" fill="{t["muted"]}">{esc(subtitle or "")}</text>')
+ 
+     def compared(mine, other, better, name):
+         if not mine or not other:
+@@ -190,28 +209,29 @@ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+         y = top + 4
+         if i:
+             out.append(f'<line x1="{x - gap / 2:.1f}" y1="{y + 6}" x2="{x - gap / 2:.1f}" y2="{y + tile_h - 6}" stroke="{t["rule"]}"/>')
+-        out.append(f'<text x="{x:.1f}" y="{y + 18}" font-size="13" font-weight="600" fill="{t["muted"]}">{name}</text>')
++        out.append(f'<text x="{x:.1f}" y="{y + 18}" font-size="13" font-weight="600" fill="{t["muted"]}">{esc(name)}</text>')
+         mine = values.get(builds[0])
+         shown = fmt(mine, unit)
+         figure, _, unit_text = shown.rpartition(" ") if " " in shown else (shown, "", "")
++        figure = esc(figure)  # (escaped before the tspan is added: the markup itself is not text)
+         if unit_text:
+-            figure += f'<tspan font-size="16" font-weight="600" fill="{t["muted"]}" dx="5">{unit_text}</tspan>'
++            figure += f'<tspan font-size="16" font-weight="600" fill="{t["muted"]}" dx="5">{esc(unit_text)}</tspan>'
+         out.append(f'<text x="{x:.1f}" y="{y + 58}" font-size="36" font-weight="700" fill="{t["text"]}">{figure}</text>')
+         for k, (other, other_name) in enumerate(compare):
+             line = compared(mine, values.get(other), better, other_name)
+             if line:
+                 style = f'font-weight="600" fill="{t["text"]}"' if k == 0 else f'fill="{t["muted"]}"'
+-                out.append(f'<text x="{x:.1f}" y="{y + 84 + 18 * k}" font-size="13" {style}>{line}</text>')
++                out.append(f'<text x="{x:.1f}" y="{y + 84 + 18 * k}" font-size="13" {style}>{esc(line)}</text>')
+         most = max(v for v in values.values() if v)
+         for j, b in enumerate(builds):
+             v = values.get(b)
+             yy = y + bars_y + j * 30
+             weight = "650" if j == 0 else "400"
+             ink = t["text"] if j == 0 else t["muted"]
+-            out.append(f'<text x="{x:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" fill="{ink}">{LABELS.get(b, b)}</text>')
++            out.append(f'<text x="{x:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" fill="{ink}">{esc(LABELS.get(b, b))}</text>')
+             if not v:
+                 continue
+-            out.append(f'<text x="{x + tile_w:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" text-anchor="end" fill="{ink}">{fmt(v, unit)}</text>')
++            out.append(f'<text x="{x + tile_w:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" text-anchor="end" fill="{ink}">{esc(fmt(v, unit))}</text>')
+             bw = max(6, tile_w * v / most)
+             out.append(f'<rect x="{x:.1f}" y="{yy + 7}" width="{bw:.1f}" height="6" rx="3" fill="{color_of(b, j, theme)}"/>')
+     out.append("</svg>")
+diff --git a/bench/test_report.py b/bench/test_report.py
+new file mode 100644
+index 000000000..b6d843bed
+--- /dev/null
++++ b/bench/test_report.py
+@@ -0,0 +1,232 @@
++#!/usr/bin/env python3
++"""Tests for bench/report.py's SVG output: text and attribute escaping, injection, Unicode, and byte-identical ordinary charts.
++
++Run from the repo root: python3 -m unittest bench/test_report.py -v
++Standard library only: the writer is checked through xml.etree, a standard XML parser, not through string matching alone.
++"""
++
++import importlib.util
++import subprocess
++import sys
++import tempfile
++import unittest
++import xml.etree.ElementTree as ET
++from pathlib import Path
++
++BENCH = Path(__file__).resolve().parent
++SVG = "{http://www.w3.org/2000/svg}"
++FIXTURE = BENCH / "fixtures" / "report"
++GOLDEN = BENCH / "fixtures" / "report-golden"
++
++
++def load_report():
++    spec = importlib.util.spec_from_file_location("bench_report", BENCH / "report.py")
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++report = load_report()
++
++
++def texts(root):
++    """Every text node's string content, tspan children included."""
++    return [t.text or "" for t in root.iter(SVG + "text")]
++
++
++def tag_names(root):
++    return {el.tag for el in root.iter()}
++
++
++def attributes(root):
++    return {name for el in root.iter() for name in el.attrib}
++
++
++class EscapingTest(unittest.TestCase):
++    """The helper itself: what it produces for each kind of input."""
++
++    def test_special_characters_become_entities(self):
++        self.assertEqual(report.esc('& < > " \''), "&amp; &lt; &gt; &quot; &#x27;")
++
++    def test_each_character_is_escaped_once(self):
++        self.assertEqual(report.esc("Tom & Jerry"), "Tom &amp; Jerry")
++        # A literal entity in the input is text: & of "&amp;" is escaped, the rest is not escaped again.
++        self.assertEqual(report.esc("&amp;"), "&amp;amp;")
++
++    def test_ordinary_text_is_unchanged(self):
++        for text in ("Pi-Bolt 1.0.0", "CPU, 20,000-char answer", "pi -p: one prompt, 4 tool calls", ""):
++            self.assertEqual(report.esc(text), text)
++
++    def test_unicode_is_preserved(self):
++        # What fmt() and ratio_text() already emit, and labels people write.
++        for text in ("–", "2.9× faster", "Niños", "日本語のラベル", "🚀"):
++            self.assertEqual(report.esc(text), text)
++
++    def test_illegal_xml_code_points_are_dropped(self):
++        self.assertEqual(report.esc("a\x00b\x0bc\x1fd"), "abcd")
++        self.assertEqual(report.esc("x\ud800y"), "xy")
++        self.assertEqual(report.esc("x\ufffey"), "xy")
++
++    def test_attribute_values_use_the_same_escape(self):
++        self.assertEqual(report.attr('a"b\'c<&>'), "a&quot;b&#x27;c&lt;&amp;&gt;")
++
++
++class ChartTest(unittest.TestCase):
++    """chart(): the panel chart writer."""
++
++    def setUp(self):
++        self.labels, self.pi_version = dict(report.LABELS), list(report.PI_VERSION)
++        self.dir = tempfile.TemporaryDirectory()
++        self.addCleanup(self.dir.cleanup)
++
++    def tearDown(self):
++        report.LABELS.clear()
++        report.LABELS.update(self.labels)
++        report.PI_VERSION[:] = self.pi_version
++
++    def write(self, title="Time", subtitle="Wall-clock time, lower is better", name="Launch", labels=()):
++        for build, text in labels:
++            report.LABELS[build] = text
++        path = Path(self.dir.name) / "chart.svg"
++        report.chart(title, subtitle, [(name, "ms", {"pi-bolt": 100, "bun": 200})], ["pi-bolt", "bun"], "light", path)
++        return path.read_text(), ET.parse(path).getroot()
++
++    def test_special_characters_in_text_are_escaped(self):
++        raw, root = self.write(title="A & B", subtitle='x < y "z"')
++        self.assertIn("A &amp; B", raw)
++        self.assertIn("x &lt; y &quot;z&quot;", raw)
++        self.assertIn("A & B", texts(root))
++
++    def test_label_cannot_inject_an_element(self):
++        raw, root = self.write(labels=[("bun", "</text><script>alert(1)</script>")])
++        self.assertNotIn("<script", raw)
++        self.assertNotIn(SVG + "script", tag_names(root))
++        self.assertIn("</text><script>alert(1)</script>", texts(root))  # shown as its literal characters
++
++    def test_label_cannot_inject_an_attribute(self):
++        raw, root = self.write(labels=[("bun", 'x" onload="alert(1)')])
++        self.assertNotIn("onload", attributes(root))
++        self.assertNotIn('onload="', raw.replace("&quot;", ""))
++        self.assertIn('x" onload="alert(1)', texts(root))
++
++    def test_panel_name_is_escaped(self):
++        raw, root = self.write(name="</text><circle r='9'/>")
++        self.assertNotIn(SVG + "circle", tag_names(root))
++        self.assertNotIn("<circle", raw)
++        self.assertIn("</text><circle r='9'/>", texts(root))
++
++    def test_label_rendered_once_is_escaped_once(self):
++        raw, _ = self.write(labels=[("bun", "A & B")])
++        self.assertIn("A &amp; B", raw)
++        self.assertNotIn("A &amp;amp; B", raw)
++
++    def test_document_parses(self):
++        _, root = self.write(labels=[("bun", "<b>&amp;</b>")])
++        self.assertEqual(root.tag, SVG + "svg")
++        self.assertIn("Time: Wall-clock time, lower is better", root.attrib["aria-label"])
++
++
++class HeroTest(unittest.TestCase):
++    """hero(): the headline figure, whose big value embeds a <tspan> for the unit."""
++
++    def setUp(self):
++        self.labels, self.pi_version = dict(report.LABELS), list(report.PI_VERSION)
++        self.dir = tempfile.TemporaryDirectory()
++        self.addCleanup(self.dir.cleanup)
++
++    def tearDown(self):
++        report.LABELS.clear()
++        report.LABELS.update(self.labels)
++        report.PI_VERSION[:] = self.pi_version
++
++    def write(self, title="Pi-Bolt", subtitle="Compared", name="Ready to type", label="Bun 1.4.2"):
++        report.LABELS["bun"] = label
++        path = Path(self.dir.name) / "hero.svg"
++        tiles = [(name, "ms", {"pi-bolt": 100, "bun": 200}, "faster")]
++        report.hero(tiles, ["pi-bolt", "bun"], "light", path, title, subtitle)
++        return path.read_text(), ET.parse(path).getroot()
++
++    def test_unit_tspan_is_still_an_element(self):
++        raw, root = self.write()
++        spans = [el for el in root.iter(SVG + "tspan")]
++        self.assertEqual([s.text for s in spans], ["ms"])
++        # The value and the unit stay text, not escaped markup.
++        self.assertIn(">100<tspan", raw)
++
++    def test_title_attribute_and_subtitle_are_escaped(self):
++        raw, root = self.write(title='A & B "q"', subtitle="x < y")
++        # In the document the attribute carries entities; a parser reads the original text back.
++        self.assertIn('aria-label="A &amp; B &quot;q&quot;', raw)
++        self.assertEqual(root.attrib["aria-label"], 'A & B "q"')
++        self.assertIn("x &lt; y", raw)
++        self.assertIn("x < y", texts(root))
++
++    def test_hostile_tile_name_and_label_are_text(self):
++        raw, root = self.write(name="</text><script>alert(1)</script>", label='"><image href="x"/>')
++        self.assertNotIn(SVG + "script", tag_names(root))
++        self.assertNotIn(SVG + "image", tag_names(root))
++        self.assertNotIn("<script", raw)
++        self.assertIn('"><image href="x"/>', texts(root))
++
++    def test_unicode_label_survives(self):
++        _, root = self.write(label="Bun 1.4.2 – 日本語")
++        self.assertIn("Bun 1.4.2 – 日本語", texts(root))
++
++    def test_label_in_two_places_is_escaped_once_in_each(self):
++        # The legend row and the "2.0× faster than ..." line both name the build: one escape per insertion, not two.
++        raw, root = self.write(label="A&B")
++        self.assertEqual(raw.count("A&amp;B"), 2)
++        self.assertNotIn("&amp;amp;", raw)
++        self.assertIn("faster than A&amp;B", raw)
++        self.assertEqual(texts(root).count("A&B"), 1)
++
++
++class ReportRunTest(unittest.TestCase):
++    """report.py end to end: the CLI, the fixtures, and every document through the XML parser."""
++
++    def run_report(self, results, images, extra=()):
++        command = [sys.executable, str(BENCH / "report.py"), str(results), "--images", str(images),
++                   "--builds", "pi-bolt,bun,node", *extra]
++        done = subprocess.run(command, capture_output=True, text=True)
++        self.assertEqual(done.returncode, 0, done.stderr)
++        return sorted(Path(images).glob("*.svg"))
++
++    def test_ordinary_input_is_byte_identical_to_the_golden_charts(self):
++        # The charts of bench/fixtures/report as the writer drew them before escaping was added: same bytes, same picture.
++        with tempfile.TemporaryDirectory() as tmp:
++            drawn = self.run_report(FIXTURE, tmp)
++            golden = sorted(GOLDEN.glob("*.svg"))
++            self.assertEqual([p.name for p in drawn], [p.name for p in golden])  # every chart, none dropped
++            for path in drawn:
++                self.assertEqual(path.read_bytes(), (GOLDEN / path.name).read_bytes(), path.name)
++
++    def test_every_generated_document_parses(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            drawn = self.run_report(FIXTURE, tmp)
++            self.assertTrue(drawn)
++            for path in drawn:
++                ET.parse(path)
++
++    def test_hostile_label_through_the_cli_parses(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            drawn = self.run_report(FIXTURE, tmp, ["--label", 'bun=</text><script>alert(1)</script>'])
++            for path in drawn:
++                root = ET.parse(path).getroot()
++                self.assertNotIn(SVG + "script", tag_names(root))
++                self.assertNotIn("onload", attributes(root))
++            raw = drawn[0].read_text()
++            self.assertNotIn("<script", raw)
++
++    def test_real_results_folder_parses(self):
++        results = BENCH / "results" / "2026-10-12-linux-x64-0.8.5"
++        if not results.is_dir():
++            self.skipTest("results folder not present")
++        with tempfile.TemporaryDirectory() as tmp:
++            drawn = self.run_report(results, tmp)
++            self.assertTrue(drawn)
++            for path in drawn:
++                ET.parse(path)
++
++
++if __name__ == "__main__":
++    unittest.main()

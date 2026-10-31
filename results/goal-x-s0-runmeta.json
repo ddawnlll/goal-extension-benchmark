@@ -1,0 +1,112 @@
+{
+ "name": "goal-x",
+ "trial": "s0",
+ "baseline_sha": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+ "warmup": "OK",
+ "started_wall": 1793451500.4539971,
+ "ended_wall": 1793452118.4676921,
+ "wall_seconds": 618.0,
+ "externally_verified_at_s": null,
+ "verifier_samples": [
+  {
+   "t": 39.7,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.18s"
+  },
+  {
+   "t": 70.1,
+   "ok": false,
+   "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.16s"
+  },
+  {
+   "t": 100.5,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.13s"
+  },
+  {
+   "t": 130.8,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 161.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.13s"
+  },
+  {
+   "t": 191.6,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.23s"
+  },
+  {
+   "t": 223.2,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.23s"
+  },
+  {
+   "t": 253.7,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.14s"
+  },
+  {
+   "t": 284.1,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.15s"
+  },
+  {
+   "t": 314.5,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 344.9,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 375.2,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.13s"
+  },
+  {
+   "t": 405.6,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 435.9,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 466.2,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 496.6,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.11s"
+  },
+  {
+   "t": 526.9,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 557.3,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 587.6,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  },
+  {
+   "t": 618.0,
+   "ok": false,
+   "detail": "2 failed, 7 passed, 1 deselected, 3 warnings in 0.12s"
+  }
+ ]
+}

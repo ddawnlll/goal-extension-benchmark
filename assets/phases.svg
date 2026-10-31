@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="384" viewBox="0 0 920 384" role="img" aria-label="Where the time went">
+<rect width="920" height="384" fill="#ffffff"/>
+<rect x="0.5" y="0.5" width="919" height="383" fill="none" stroke="#e5e7eb"/>
+<text x="26.0" y="34.0" font-size="17" font-weight="650" fill="#111827" text-anchor="start">Where the time went</text>
+<text x="26.0" y="55.0" font-size="12" font-weight="400" fill="#6b7280" text-anchor="start">mutually exclusive phases of each run, in seconds</text>
+<rect x="26.0" y="74.0" width="10.0" height="10.0" fill="#94a3b8" rx="2"/>
+<text x="41.0" y="83.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Drafting and confirmation</text>
+<rect x="184.0" y="74.0" width="10.0" height="10.0" fill="#334155" rx="2"/>
+<text x="199.0" y="83.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Coding and self-testing</text>
+<rect x="330.8" y="74.0" width="10.0" height="10.0" fill="#e2e8f0" rx="2"/>
+<text x="345.8" y="83.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Contract reconciliation</text>
+<rect x="477.6" y="74.0" width="10.0" height="10.0" fill="#0f766e" rx="2"/>
+<text x="492.6" y="83.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Model audit</text>
+<rect x="557.2" y="74.0" width="10.0" height="10.0" fill="#b45309" rx="2"/>
+<text x="572.2" y="83.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Rework after rejection</text>
+<rect x="698.4" y="74.0" width="10.0" height="10.0" fill="#cbd5e1" rx="2"/>
+<text x="713.4" y="83.0" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Settlement</text>
+<text x="176.0" y="131.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="end">GLLA  s0</text>
+<rect x="190.0" y="116.0" width="70.1" height="22.0" fill="#94a3b8" rx="2"/>
+<text x="225.1" y="131.0" font-size="10.5" font-weight="600" fill="#111827" text-anchor="middle">110</text>
+<rect x="260.1" y="116.0" width="190.7" height="22.0" fill="#334155" rx="2"/>
+<text x="355.5" y="131.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">299</text>
+<rect x="450.8" y="116.0" width="170.9" height="22.0" fill="#e2e8f0" rx="2"/>
+<text x="536.3" y="131.0" font-size="10.5" font-weight="600" fill="#111827" text-anchor="middle">268</text>
+<rect x="621.7" y="116.0" width="176.8" height="22.0" fill="#0f766e" rx="2"/>
+<text x="710.1" y="131.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">277</text>
+<rect x="798.5" y="116.0" width="1.5" height="22.0" fill="#cbd5e1" rx="2"/>
+<text x="808.0" y="132.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">956 s</text>
+<text x="176.0" y="167.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">GLLA  r1</text>
+<rect x="190.0" y="152.0" width="57.0" height="22.0" fill="#94a3b8" rx="2"/>
+<text x="218.5" y="167.0" font-size="10.5" font-weight="600" fill="#111827" text-anchor="middle">89</text>
+<rect x="247.0" y="152.0" width="149.4" height="22.0" fill="#334155" rx="2"/>
+<text x="321.7" y="167.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">234</text>
+<rect x="396.4" y="152.0" width="135.0" height="22.0" fill="#e2e8f0" rx="2"/>
+<text x="463.8" y="167.0" font-size="10.5" font-weight="600" fill="#111827" text-anchor="middle">212</text>
+<rect x="531.3" y="152.0" width="98.8" height="22.0" fill="#0f766e" rx="2"/>
+<text x="580.7" y="167.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">155</text>
+<rect x="630.1" y="152.0" width="5.7" height="22.0" fill="#cbd5e1" rx="2"/>
+<text x="643.8" y="168.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">699 s</text>
+<text x="176.0" y="203.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">GLLA  r2</text>
+<rect x="190.0" y="188.0" width="44.9" height="22.0" fill="#94a3b8" rx="2"/>
+<text x="212.4" y="203.0" font-size="10.5" font-weight="600" fill="#111827" text-anchor="middle">70</text>
+<rect x="234.9" y="188.0" width="148.0" height="22.0" fill="#334155" rx="2"/>
+<text x="308.9" y="203.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">232</text>
+<rect x="382.9" y="188.0" width="0.8" height="22.0" fill="#e2e8f0" rx="2"/>
+<rect x="383.7" y="188.0" width="170.9" height="22.0" fill="#0f766e" rx="2"/>
+<text x="469.1" y="203.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">268</text>
+<rect x="554.6" y="188.0" width="26.7" height="22.0" fill="#b45309" rx="2"/>
+<rect x="581.3" y="188.0" width="5.7" height="22.0" fill="#cbd5e1" rx="2"/>
+<text x="595.0" y="204.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">622 s</text>
+<text x="176.0" y="239.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="end">pi-goal-x  s0</text>
+<rect x="190.0" y="224.0" width="21.0" height="22.0" fill="#94a3b8" rx="2"/>
+<rect x="211.0" y="224.0" width="185.1" height="22.0" fill="#334155" rx="2"/>
+<text x="303.5" y="239.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">290</text>
+<rect x="396.1" y="224.0" width="158.9" height="22.0" fill="#0f766e" rx="2"/>
+<text x="475.6" y="239.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">249</text>
+<rect x="555.0" y="224.0" width="17.1" height="22.0" fill="#cbd5e1" rx="2"/>
+<text x="580.1" y="240.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">599 s</text>
+<text x="176.0" y="275.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x  r1</text>
+<rect x="190.0" y="260.0" width="32.4" height="22.0" fill="#94a3b8" rx="2"/>
+<rect x="222.4" y="260.0" width="88.3" height="22.0" fill="#334155" rx="2"/>
+<text x="266.5" y="275.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">138</text>
+<rect x="310.7" y="260.0" width="0.3" height="22.0" fill="#e2e8f0" rx="2"/>
+<rect x="311.0" y="260.0" width="51.6" height="22.0" fill="#0f766e" rx="2"/>
+<text x="336.8" y="275.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">81</text>
+<rect x="362.5" y="260.0" width="17.5" height="22.0" fill="#cbd5e1" rx="2"/>
+<text x="388.0" y="276.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">298 s</text>
+<text x="176.0" y="311.0" font-size="13" font-weight="600" fill="#111827" text-anchor="end">pi-goal-x  r2</text>
+<rect x="190.0" y="296.0" width="16.8" height="22.0" fill="#94a3b8" rx="2"/>
+<rect x="206.8" y="296.0" width="70.4" height="22.0" fill="#334155" rx="2"/>
+<text x="242.1" y="311.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">110</text>
+<rect x="277.3" y="296.0" width="0.3" height="22.0" fill="#e2e8f0" rx="2"/>
+<rect x="277.6" y="296.0" width="169.4" height="22.0" fill="#0f766e" rx="2"/>
+<text x="362.3" y="311.0" font-size="10.5" font-weight="600" fill="#ffffff" text-anchor="middle">266</text>
+<rect x="447.0" y="296.0" width="17.3" height="22.0" fill="#cbd5e1" rx="2"/>
+<text x="472.3" y="312.0" font-size="11.5" font-weight="600" fill="#111827" text-anchor="start">430 s</text>
+</svg>

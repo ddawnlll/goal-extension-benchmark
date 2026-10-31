@@ -1,0 +1,114 @@
+{
+ "name": "goal-x",
+ "extension": "pi-goal-x",
+ "trial": "r2",
+ "started_wall": 1793460160.5572884,
+ "started_utc": "2026-10-31T15:22:40Z",
+ "limit_seconds": 2700.0,
+ "thinking": "low",
+ "process_launch": {
+  "t": 0.001,
+  "wall": 1793460160.558,
+  "utc": "2026-10-31T15:22:40Z",
+  "cmd": [
+   "pi",
+   "--mode",
+   "rpc",
+   "--provider",
+   "local",
+   "--model",
+   "deepseek-v4.1-flash",
+   "--thinking",
+   "low",
+   "--session-dir",
+   "/home/agent/.pi/agent/sessions",
+   "--continue",
+   "--name",
+   "goal-x-r2",
+   "--no-approve"
+  ]
+ },
+ "pi_pid": {
+  "t": 0.005,
+  "wall": 1793460160.562,
+  "utc": "2026-10-31T15:22:40Z",
+  "pid": 10
+ },
+ "goal_submitted": {
+  "t": 0.006,
+  "wall": 1793460160.562,
+  "utc": "2026-10-31T15:22:40Z",
+  "prompt_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+  "chars": 1614
+ },
+ "run_started": {
+  "t": 0.858,
+  "wall": 1793460161.415,
+  "utc": "2026-10-31T15:22:41Z"
+ },
+ "first_test_run": {
+  "t": 6.529,
+  "wall": 1793460167.086,
+  "utc": "2026-10-31T15:22:47Z",
+  "command": "cd /home/agent/work && wc -l bench/report.py && grep -n \"svg\\|SVG\\|escape\\|html\\|xml\" bench/report.py | head -80"
+ },
+ "first_successful_test_run": {
+  "t": 6.533,
+  "wall": 1793460167.09,
+  "utc": "2026-10-31T15:22:47Z",
+  "durationMs": 11
+ },
+ "first_ui_question": {
+  "t": 26.426,
+  "wall": 1793460186.983,
+  "utc": "2026-10-31T15:23:06Z",
+  "method": "select",
+  "text": "Completion auditor (currently enabled)   Enabled \u2014 require independent approval | Disabled \u2014 skip the completion audit"
+ },
+ "first_ui_answer": {
+  "t": 26.427,
+  "wall": 1793460186.984,
+  "utc": "2026-10-31T15:23:06Z",
+  "method": "select"
+ },
+ "goal_confirmed": {
+  "t": 26.432,
+  "wall": 1793460186.989,
+  "utc": "2026-10-31T15:23:06Z",
+  "method": "select",
+  "via": "extension_ui_select"
+ },
+ "agent_settled": {
+  "t": 26.639,
+  "wall": 1793460187.196,
+  "utc": "2026-10-31T15:23:07Z"
+ },
+ "settled_count": 2,
+ "first_code_modification": {
+  "t": 51.16,
+  "wall": 1793460211.717,
+  "utc": "2026-10-31T15:23:31Z",
+  "files": [
+   " M bench/report.py"
+  ]
+ },
+ "first_audit_request": {
+  "t": 76.812,
+  "wall": 1793460237.369,
+  "utc": "2026-10-31T15:23:57Z",
+  "id": "6317cfde"
+ },
+ "first_status_complete": {
+  "t": 402.371,
+  "wall": 1793460562.928,
+  "utc": "2026-10-31T15:29:22Z",
+  "source": "notify",
+  "text": "Goal archived.\nFile: .pi/goals/archived/goal_2026103115292289_mvwjw0vi-lz0p1u.md"
+ },
+ "run_stopped": {
+  "t": 428.932,
+  "wall": 1793460589.489,
+  "utc": "2026-10-31T15:29:49Z",
+  "reason": "extension_state_terminal"
+ }
+}

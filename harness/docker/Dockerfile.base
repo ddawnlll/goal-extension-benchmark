@@ -1,0 +1,45 @@
+# Base image for the GLLA vs pi-goal-x benchmark.
+# Minimal, identical runtime for both competitors: python3 (the task's tests),
+# git, ripgrep, and Node 22 (both extensions declare Node >= 22.19; GLLA's
+# detached auditor worker is a Node script). Nothing else that could influence
+# the agent.
+FROM debian:bookworm-slim
+
+ARG NODE_VERSION=22.21.1
+ARG TARGETARCH=arm64
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 \
+        git \
+        ripgrep \
+        procps \
+        ca-certificates \
+        curl \
+        diffutils \
+        coreutils \
+        findutils \
+        tar \
+        xz-utils \
+        util-linux \
+    && rm -rf /var/lib/apt/lists/* \
+    && git config --system --add safe.directory '*'
+
+RUN set -eux; \
+    case "$TARGETARCH" in amd64) narch=x64 ;; arm64) narch=arm64 ;; *) narch=x64 ;; esac; \
+    curl -fsSL -o /tmp/node.tar.xz "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${narch}.tar.xz"; \
+    tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 --no-same-owner; \
+    rm /tmp/node.tar.xz; \
+    node --version; npm --version
+
+# Unprivileged worker. Nothing in the benchmark runs as root after entrypoint.
+RUN useradd --create-home --uid 1000 --shell /bin/bash agent
+RUN ln -sf /opt/pi-bolt/pi /usr/local/bin/pi
+
+COPY --chmod=755 entrypoint.sh /usr/local/bin/goalbench-entrypoint
+ENTRYPOINT ["/usr/local/bin/goalbench-entrypoint"]
+CMD ["/bin/bash"]
+WORKDIR /work

@@ -1,0 +1,125 @@
+{
+ "name": "glla",
+ "extension": "pi-goal-list-loop-audit",
+ "trial": "r1",
+ "started_wall": 1793458833.0334415,
+ "started_utc": "2026-10-31T15:00:33Z",
+ "limit_seconds": 2700.0,
+ "thinking": "low",
+ "process_launch": {
+  "t": 0.001,
+  "wall": 1793458833.034,
+  "utc": "2026-10-31T15:00:33Z",
+  "cmd": [
+   "pi",
+   "--mode",
+   "rpc",
+   "--provider",
+   "local",
+   "--model",
+   "deepseek-v4.1-flash",
+   "--thinking",
+   "low",
+   "--session-dir",
+   "/home/agent/.pi/agent/sessions",
+   "--continue",
+   "--name",
+   "glla-r1",
+   "--no-approve"
+  ]
+ },
+ "pi_pid": {
+  "t": 0.006,
+  "wall": 1793458833.039,
+  "utc": "2026-10-31T15:00:33Z",
+  "pid": 10
+ },
+ "goal_submitted": {
+  "t": 0.006,
+  "wall": 1793458833.039,
+  "utc": "2026-10-31T15:00:33Z",
+  "prompt_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+  "chars": 1619
+ },
+ "run_started": {
+  "t": 1.093,
+  "wall": 1793458834.126,
+  "utc": "2026-10-31T15:00:34Z"
+ },
+ "first_test_run": {
+  "t": 6.347,
+  "wall": 1793458839.38,
+  "utc": "2026-10-31T15:00:39Z",
+  "command": "cd /home/agent/work && wc -l bench/report.py && grep -n \"svg\\|SVG\\|escape\\|html\" bench/report.py | head -60"
+ },
+ "first_successful_test_run": {
+  "t": 6.35,
+  "wall": 1793458839.383,
+  "utc": "2026-10-31T15:00:39Z",
+  "durationMs": 7
+ },
+ "agent_settled": {
+  "t": 35.431,
+  "wall": 1793458868.464,
+  "utc": "2026-10-31T15:01:08Z"
+ },
+ "settled_count": 6,
+ "clarification_rounds": 1,
+ "clarification_round_1": {
+  "t": 45.791,
+  "wall": 1793458878.824,
+  "utc": "2026-10-31T15:01:18Z",
+  "idle_after_settle": 10.4
+ },
+ "first_ui_question": {
+  "t": 89.341,
+  "wall": 1793458922.374,
+  "utc": "2026-10-31T15:02:02Z",
+  "method": "select",
+  "text": "Confirm goal\n\nHarden SVG text generation in `bench/report.py` against XML/SVG injection, with adversarial regression tests and parser-validated output.  Current state - `bench/report.py` (489 lines) is the only SVG producer. Two writers build documents by f-string interpolation: `chart()` (line 99, multi-panel bar charts) and `hero()` (line 152, the README headline figure). - Dynamic text reaching markup comes from: `--label name=text` (line 304), `environment.txt`-derived labels (lines 276-301), `--builds` names and `LABELS.get(b, b)` fallbacks (lines 112, 137, 152-215), JSONL-derived panel/tile/step/plugin names (e.g. `step_name()`, the `plugins.jsonl` `plugin` field at line 436, `names[k]` at line 438), chart titles/subtitles composed in `main()`, formatted values from `fmt()`, ratio notes from `ratio_text()`, and the `aria-label` attribute on the root `<svg>`. - Nothing is escaped today; `xml.etree` cannot be expected to parse a document built from hostile metadata. - The layout helpers `text_width()` (line 81) and `color_of()` (line 70) intentionally operate on raw, unescaped text. - There is no Python test suite for `bench/`; CI only runs `python3 -m py_compile bench/*.py` (`.github/workflows/ci.yml:102`). - `docs/images/*.svg` are committed but were generated from a different results folder and Pi version, so they are not a byte-comparable baseline (verified: regenerating from `bench/results/2026-10-12-linux-x64-0.8.5` already differs).  Decisions 1. Escape at the write boundary, one helper pair. Add module-level `esc(text)` (escapes `&` `<` `>` `\"` `'` \u2014 `&amp; &lt; &gt; &quot; &#x27;`) and `attr(text)` delegating to it, applied at every interpolation site inside `chart()` and `hero()`, including the `aria-label` attribute. Rejected: escaping inputs at ingestion \u2014 a label renders in several places (legend, table header, plugin names) so it would be escaped twice, producing `&amp;amp;`, and it misses sources added later. Rejected: rebuilding both documents wi"
+ },
+ "goal_confirmed": {
+  "t": 89.341,
+  "wall": 1793458922.374,
+  "utc": "2026-10-31T15:02:02Z",
+  "method": "select",
+  "via": "extension_ui_select"
+ },
+ "first_ui_answer": {
+  "t": 89.341,
+  "wall": 1793458922.374,
+  "utc": "2026-10-31T15:02:02Z",
+  "method": "select"
+ },
+ "first_code_modification": {
+  "t": 117.205,
+  "wall": 1793458950.238,
+  "utc": "2026-10-31T15:02:30Z",
+  "files": [
+   "?? bench/fixtures/report/environment.txt",
+   "?? bench/fixtures/report/large_write-1.txt",
+   "?? bench/fixtures/report/large_write-2.txt",
+   "?? bench/fixtures/report/long_answer-1.txt",
+   "?? bench/fixtures/report/long_answer-2.txt"
+  ]
+ },
+ "first_audit_request": {
+  "t": 539.32,
+  "wall": 1793459372.353,
+  "utc": "2026-10-31T15:09:32Z",
+  "id": "c54a6c7f"
+ },
+ "first_status_complete": {
+  "t": 691.063,
+  "wall": 1793459524.096,
+  "utc": "2026-10-31T15:12:04Z",
+  "source": "state:20261031150202-jux9q9.md",
+  "text": "pletion review | \u2014 | review status | approved (1 review) | approved (3 reviews) |\n\n\u2022 completion audit approved.\n\u2022 completion review: approved (3 reviews).\n\u2022 record: .pi-glla/archive/20261031150202-jux9q9.md\n\n## Original completion claim (verbatim)\n\nOutcome: SVGs drawn by bench/report.py can no longer be broken or injected into by text from --label, environment.txt or the results JSONL; ordinary charts are byte-for-byte unchanged.\nChanged: every dynamic string and attribute value is escaped once at the point it is written into the markup, with characters XML forbids dropped, so hostile metadata still yields a document a standard parser accepts.\nEvidence: bench/report.py (esc/attr helpers applied at all insertion sites in chart() and hero()), bench/test_report.py, bench/fixtures/report plus bench/fixtures/report-golden, bench/README.md section \"Text in the charts\".\nTests: python3 -m unittest bench/test_report.py \u2014 21 passed, 0 failed; golden CLI regeneration diff \u2014 identical, 12 SVGs; real results folder \u2014 10 documents parsed by xml.etree; hostile --label run \u2014 no script element, all documents parsed; python3 -m py_compile bench/*.py \u2014 clean.\nUnresolved: the new tests are not wired into .github/workflows/ci.yml (CI still only compiles bench/*.py), matching the agreed scope; Markdown table output is untouched and remains unescaped by design.\nNext: if you want the regression tests enforced in CI, add `python3 -m unittest bench/test_report.py` beside the existing py_compile step.\n"
+ },
+ "run_stopped": {
+  "t": 697.672,
+  "wall": 1793459530.705,
+  "utc": "2026-10-31T15:12:10Z",
+  "reason": "extension_state_terminal"
+ }
+}

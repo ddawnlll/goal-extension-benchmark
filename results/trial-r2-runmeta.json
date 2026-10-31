@@ -1,0 +1,85 @@
+{
+ "trial": "r2",
+ "order": "goal-x,glla",
+ "runs": [
+  {
+   "name": "goal-x",
+   "trial": "r2",
+   "baseline_sha": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+   "warmup": "OK",
+   "started_wall": 1793460150.6121442,
+   "ended_wall": 1793460596.437964,
+   "started_utc": "2026-10-31T15:22:30Z",
+   "ended_utc": "2026-10-31T15:29:56Z",
+   "wall_seconds": 445.8,
+   "externally_verified_at_s": 98.9,
+   "verifier_samples": [
+    {
+     "t": 55.1,
+     "ok": false,
+     "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.21s"
+    },
+    {
+     "t": 98.9,
+     "ok": true,
+     "detail": "9 passed, 1 deselected, 2 warnings in 0.17s"
+    }
+   ],
+   "sleep_events": [],
+   "docker_gaps": [],
+   "relay": {
+    "requests": 23,
+    "failed": 0,
+    "failure_rate": 0.0
+   },
+   "exit_reason": "extension_state_terminal",
+   "oom_killed": false,
+   "container_exit_code": "0",
+   "memory_limit": "6g",
+   "invalid_reasons": [],
+   "valid": true
+  },
+  {
+   "name": "glla",
+   "trial": "r2",
+   "baseline_sha": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+   "warmup": "OK",
+   "started_wall": 1793460637.622798,
+   "ended_wall": 1793461281.755776,
+   "started_utc": "2026-10-31T15:30:37Z",
+   "ended_utc": "2026-10-31T15:41:21Z",
+   "wall_seconds": 644.1,
+   "externally_verified_at_s": 148.1,
+   "verifier_samples": [
+    {
+     "t": 60.3,
+     "ok": false,
+     "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.17s"
+    },
+    {
+     "t": 104.1,
+     "ok": false,
+     "detail": "5 failed, 4 passed, 1 deselected, 3 warnings in 0.18s"
+    },
+    {
+     "t": 148.1,
+     "ok": true,
+     "detail": "9 passed, 1 deselected, 2 warnings in 0.13s"
+    }
+   ],
+   "sleep_events": [],
+   "docker_gaps": [],
+   "relay": {
+    "requests": 42,
+    "failed": 0,
+    "failure_rate": 0.0
+   },
+   "exit_reason": "extension_state_terminal",
+   "oom_killed": false,
+   "container_exit_code": "0",
+   "memory_limit": "6g",
+   "invalid_reasons": [],
+   "valid": true
+  }
+ ]
+}
