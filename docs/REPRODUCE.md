@@ -1,7 +1,8 @@
 # Reproduce the benchmark
 
-Everything below runs on one machine with Docker. The full campaign is about
-45 minutes of model time per pair plus setup.
+Everything below runs on one machine with Docker. In the recorded runs one pair
+(two sequential runs) took about 17 minutes of wall clock; both pairs plus setup
+and evaluation fit in well under an hour, because GLLA dominates the wall clock.
 
 ## Requirements
 
