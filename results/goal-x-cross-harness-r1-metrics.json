@@ -1,0 +1,65 @@
+{
+ "name": "goal-x",
+ "trial": "cross-harness-r1",
+ "started_utc": "2026-11-02T22:57:39Z",
+ "total_elapsed_s": 272.496,
+ "goal_confirmed_s": 32.246,
+ "first_code_write_s": 46.545,
+ "last_code_write_s": 116.19,
+ "code_writes": 7,
+ "test_commands": 1,
+ "first_test_s": 11.436,
+ "last_test_s": 11.436,
+ "first_completion_claim_s": 144.009,
+ "completion_tool": "update_goal",
+ "requests": 42,
+ "requests_failed": 0,
+ "max_request_gap_s": 25.2,
+ "audit_verdicts": [],
+ "audit_jobs": [],
+ "goal_events": [
+  {
+   "type": "goal_created",
+   "at": "2026-11-02T22:58:12.243Z"
+  },
+  {
+   "type": "completion_requested",
+   "at": "2026-11-02T23:00:03.993Z"
+  },
+  {
+   "type": "audit_started",
+   "at": "2026-11-02T23:00:03.994Z"
+  },
+  {
+   "type": "audit_result",
+   "at": "2026-11-02T23:01:45.409Z"
+  },
+  {
+   "type": "goal_completed",
+   "at": "2026-11-02T23:01:45.426Z"
+  },
+  {
+   "type": "goal_archived",
+   "at": "2026-11-02T23:01:45.427Z"
+  }
+ ],
+ "counters": {
+  "ui_questions": 190,
+  "ui_answers": 2,
+  "ui_deviations": 0,
+  "turns": 31,
+  "tool_calls": 36,
+  "test_runs": 16,
+  "test_runs_ok": 15,
+  "audit_requests": 33,
+  "audit_completions": 33,
+  "audit_failures": 0,
+  "completion_claims": 0,
+  "status_polls": 0,
+  "compactions": 0,
+  "retries": 0,
+  "agent_end_events": 2
+ },
+ "exit_reason": "extension_state_terminal",
+ "tokens_main": null
+}

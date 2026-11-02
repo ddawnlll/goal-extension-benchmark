@@ -1,0 +1,4 @@
+M	bench/README.md
+M	bench/report.py
+A	tests/bench/report-svg.py
+A	tests/bench/run.sh

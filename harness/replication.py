@@ -11,6 +11,7 @@ Subcommands:
   evaluate <trial>             blind independent test run for both candidates
   aggregate                    medians/ranges over all replication trials
 """
+import gzip
 import hashlib
 import json
 import os
@@ -45,7 +46,10 @@ def docker(*a, **kw):
 def load_jsonl(p):
     out = []
     try:
-        for line in Path(p).read_text(errors="replace").splitlines():
+        path = Path(p)
+        compressed = Path(str(path) + ".gz")
+        content = path.read_text(errors="replace") if path.exists() else gzip.open(compressed, "rt", errors="replace").read()
+        for line in content.splitlines():
             try:
                 out.append(json.loads(line))
             except Exception:
@@ -56,6 +60,8 @@ def load_jsonl(p):
 
 
 def cdir(name, trial):
+    if name not in ("glla", "goal-x", "dsh") or not re.fullmatch(r"[A-Za-z0-9_-]+", trial):
+        raise ValueError("invalid competitor or trial ID")
     return ROOT / "competitors" / name / trial
 
 
@@ -65,6 +71,8 @@ def collect(name, trial):
     relay_vol = f"gb-{name}-relay"
     dest = cdir(name, trial)
     tmp = ROOT / "harness" / ".tmp" / f"collect-{name}-{trial}"
+    if dest.exists() or (R / f"{name}-{trial}.patch").exists():
+        raise FileExistsError(f"refusing to overwrite collected evidence for {name}/{trial}")
     shutil.rmtree(tmp, ignore_errors=True)
     tmp.mkdir(parents=True)
     docker("run", "--rm", "--user", "0", "--entrypoint", "/bin/bash",
@@ -72,13 +80,12 @@ def collect(name, trial):
            "set -e; mkdir -p /out/logs /out/sessions /out/agent-config /out/extensions /out/workspace; "
            "cp -a /h/logs/. /out/logs/ 2>/dev/null || true; "
            "cp -a /h/.pi/agent/sessions/. /out/sessions/ 2>/dev/null || true; "
+           "cp -a /h/dsh-sessions/. /out/sessions/ 2>/dev/null || true; "
            "cp -a /h/.pi/agent/models.json /h/.pi/agent/settings.json /out/agent-config/ 2>/dev/null || true; "
            "cp -a /h/extensions/. /out/extensions/ 2>/dev/null || true; "
            "cp -a /h/work/. /out/workspace/ 2>/dev/null || true; "
            "cp -a /relaylog/. /out/logs/ 2>/dev/null || true; "
-           "rm -rf /out/workspace/.git")
-    if dest.exists():
-        shutil.rmtree(dest)
+           "rm -rf /out/workspace/.git", check=True)
     for part in ("logs", "sessions", "agent-config", "extensions", "workspace"):
         shutil.copytree(tmp / part, dest / part, symlinks=True)
     shutil.rmtree(tmp, ignore_errors=True)
@@ -94,7 +101,7 @@ def collect(name, trial):
         shutil.rmtree(child) if child.is_dir() else child.unlink()
     src = dest / "workspace"
     for child in src.iterdir():
-        if child.name in (".pi", ".pi-glla", ".git"):
+        if child.name in (".pi", ".pi-glla", ".dsh", ".git"):
             continue
         target = work / child.name
         shutil.copytree(child, target, symlinks=True) if child.is_dir() else shutil.copy2(child, target)
@@ -117,10 +124,15 @@ def collect(name, trial):
 # ----------------------------------------------------------------- timeline
 def timeline(name, trial):
     d = cdir(name, trial)
-    final = json.loads((d / "logs" / "final-state.json").read_text())
+    logdir = d / "logs" if (d / "logs" / "final-state.json").exists() else R / "logs" / trial / name
+    final_path = logdir / "final-state.json"
+    final_text = final_path.read_text() if final_path.exists() else gzip.open(str(final_path) + ".gz", "rt").read()
+    final = json.loads(final_text)
+    if name == "dsh":
+        return dsh_timeline(d, trial, final)
     ms, c = final["milestones"], final["counters"]
-    ev = load_jsonl(d / "logs" / "events.jsonl")
-    relay = load_jsonl(d / "logs" / "relay.jsonl")
+    ev = load_jsonl(logdir / "events.jsonl")
+    relay = load_jsonl(logdir / "relay.jsonl")
 
     tool_events = []
     for e in ev:
@@ -144,14 +156,18 @@ def timeline(name, trial):
     claim_t = min((t["t"] for t in claims), default=(ms.get("first_completion_claim") or {}).get("t"))
 
     # audit facts from the extension's own records
-    audits = load_jsonl(d / "workspace" / ".pi-glla" / "audits.jsonl")
+    audit_dir = d / "workspace" / ".pi-glla"
+    historical_audit = R / "audit-records" / trial / name
+    audits = load_jsonl(audit_dir / "audits.jsonl" if audit_dir.exists() else historical_audit / "audits.jsonl")
     audit_jobs = []
-    for prog in (d / "workspace" / ".pi-glla" / "audit-jobs").glob("*/progress.json"):
+    progress = list((audit_dir / "audit-jobs").glob("*/progress.json")) if audit_dir.exists() else list(historical_audit.glob("*-progress.json"))
+    for prog in progress:
         try:
             audit_jobs.append(json.loads(prog.read_text()))
         except Exception:
             pass
-    gx_events = load_jsonl(d / "workspace" / ".pi" / "goals" / "goal_events.jsonl")
+    gx_path = d / "workspace" / ".pi" / "goals" / "goal_events.jsonl"
+    gx_events = load_jsonl(gx_path if gx_path.exists() else historical_audit / "goal_events.jsonl")
     status_complete_t = None
     for e in ev:
         rec = e.get("record") or {}
@@ -202,6 +218,42 @@ def timeline(name, trial):
     }
 
 
+def dsh_timeline(d, trial, final):
+    events = []
+    for path in (d / "sessions").rglob("session.v4.jsonl"):
+        events.extend(load_jsonl(path))
+    changes = [e for e in events if e.get("type") == "goal/change"]
+    rounds = [e for e in events if e.get("type") == "user/message" and
+              (e.get("data", {}).get("source") or {}).get("kind") == "goal"]
+    requests = [r for r in load_jsonl(d / "logs" / "relay.jsonl") if r.get("path", "").endswith("chat/completions")]
+    return {"name": "dsh", "trial": trial, "total_elapsed_s": final.get("elapsed_seconds"),
+            "exit_reason": final.get("exit_reason"), "native_goal": final.get("native_goal"),
+            "goal_changes": [{"time": e.get("time"), "data": e.get("data")} for e in changes],
+            "autonomous_rounds": len(rounds), "requests": len(requests),
+            "relay_tokens": relay_tokens(requests),
+            "audit_verdicts": "not_applicable", "audit_jobs": "not_applicable"}
+
+
+def relay_tokens(requests):
+    total = {"input": 0, "output": 0, "cacheRead": 0, "reasoning": 0, "requests_with_usage": 0}
+    for request in requests:
+        usage = request.get("usage")
+        if not isinstance(usage, dict):
+            continue
+        prompt = usage.get("prompt_tokens") or 0
+        cached = min(prompt, (usage.get("prompt_tokens_details") or {}).get("cached_tokens") or 0)
+        total["input"] += max(0, prompt - cached)
+        total["cacheRead"] += cached
+        total["output"] += usage.get("completion_tokens") or 0
+        total["reasoning"] += (usage.get("completion_tokens_details") or {}).get("reasoning_tokens") or 0
+        total["requests_with_usage"] += 1
+    if total["requests_with_usage"] == 0:
+        return {key: (0 if key == "requests_with_usage" else None) for key in
+                ("input", "output", "cacheRead", "reasoning", "requests_with_usage", "cost_usd_nominal")}
+    total["cost_usd_nominal"] = round((total["input"] * .3 + total["output"] * 1.2 + total["cacheRead"] * .006) / 1e6, 6)
+    return total
+
+
 def tokens(d):
     tot = {"input": 0, "output": 0, "cacheRead": 0, "cost": 0.0, "messages": 0}
     files = list((d / "sessions").glob("*.jsonl")) + list(
@@ -228,38 +280,61 @@ def tokens(d):
 
 
 # ----------------------------------------------------------------- evaluate
-def evaluate(trial):
-    mapping = {n: f"C{i+1}" for i, n in enumerate(random.sample(NAMES, 2))}
+def evaluate(trial, names=None, output_id=None):
+    names = names or NAMES
+    output_id = output_id or trial
+    for name in names:
+        cdir(name, trial)
+        cdir(name, output_id)
+    targets = [R / f"replication-evaluation-{output_id}.json"] + [
+        R / f"{name}-{output_id}-{label}-tests.log" for name in names
+        for label in ("frozen", "adversarial", "cli-parity")]
+    if any(path.exists() for path in targets):
+        raise FileExistsError(f"refusing to overwrite evaluation evidence for {trial}")
+    mapping = {n: f"C{i+1}" for i, n in enumerate(random.sample(names, len(names)))}
     out = {"trial": trial, "anonymization": mapping, "candidates": {}}
-    for name in NAMES:
+    for name in names:
         anon = mapping[name]
         src = cdir(name, trial) / "workspace"
         work = ROOT / "harness" / ".tmp" / f"eval-{anon}-{trial}"
         shutil.rmtree(work, ignore_errors=True)
         work.mkdir(parents=True)
-        for child in src.iterdir():
-            if child.name in (".git", ".pi", ".pi-glla"):
+        source = src if src.is_dir() else ROOT / "baseline" / "pi-bolt"
+        for child in source.iterdir():
+            if child.name in (".git", ".pi", ".pi-glla", ".dsh"):
                 continue
             tgt = work / child.name
             shutil.copytree(child, tgt, symlinks=True) if child.is_dir() else shutil.copy2(child, tgt)
+        if not src.is_dir():
+            patch = R / f"{name}-{trial}.patch"
+            if not patch.is_file():
+                raise FileNotFoundError(f"no workspace or patch for {name}/{trial}")
+            applied = sh(["git", "-C", str(work), "apply", str(patch)])
+            if applied.returncode:
+                raise RuntimeError(f"cannot apply {patch}: {applied.stderr}")
         tests = {}
-        for suite, label in (("test_report_svg.py", "frozen"), ("test_adversarial_extra.py", "adversarial")):
+        for suite, label in (("/eval/test_report_svg.py", "frozen"),
+                             ("/eval/test_adversarial_extra.py", "adversarial"),
+                             ("/extra/test_cli_parity.py", "cli-parity")):
             p = docker("run", "--rm", "--network", "none",
                        "-v", f"{work}:/candidate",
                        "-v", f"{ROOT / 'evaluation' / 'frozen'}:/eval:ro",
+                       "-v", f"{ROOT / 'evaluation' / 'extra'}:/extra:ro",
+                       "-v", f"{ROOT / 'baseline' / 'pi-bolt'}:/baseline:ro",
                        "-v", f"{ROOT / 'baseline' / 'pi-bolt' / 'bench' / 'results' / '2026-10-10-pi-bolt-0.7.3'}:/fixture/results:ro",
                        "-v", f"{ROOT / 'evaluation' / 'fixtures' / 'baseline-svgs'}:/fixture/baseline-svgs:ro",
                        "-e", "CANDIDATE_ROOT=/candidate",
                        "-e", "FIXTURE_RESULTS=/fixture/results",
                        "-e", "BASELINE_SVGS=/fixture/baseline-svgs",
-                       EVAL, "python3", "-m", "pytest", "-v", f"/eval/{suite}")
+                       EVAL, "python3", "-m", "pytest", "-v", suite)
             text = (p.stdout or "") + (p.stderr or "")
-            (R / f"{name}-{trial}-{label}-tests.log").write_text(text)
+            (R / f"{name}-{output_id}-{label}-tests.log").write_text(text)
             tests[label] = {
-                "passed": len(re.findall(r"PASSED", text)),
-                "failed": len(re.findall(r"FAILED", text)),
+                "passed": len(re.findall(r"^.*::.* PASSED\s", text, re.MULTILINE)),
+                "failed": len(re.findall(r"^.*::.* FAILED\s", text, re.MULTILINE)),
                 "failures": sorted(set(re.findall(r"FAILED \S+::(\S+)", text))),
                 "summary": next((l for l in text.splitlines() if re.search(r"\d+ (passed|failed)", l)), ""),
+                "exit_code": p.returncode,
             }
         files = R / f"{name}-{trial}-changed-files.txt"
         changed = []
@@ -269,6 +344,7 @@ def evaluate(trial):
                 changed.append({"status": parts[0], "path": parts[1]})
         out["candidates"][name] = {
             "anonymous_id": anon, "tests": tests, "changed": changed,
+            "independent_tests_pass": all(t["exit_code"] == 0 and t["passed"] > 0 for t in tests.values()),
             "datasets_modified": [c for c in changed if c["path"].startswith("bench/results/")],
             "out_of_scope": [c for c in changed if not (
                 c["path"] == "bench/report.py" or c["path"].startswith("bench/tests/")
@@ -276,8 +352,8 @@ def evaluate(trial):
                 or c["path"].startswith("docs/") or c["path"] in ("bench/README.md", "README.md"))],
         }
         shutil.rmtree(work, ignore_errors=True)
-    (R / f"replication-evaluation-{trial}.json").write_text(json.dumps(out, indent=1))
-    for n in NAMES:
+    (R / f"replication-evaluation-{output_id}.json").write_text(json.dumps(out, indent=1))
+    for n in names:
         t = out["candidates"][n]["tests"]
         print(f"{n} ({mapping[n]}): frozen {t['frozen']['passed']}p/{t['frozen']['failed']}f, "
               f"adversarial {t['adversarial']['passed']}p/{t['adversarial']['failed']}f")
@@ -341,9 +417,35 @@ if __name__ == "__main__":
     elif cmd == "collect-one":
         collect(sys.argv[2], sys.argv[3])
     elif cmd == "timeline":
-        for n in NAMES:
-            print(json.dumps(timeline(n, sys.argv[2]), indent=1))
+        for n in (sys.argv[3].split(",") if len(sys.argv) > 3 else NAMES):
+            result = timeline(n, sys.argv[2])
+            output = R / f"{n}-{sys.argv[2]}-metrics.json"
+            if output.exists():
+                raise FileExistsError(f"refusing to overwrite {output}")
+            output.write_text(json.dumps(result, indent=1))
+            print(json.dumps(result, indent=1))
     elif cmd == "evaluate":
-        evaluate(sys.argv[2])
+        evaluate(sys.argv[2], sys.argv[3].split(",") if len(sys.argv) > 3 else None,
+                 sys.argv[4] if len(sys.argv) > 4 else None)
     elif cmd == "aggregate":
-        aggregate()
+        if len(sys.argv) < 3:
+            raise SystemExit("provide comma-separated trial IDs; historical summaries are never overwritten")
+        trials = sys.argv[2].split(",")
+        names = sys.argv[3].split(",") if len(sys.argv) > 3 else NAMES
+        for trial in trials:
+            for name in names:
+                cdir(name, trial)
+        rows = {}
+        for trial in trials:
+            for name in names:
+                meta = json.loads((R / f"{name}-{trial}-runmeta.json").read_text())
+                row = timeline(name, trial)
+                row["valid"] = meta["valid"]
+                row["invalid_reasons"] = meta["invalid_reasons"]
+                row["relay_tokens"] = relay_tokens(meta.get("wire", []))
+                rows.setdefault(name, []).append(row)
+        output = R / ("comparison-" + "-".join(trials) + ".json")
+        if output.exists():
+            raise SystemExit(f"refusing to overwrite {output}")
+        output.write_text(json.dumps(rows, indent=1))
+        print(output)

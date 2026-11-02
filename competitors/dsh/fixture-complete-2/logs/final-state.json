@@ -1,0 +1,20 @@
+{
+  "name": "dsh",
+  "trial": "fixture-complete-2",
+  "session_id": "session-2bc06953-abd8-4927-8da4-61d7ba4472b2",
+  "exit_reason": "goal_complete",
+  "native_goal": {
+    "id": "goal-ce2cd501-acb4-4664-ba2e-a49b7f118f75",
+    "revision": 2,
+    "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+    "phase": "complete",
+    "maxGoalRounds": 4,
+    "roundsStarted": 2,
+    "createdAt": 1793662808915,
+    "updatedAt": 1793662809104,
+    "activation": "disarmed"
+  },
+  "objective_matches_normalized_task": true,
+  "auditor": "not_applicable",
+  "elapsed_seconds": 0.511
+}

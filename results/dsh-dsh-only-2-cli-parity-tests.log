@@ -1,0 +1,42 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-7.2.1, pluggy-1.0.0+repack -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /extra
+collecting ... collected 2 items
+
+../extra/test_cli_parity.py::CliParity::test_help_output_byte_identical FAILED [ 50%]
+../extra/test_cli_parity.py::CliParity::test_tables_unchanged_for_ordinary_results PASSED [100%]
+
+=================================== FAILURES ===================================
+__________________ CliParity.test_help_output_byte_identical ___________________
+
+self = <test_cli_parity.CliParity testMethod=test_help_output_byte_identical>
+
+    def test_help_output_byte_identical(self):
+        def help_of(root):
+            return subprocess.run([sys.executable, str(root / "bench" / "report.py"), "--help"],
+                                  capture_output=True, text=True, timeout=120)
+        a, b = help_of(BASE), help_of(CAND)
+        self.assertEqual(a.returncode, b.returncode)
+>       self.assertEqual(a.stdout, b.stdout, "--help output changed")
+E       AssertionError: 'usag[1529 chars]").\n\nExample: bench/report.py results/2026-1[350 chars]e)\n' != 'usag[1529 chars]").\nEvery string the charts draw (titles, pan[586 chars]e)\n'
+E       Diff is 2197 characters long. Set self.maxDiff to None to see it. : --help output changed
+
+/extra/test_cli_parity.py:25: AssertionError
+=============================== warnings summary ===============================
+../usr/lib/python3/dist-packages/_pytest/cacheprovider.py:433
+  /usr/lib/python3/dist-packages/_pytest/cacheprovider.py:433: PytestCacheWarning: could not create cache path /extra/.pytest_cache/v/cache/nodeids
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../usr/lib/python3/dist-packages/_pytest/cacheprovider.py:387
+  /usr/lib/python3/dist-packages/_pytest/cacheprovider.py:387: PytestCacheWarning: could not create cache path /extra/.pytest_cache/v/cache/lastfailed
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+../usr/lib/python3/dist-packages/_pytest/stepwise.py:56
+  /usr/lib/python3/dist-packages/_pytest/stepwise.py:56: PytestCacheWarning: could not create cache path /extra/.pytest_cache/v/cache/stepwise
+    session.config.cache.set(STEPWISE_CACHE_DIR, [])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../extra/test_cli_parity.py::CliParity::test_help_output_byte_identical
+=================== 1 failed, 1 passed, 3 warnings in 0.13s ====================

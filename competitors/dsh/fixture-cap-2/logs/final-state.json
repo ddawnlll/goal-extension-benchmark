@@ -1,0 +1,24 @@
+{
+  "name": "dsh",
+  "trial": "fixture-cap-2",
+  "session_id": "session-75ea4c30-360c-4b63-8243-3cadcf6aaada",
+  "exit_reason": "goal_blocked",
+  "native_goal": {
+    "id": "goal-8178fcd3-ae81-4995-bc0c-169c52f2e2a2",
+    "revision": 2,
+    "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+    "phase": "blocked",
+    "maxGoalRounds": 2,
+    "blockedReason": {
+      "code": "round-limit",
+      "message": "Goal reached its configured limit of 2 rounds."
+    },
+    "roundsStarted": 2,
+    "createdAt": 1793662848232,
+    "updatedAt": 1793662848353,
+    "activation": "disarmed"
+  },
+  "objective_matches_normalized_task": true,
+  "auditor": "not_applicable",
+  "elapsed_seconds": 0.508
+}

@@ -18,3 +18,12 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .DS_Store
+
+# Generated per-run seed data
+harness/run-seed/
+competitors/*/workspace/
+competitors/*/*/workspace/
+results/*/workspace/
+results/*/*/workspace/
+competitors/*/*/extensions/dsh/
+competitors/*/*/sessions/**/session.lock

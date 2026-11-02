@@ -11,6 +11,7 @@ relay container (the exact topology used for timing):
 Records every latency and error. Exits non-zero if any request fails, because a
 trial timed on an unstable relay is not a valid speed measurement.
 """
+import argparse
 import json
 import os
 import statistics
@@ -23,12 +24,11 @@ ROOT = Path(__file__).resolve().parent.parent
 ENV = dict(os.environ, DOCKER_HOST=os.environ.get(
     "DOCKER_HOST", f"unix://{Path.home()}/.colima/default/docker.sock"))
 IMAGE = "goalbench/base:1"
-OUT = ROOT / "results" / "replication-preflight.json"
 N = 4
 
 
-def sh(cmd, **kw):
-    return subprocess.run(cmd, text=True, capture_output=True, env=ENV, **kw)
+def sh(cmd, extra_process_env=None, **kw):
+    return subprocess.run(cmd, text=True, capture_output=True, env={**ENV, **(extra_process_env or {})}, **kw)
 
 
 def docker(*a, **kw):
@@ -43,7 +43,7 @@ tools = [{"type":"function","function":{"name":f"tool_{i}",
           "parameters":{"type":"object","properties":{"path":{"type":"string"}},"required":["path"]}}}
          for i in range(24)]
 shapes = [
-  ("small",   {"max_tokens": 24, "stream": False,
+  ("small",   {"max_tokens": 24, "stream": False, "reasoning_effort": "low",
                "messages":[{"role":"user","content":"Reply with exactly: PREFLIGHT_OK"}]}),
   ("tools",   {"max_tokens": 200, "stream": True, "tools": tools, "reasoning_effort": "low",
                "messages":[{"role":"system","content":"You are a coding agent. "*120},
@@ -84,15 +84,28 @@ print("SUMMARY " + json.dumps({
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--id", required=True, help="fresh preflight ID")
+    parser.add_argument("--competitors", default="glla,goal-x,dsh")
+    args = parser.parse_args()
+    import re
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", args.id):
+        parser.error("invalid preflight ID")
+    names = args.competitors.split(",")
+    if not names or len(names) != len(set(names)) or any(n not in ("glla", "goal-x", "dsh") for n in names):
+        parser.error("invalid competitor list")
+    out_path = ROOT / "results" / f"preflight-{args.id}.json"
+    if out_path.exists():
+        parser.error("preflight output already exists")
     key = (ROOT / "harness" / ".secrets" / "local_api_key").read_text().strip()
     script = ROOT / "harness" / ".tmp" / "preflight_infer.py"
     script.parent.mkdir(parents=True, exist_ok=True)
     script.write_text(PREFLIGHT_PY)
     report = {"started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "competitors": {}}
     ok_all = True
-    for name in ("glla", "goal-x"):
-        net, relay, relay_vol = f"gbnet-{name}", f"gb-relay-{name}", f"gb-{name}-relay"
-        for c in (f"gb-worker-{name}", f"gb-verify-{name}", relay):
+    for name in names:
+        net, relay, relay_vol = f"gbpreflight-{args.id}-{name}", f"gb-preflight-{args.id}-{name}", f"gbpreflight-{args.id}-{name}"
+        for c in (relay,):
             docker("rm", "-f", c)
         docker("network", "rm", net)
         docker("network", "create", "--internal", net)
@@ -100,9 +113,14 @@ def main():
         docker("volume", "create", relay_vol)
         docker("run", "-d", "--name", relay, "--restart", "no", "--network", net,
                "--add-host", "host.lima.internal:host-gateway",
-               "-e", "LOCAL_LLM_KEY=" + key, "-e", "RELAY_LOG=/logs/relay.jsonl",
+               "-e", "LOCAL_LLM_KEY",
+               *sum((["-e", f"{var}={os.environ[var]}"] for var in
+                      ("UPSTREAM_HOST", "UPSTREAM_PORT", "UPSTREAM_SCHEME", "UPSTREAM_PREFIX", "UPSTREAM_MODELS_PATH")
+                      if var in os.environ), []),
+               "-e", f"UPSTREAM_SESSION=goalbench-preflight-{args.id}-{name}",
+               "-e", "RELAY_LOG=/logs/relay.jsonl",
                "-e", "RELAY_CONTROL=/logs/control.json", "-v", f"{relay_vol}:/logs",
-               "goalbench/relay:1")
+               "goalbench/relay:1", extra_process_env={"LOCAL_LLM_KEY": key})
         docker("network", "connect", "bridge", relay)
         docker("run", "--rm", "--entrypoint", "/bin/sh", "-v", f"{relay_vol}:/logs",
                "goalbench/relay:1", "-c",
@@ -137,8 +155,8 @@ def main():
         docker("stop", relay)
     report["stable"] = ok_all
     report["finished_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    OUT.write_text(json.dumps(report, indent=1))
-    print("PREFLIGHT", "STABLE" if ok_all else "UNSTABLE", "->", OUT)
+    out_path.write_text(json.dumps(report, indent=1))
+    print("PREFLIGHT", "STABLE" if ok_all else "UNSTABLE", "->", out_path)
     return 0 if ok_all else 1
 
 

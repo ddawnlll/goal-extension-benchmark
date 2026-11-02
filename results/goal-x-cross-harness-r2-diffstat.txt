@@ -1,0 +1,4 @@
+ bench/README.md      |   7 ++
+ bench/report.py      |  47 +++++++---
+ bench/test_report.py | 253 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 292 insertions(+), 15 deletions(-)

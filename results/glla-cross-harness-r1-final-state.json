@@ -1,0 +1,418 @@
+{
+ "name": "glla",
+ "extension": "pi-goal-list-loop-audit",
+ "trial": "cross-harness-r1",
+ "exit_reason": "wall_clock_limit",
+ "duration_seconds": 301.219,
+ "pi_exit_code": 0,
+ "milestones": {
+  "name": "glla",
+  "extension": "pi-goal-list-loop-audit",
+  "trial": "cross-harness-r1",
+  "started_wall": 1793659938.45732,
+  "started_utc": "2026-11-02T22:52:18Z",
+  "limit_seconds": 300.0,
+  "thinking": "low",
+  "process_launch": {
+   "t": 0.001,
+   "wall": 1793659938.458,
+   "utc": "2026-11-02T22:52:18Z",
+   "cmd": [
+    "pi",
+    "--mode",
+    "rpc",
+    "--provider",
+    "local",
+    "--model",
+    "deepseek-v4.1-flash",
+    "--thinking",
+    "low",
+    "--session-dir",
+    "/home/agent/.pi/agent/sessions",
+    "--continue",
+    "--name",
+    "glla-cross-harness-r1",
+    "--no-approve"
+   ]
+  },
+  "pi_pid": {
+   "t": 0.002,
+   "wall": 1793659938.458,
+   "utc": "2026-11-02T22:52:18Z",
+   "pid": 10
+  },
+  "goal_submitted": {
+   "t": 0.002,
+   "wall": 1793659938.459,
+   "utc": "2026-11-02T22:52:18Z",
+   "prompt_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+   "chars": 1619
+  },
+  "run_started": {
+   "t": 0.937,
+   "wall": 1793659939.394,
+   "utc": "2026-11-02T22:52:19Z"
+  },
+  "first_test_run": {
+   "t": 3.276,
+   "wall": 1793659941.733,
+   "utc": "2026-11-02T22:52:21Z",
+   "command": "ls /home/agent/work; echo ---; find /home/agent/work -name report.py -not -path '*/node_modules/*' | head -20"
+  },
+  "first_successful_test_run": {
+   "t": 3.289,
+   "wall": 1793659941.746,
+   "utc": "2026-11-02T22:52:21Z",
+   "durationMs": 13
+  },
+  "agent_settled": {
+   "t": 44.291,
+   "wall": 1793659982.748,
+   "utc": "2026-11-02T22:53:02Z"
+  },
+  "settled_count": 1,
+  "clarification_rounds": 1,
+  "clarification_round_1": {
+   "t": 48.329,
+   "wall": 1793659986.786,
+   "utc": "2026-11-02T22:53:06Z",
+   "idle_after_settle": 4.0
+  },
+  "first_ui_question": {
+   "t": 78.689,
+   "wall": 1793660017.146,
+   "utc": "2026-11-02T22:53:37Z",
+   "method": "select",
+   "text": "Confirm goal\n\nImprove the security and reliability of SVG generation in Pi-Bolt's `bench/report.py`, exactly as specified. The reporting tool generates SVG charts and accepts text that can originate from benchmark metadata, labels and command-line arguments. Implement correct SVG/XML escaping for text inserted into generated SVG documents.  REQUIREMENTS (all retained, none narrowed): 1. Locate all relevant paths that insert dynamic text into generated SVG markup. 2. Ensure special XML characters are handled safely, including `&`, `<`, `>`, quotation marks and apostrophes where applicable. 3. Preserve legitimate Unicode content. 4. Ensure user-controlled labels cannot inject SVG elements, attributes or scripts. 5. Avoid double escaping. 6. Preserve the existing visual appearance for ordinary inputs. 7. Add focused automated regression tests, including adversarial input. 8. Validate the generated SVG with a standard XML parser. 9. Run relevant existing tests and report their results. 10. Document the behavior where appropriate.  CONSTRAINTS (all retained): - No unrelated refactoring. - Do not weaken existing tests. - Do not modify benchmark result datasets. - Preserve the existing command-line interface and supported functionality. - Prefer standard-library solutions. - Do not require a complete Pi-Bolt runtime rebuild unless genuinely necessary.  CURRENT STATE (evidence from a read-only survey): `bench/report.py` is 489 lines, Python 3.11, standard library only (`argparse`, `json`, `re`, `statistics`, `collections`, `pathlib`). Two functions write SVG: `chart()` (line 103, panel charts) and `hero()` (line 151, the headline image). `main()` (line ~253) assembles the labels. Dynamic text reaches SVG markup through bare f-strings at these sinks: - `aria-label=\"{title}: {subtitle}\"` in both writers (lines 115, 172) \u2014 an ATTRIBUTE context, where a quote breaks out of the value. - Title and subtitle `<text>` elements (lines 115-118, 175-176); `subtitle` can carry `pi_versi"
+  },
+  "goal_confirmed": {
+   "t": 78.691,
+   "wall": 1793660017.147,
+   "utc": "2026-11-02T22:53:37Z",
+   "method": "select",
+   "via": "extension_ui_select"
+  },
+  "first_ui_answer": {
+   "t": 78.691,
+   "wall": 1793660017.147,
+   "utc": "2026-11-02T22:53:37Z",
+   "method": "select"
+  },
+  "first_code_modification": {
+   "t": 118.953,
+   "wall": 1793660057.409,
+   "utc": "2026-11-02T22:54:17Z",
+   "files": [
+    " M bench/report.py"
+   ]
+  },
+  "run_stopped": {
+   "t": 300.154,
+   "wall": 1793660238.661,
+   "utc": "2026-11-02T22:57:18Z",
+   "reason": "wall_clock_limit"
+  }
+ },
+ "counters": {
+  "ui_questions": 104,
+  "ui_answers": 1,
+  "ui_deviations": 0,
+  "turns": 44,
+  "tool_calls": 53,
+  "test_runs": 25,
+  "test_runs_ok": 24,
+  "audit_requests": 0,
+  "audit_completions": 0,
+  "audit_failures": 0,
+  "completion_claims": 0,
+  "status_polls": 0,
+  "compactions": 0,
+  "retries": 0,
+  "agent_end_events": 1
+ },
+ "claims": [],
+ "status_log": [
+  {
+   "t": 0.936,
+   "source": "notify",
+   "text": "pi-goal-list-loop-audit: session provider \"local\" is not a known built-in. The auditor inherits the resolved model in-process, so this usually works \u2014 but if audits error with auth/provider failures, choose an explicit auditor model in /glla settings."
+  },
+  {
+   "t": 0.936,
+   "source": "setStatus",
+   "text": "\u001b[39m\u001b[2mglla:\u001b[22;39m \u001b[39m\u001b[2mIDLE\u001b[22;39m \u001b[39m\u001b[2m\u00b7 idle\u001b[22;39m \u001b[39m\u001b[2m\u00b7 no action\u001b[22;39m"
+  },
+  {
+   "t": 0.936,
+   "source": "notify",
+   "text": " DEEP PLANNING MODE: research the code FIRST, then interview in ROUNDS (architecture \u2192 scope \u2192 failure conditions \u2192 verification); the proposal will be a structured expanded contract, far more detailed than a regular draft. Goal drafting \u2014 deep planning: the objective has no \"Done when:\" clause \u2014 the agent will grill you about it first (nothing activates until you confirm). Skip the interview entirely: /goal start <objective>."
+  },
+  {
+   "t": 0.936,
+   "source": "setStatus",
+   "text": "\u001b[39m\u001b[2mglla:\u001b[22;39m \u001b[39m\u001b[2mIDLE\u001b[22;39m \u001b[39m\u001b[2m\u00b7 idle\u001b[22;39m \u001b[39m\u001b[2m\u00b7 no action\u001b[22;39m"
+  },
+  {
+   "t": 0.938,
+   "source": "setStatus",
+   "text": "\u001b[39m\u001b[2mglla:\u001b[22;39m \u001b[39m\u001b[2mIDLE\u001b[22;39m \u001b[39m\u001b[2m\u00b7 idle\u001b[22;39m \u001b[39m\u001b[2m\u00b7 no action\u001b[22;39m"
+  },
+  {
+   "t": 78.739,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 0s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mcurrent-owner turn observed\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 78.773,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 0s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mcurrent-owner turn observed\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 80.765,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mcurrent-owner turn observed\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 85.77,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 7s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 90.764,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 12s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 3s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 95.761,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 17s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 4s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 100.769,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 22s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 9s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 105.766,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 27s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 14s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 110.779,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 32s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 0s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 115.782,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 37s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 5s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 120.783,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 42s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 0s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 125.798,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 47s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 5s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 130.798,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 52s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 0s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 135.797,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 57s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 5s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 140.808,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 02s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 145.841,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 07s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 150.811,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 12s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 4s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 155.808,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 17s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 0s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 160.818,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 22s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 5s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 165.823,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 27s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 10s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 170.824,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 32s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 15s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 175.827,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 37s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 20s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 180.836,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 42s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 25s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 185.827,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 47s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 30s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 190.838,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 52s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 195.841,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 1m 57s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 7s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 200.844,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 02s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 205.847,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 07s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 7s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 210.846,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 12s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 215.851,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 17s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 220.86,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 22s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 5s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 224.13,
+   "source": "notify",
+   "text": "glla: a turn started 1m ago but no continuation was accepted since (19 re-arms) \u2014 the open turn has not picked up the queued dispatch. If its stream counters are frozen it is hung, not thinking; Esc interrupts it, then resume retries. No action needed unless this reaches a state-based stop."
+  },
+  {
+   "t": 225.862,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 27s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 230.879,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 32s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 3s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 235.873,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 37s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 240.869,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 42s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 245.875,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 47s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 250.876,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 52s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 0s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 255.898,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 2m 57s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 5s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 260.883,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 02s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 265.884,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 07s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 2s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 270.885,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 12s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 3s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 275.892,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 17s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mlast progress 1s ago \u00b7 runtime\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 280.074,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 21s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mjudgment: 0 prior defer recommendations \u00b7 durable action evaluated first\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m1. Durable fix \u2014 Implement Added svg_text/svg_attr to bench/\u2026 \u25c2 recommended\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m2. Defer / workaround \u2014 Use only when the durable action is unsafe, imposs\u2026\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mselected: inline (durable fix)\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 280.12,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 21s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mjudgment: 0 prior defer recommendations \u00b7 durable action evaluated first\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m1. Durable fix \u2014 Implement Added svg_text/svg_attr to bench/\u2026 \u25c2 recommended\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m2. Defer / workaround \u2014 Use only when the durable action is unsafe, imposs\u2026\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mselected: inline (durable fix)\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 285.894,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 27s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mjudgment: 0 prior defer recommendations \u00b7 durable action evaluated first\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m1. Durable fix \u2014 Implement Added svg_text/svg_attr to bench/\u2026 \u25c2 recommended\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m2. Defer / workaround \u2014 Use only when the durable action is unsafe, imposs\u2026\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mselected: inline (durable fix)\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 290.9,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 32s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mjudgment: 0 prior defer recommendations \u00b7 durable action evaluated first\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m1. Durable fix \u2014 Implement Added svg_text/svg_attr to bench/\u2026 \u25c2 recommended\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m2. Defer / workaround \u2014 Use only when the durable action is unsafe, imposs\u2026\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mselected: inline (durable fix)\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  },
+  {
+   "t": 295.901,
+   "source": "setWidget",
+   "text": "\u001b[38;5;2m\u25cf \u001b[39m\u001b[39m\u001b[2mGOAL\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mworking\u001b[22;39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[38;5;2mRUNNING\u001b[39m\u001b[39m\u001b[2m \u00b7 \u001b[22;39m\u001b[39m\u001b[2mage 3m 37s\u001b[22;39m\n\u001b[39m\u001b[2m\u2502  \u001b[22;39mprovider error\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mjudgment: 0 prior defer recommendations \u00b7 durable action evaluated first\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m1. Durable fix \u2014 Implement Added svg_text/svg_attr to bench/\u2026 \u25c2 recommended\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2m2. Defer / workaround \u2014 Use only when the durable action is unsafe, imposs\u2026\u001b[22;39m\n\u001b[39m\u001b[2m\u251c\u2500 \u001b[22;39m\u001b[39m\u001b[2mselected: inline (durable fix)\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mnext: Observed work is in progress\u001b[22;39m\n\u001b[39m\u001b[2m\u2514\u2500 \u001b[22;39m\u001b[39m\u001b[2mv0.39.54\u001b[22;39m"
+  }
+ ],
+ "git": {
+  "first_change": {
+   "t": 118.953,
+   "wall": 1793660057.409
+  },
+  "changed_files": [
+   " M bench/README.md",
+   " M bench/report.py",
+   "?? tests/bench/report-svg.py",
+   "?? tests/bench/run.sh"
+  ]
+ },
+ "last_rss_kb": 0,
+ "surviving_children": [],
+ "task_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9",
+ "prompt_sha256": "4949e199b508efc4128cec76d856fdf08c19655f5c91fb17a3bc8e6072cf458b",
+ "finished_wall": 1793660239.7297485
+}

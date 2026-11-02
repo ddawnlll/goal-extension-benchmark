@@ -1,0 +1,40 @@
+# Overlay on the shipped base + headless profile. The product goal service,
+# slash command, tool and round driver stay mounted and unmodified.
+- id: headless-startup
+  disabled: true
+- id: headless-runner
+  disabled: true
+- id: llm-deepseek
+  disabled: true
+- id: agent-default-model
+  config:
+    provider: local
+    model: deepseek-v4.1-flash
+    reasoningEffort: low
+- id: llm-pi-ai
+  config:
+    providers:
+      local:
+        api: openai-completions
+        apiKeyEnv: BENCH_RELAY_KEY
+        baseURL: !!js "'http://gb-relay-' + process.env.INSTANCE_NAME + ':9091/v1'"
+        compat:
+          supportsReasoningEffort: true
+          supportsUsageInStreaming: true
+        models:
+          - id: deepseek-v4.1-flash
+            name: DeepSeek v4.1 Flash
+            contextWindow: 1000000
+            maxTokens: 32768
+            reasoningEfforts:
+              low: low
+- id: goal
+  config:
+    defaultMaxGoalRounds: !!js "Number(process.env.DSH_GOAL_MAX_ROUNDS ?? 256)"
+- id: session-persistence-jsonl
+  config:
+    root: /home/agent/dsh-sessions
+    compression: none
+- insert:
+    - id: benchmark-goal-adapter
+      name: /opt/dsh/adapter.mjs

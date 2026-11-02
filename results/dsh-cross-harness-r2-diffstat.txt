@@ -1,0 +1,5 @@
+ .github/workflows/ci.yml |   4 +-
+ bench/README.md          |   3 +-
+ bench/report.py          |  60 ++++++++----
+ bench/test_report.py     | 243 +++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 290 insertions(+), 20 deletions(-)

@@ -1,0 +1,358 @@
+{
+  "dsh-fixture01": {
+    "mode": "deterministic fixture (not benchmark)",
+    "state": {
+      "name": "dsh",
+      "trial": "dsh-fixture01",
+      "session_id": "session-b75c2be7-094e-4d44-ad9f-c31122e45290",
+      "exit_reason": "goal_complete",
+      "native_goal": {
+        "id": "goal-36fdc78b-e6e5-4b3c-9d29-bf029febe292",
+        "revision": 2,
+        "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+        "phase": "complete",
+        "maxGoalRounds": 4,
+        "roundsStarted": 2,
+        "createdAt": 1793660001836,
+        "updatedAt": 1793660002040,
+        "activation": "disarmed"
+      },
+      "objective_matches_normalized_task": true,
+      "auditor": "not_applicable",
+      "elapsed_seconds": 0.508
+    },
+    "trace": [
+      {
+        "seq": 20,
+        "time": 1793660001836,
+        "type": "command/run",
+        "name": "goal",
+        "kind": null,
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 21,
+        "time": 1793660001836,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "create",
+        "phase": "active",
+        "roundsStarted": 0
+      },
+      {
+        "seq": 22,
+        "time": 1793660001837,
+        "type": "command/done",
+        "name": null,
+        "kind": "success",
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 27,
+        "time": 1793660001850,
+        "type": "user/message",
+        "round": 1
+      },
+      {
+        "seq": 36,
+        "time": 1793660001922,
+        "type": "user/message",
+        "round": 2
+      },
+      {
+        "seq": 45,
+        "time": 1793660002040,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "complete",
+        "phase": "complete",
+        "roundsStarted": 2
+      }
+    ]
+  },
+  "dsh-fixture-blocked01": {
+    "mode": "deterministic fixture (not benchmark)",
+    "state": {
+      "name": "dsh",
+      "trial": "dsh-fixture-blocked01",
+      "session_id": "session-6147a164-5a47-4e4a-aff5-80e647fd37e5",
+      "exit_reason": "goal_blocked",
+      "native_goal": {
+        "id": "goal-c1df6533-eae0-4da8-8c72-26b6c7b2eed5",
+        "revision": 2,
+        "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+        "phase": "blocked",
+        "maxGoalRounds": 5,
+        "blockedReason": {
+          "code": "model-reported",
+          "message": "Fixture dependency remains unavailable."
+        },
+        "roundsStarted": 3,
+        "createdAt": 1793660101192,
+        "updatedAt": 1793660101427,
+        "activation": "disarmed"
+      },
+      "objective_matches_normalized_task": true,
+      "auditor": "not_applicable",
+      "elapsed_seconds": 0.503
+    },
+    "trace": [
+      {
+        "seq": 20,
+        "time": 1793660101192,
+        "type": "command/run",
+        "name": "goal",
+        "kind": null,
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 21,
+        "time": 1793660101192,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "create",
+        "phase": "active",
+        "roundsStarted": 0
+      },
+      {
+        "seq": 22,
+        "time": 1793660101193,
+        "type": "command/done",
+        "name": null,
+        "kind": "success",
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 27,
+        "time": 1793660101202,
+        "type": "user/message",
+        "round": 1
+      },
+      {
+        "seq": 36,
+        "time": 1793660101260,
+        "type": "user/message",
+        "round": 2
+      },
+      {
+        "seq": 45,
+        "time": 1793660101316,
+        "type": "user/message",
+        "round": 3
+      },
+      {
+        "seq": 54,
+        "time": 1793660101427,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "block",
+        "phase": "blocked",
+        "roundsStarted": 3
+      }
+    ]
+  },
+  "dsh-fixture-cap01": {
+    "mode": "deterministic fixture (not benchmark)",
+    "state": {
+      "name": "dsh",
+      "trial": "dsh-fixture-cap01",
+      "session_id": "session-ef682254-11e9-40bb-b838-48651b16f879",
+      "exit_reason": "goal_blocked",
+      "native_goal": {
+        "id": "goal-6a4fff72-4146-4c89-9614-82bed3e004a3",
+        "revision": 2,
+        "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+        "phase": "blocked",
+        "maxGoalRounds": 2,
+        "blockedReason": {
+          "code": "round-limit",
+          "message": "Goal reached its configured limit of 2 rounds."
+        },
+        "roundsStarted": 2,
+        "createdAt": 1793660051697,
+        "updatedAt": 1793660051820,
+        "activation": "disarmed"
+      },
+      "objective_matches_normalized_task": true,
+      "auditor": "not_applicable",
+      "elapsed_seconds": 0.505
+    },
+    "trace": [
+      {
+        "seq": 20,
+        "time": 1793660051696,
+        "type": "command/run",
+        "name": "goal",
+        "kind": null,
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 21,
+        "time": 1793660051697,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "create",
+        "phase": "active",
+        "roundsStarted": 0
+      },
+      {
+        "seq": 22,
+        "time": 1793660051698,
+        "type": "command/done",
+        "name": null,
+        "kind": "success",
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 27,
+        "time": 1793660051707,
+        "type": "user/message",
+        "round": 1
+      },
+      {
+        "seq": 36,
+        "time": 1793660051768,
+        "type": "user/message",
+        "round": 2
+      },
+      {
+        "seq": 41,
+        "time": 1793660051820,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "block",
+        "phase": "blocked",
+        "roundsStarted": 2
+      }
+    ]
+  },
+  "dsh-smoke05": {
+    "mode": "real provider smoke",
+    "state": {
+      "name": "dsh",
+      "trial": "dsh-smoke05",
+      "session_id": "session-f6af212e-4d33-463d-848b-63ba02ba297a",
+      "exit_reason": "goal_complete",
+      "native_goal": {
+        "id": "goal-3fa68fcd-be0a-491b-b5a4-6ec0703da8cc",
+        "revision": 2,
+        "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+        "phase": "complete",
+        "maxGoalRounds": 256,
+        "roundsStarted": 1,
+        "createdAt": 1793659538400,
+        "updatedAt": 1793659542654,
+        "activation": "disarmed"
+      },
+      "objective_matches_normalized_task": true,
+      "auditor": "not_applicable",
+      "elapsed_seconds": 4.539
+    },
+    "trace": [
+      {
+        "seq": 4,
+        "time": 1793659538399,
+        "type": "command/run",
+        "name": "goal",
+        "kind": null,
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 5,
+        "time": 1793659538400,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "create",
+        "phase": "active",
+        "roundsStarted": 0
+      },
+      {
+        "seq": 6,
+        "time": 1793659538401,
+        "type": "command/done",
+        "name": null,
+        "kind": "success",
+        "operation": null,
+        "phase": null,
+        "roundsStarted": null
+      },
+      {
+        "seq": 12,
+        "time": 1793659538433,
+        "type": "user/message",
+        "round": 1
+      },
+      {
+        "seq": 24,
+        "time": 1793659542654,
+        "type": "goal/change",
+        "name": null,
+        "kind": "goal/change",
+        "operation": "complete",
+        "phase": "complete",
+        "roundsStarted": 1
+      }
+    ]
+  },
+  "dsh-smoke02": {
+    "mode": "live diagnostic, not benchmark",
+    "exit_reason": null,
+    "invalid_reasons": [
+      "missing_final_state",
+      "container_exit_1",
+      "no_model_requests"
+    ],
+    "container_exit_code": "1",
+    "relay": {
+      "requests": 0,
+      "failed": 0,
+      "failure_rate": null
+    }
+  },
+  "dsh-smoke04": {
+    "mode": "live diagnostic, not benchmark",
+    "exit_reason": "wall_clock_limit",
+    "invalid_reasons": [
+      "container_exit_1",
+      "limit_wall_clock_limit"
+    ],
+    "container_exit_code": "1",
+    "relay": {
+      "requests": 71,
+      "failed": 0,
+      "failure_rate": 0.0
+    },
+    "native_goal": {
+      "id": "goal-de4a9a82-61d1-40f1-b2f8-19fe0d4ec5d4",
+      "revision": 1,
+      "objective": "Reply with the single word OK. Do not use any tools. Then finish the goal.",
+      "phase": "active",
+      "maxGoalRounds": 256,
+      "roundsStarted": 71,
+      "createdAt": 1793659365263,
+      "updatedAt": 1793659365263,
+      "activation": "armed"
+    }
+  }
+}

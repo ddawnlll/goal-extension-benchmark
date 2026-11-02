@@ -1,5 +1,75 @@
 # Reproduce the benchmark
 
+## Cross-harness DSH runs (new trial IDs only)
+
+The historical results below are retained, not overwritten. After fetching inputs,
+provide the relay key privately in `harness/.secrets/local_api_key` (mode 600).
+Do not put it in a worker environment or commit it. Build all images before
+isolating workers; DSH installs the exact lockfile at image build time:
+
+```bash
+docker build -t goalbench/base:1 -f harness/docker/Dockerfile.base harness/docker
+docker build -t goalbench/eval:1 -f harness/docker/Dockerfile.eval harness/docker
+docker build -t goalbench/relay:1 harness/relay
+docker build -t goalbench/dsh:1 harness/dsh
+python3 -m unittest discover -s harness/tests -v
+bash harness/tests/test_sandbox.sh
+bash harness/tests/test_network.sh
+```
+
+For the OpenCode Go endpoint used in the new runs, configure the relay only:
+
+```bash
+export UPSTREAM_SCHEME=https UPSTREAM_HOST=opencode.ai UPSTREAM_PORT=443
+export UPSTREAM_PREFIX=/inference/go/openai UPSTREAM_MODELS_PATH=/inference/go/v1/models
+```
+
+For a local compatible endpoint, omit those overrides. Set `DOCKER_HOST` to the
+running daemon. Do not use the examples' IDs if they already exist. To reproduce
+the deterministic native lifecycle checks (the local fixture is *not* a model
+benchmark; it uses a dummy relay credential):
+
+```bash
+bash harness/tests/run_dsh_fixture.sh complete my-fixture-complete 19991
+bash harness/tests/run_dsh_fixture.sh blocked my-fixture-blocked 19992
+bash harness/tests/run_dsh_fixture.sh cap my-fixture-cap 19993
+```
+
+For a DSH-only run, use `--order dsh` (this is the campaign recorded in
+[`docs/DSH-RESULTS.md`](DSH-RESULTS.md)):
+
+```bash
+python3 harness/run_trial.py --trial my-dsh-1 --order dsh --max-seconds 1800 --thinking low --memory 6g
+```
+
+For a controlled comparison rotate the order and keep time and resource limits
+identical. The following are **commands to run**, not claims of results:
+
+```bash
+python3 harness/run_trial.py --trial my-r1 --order glla,goal-x,dsh --max-seconds 2700 --thinking low --memory 6g
+python3 harness/run_trial.py --trial my-r2 --order goal-x,dsh,glla --max-seconds 2700 --thinking low --memory 6g
+python3 harness/run_trial.py --trial my-r3 --order dsh,glla,goal-x --max-seconds 2700 --thinking low --memory 6g
+python3 harness/replication.py evaluate my-r1 glla,goal-x,dsh
+python3 harness/replication.py timeline my-r1 glla,goal-x,dsh
+python3 harness/replication.py aggregate my-r1,my-r2,my-r3 glla,goal-x,dsh
+# Re-evaluate a historical patch without overwriting its recorded evidence:
+python3 harness/replication.py evaluate r1 glla,goal-x my-r1-recheck
+```
+
+For historical trials, evaluation reconstructs a candidate from the pinned
+baseline and committed patch if its collected workspace is unavailable. The
+optional fourth argument selects fresh output names; use it for old IDs.
+
+The DSH profile currently supports `low` only. `--smoke` uses a different,
+trivial objective and is not a benchmark score. Runs that time out, crash,
+fail native lifecycle validation, or send the wrong model/effort are invalid;
+independently passing the frozen, adversarial and CLI-parity suites is separate.
+The worker seccomp profile intentionally permits nested unprivileged namespaces;
+read the security limitation in `docs/METHODOLOGY.md` before using it. The relay
+preflight covers all three network paths, not DSH's native lifecycle;
+run it with a fresh `--id` before a campaign. See `docs/METHODOLOGY.md` for
+prompt, warm-up and whitespace limits.
+
 Everything below runs on one machine with Docker. In the recorded runs one pair
 (two sequential runs) took about 17 minutes of wall clock; both pairs plus setup
 and evaluation fit in well under an hour, because GLLA dominates the wall clock.
@@ -51,7 +121,7 @@ when starting it, or edit the defaults in `harness/run_trial.py::setup_networks`
 ## 3. Preflight (do not skip)
 
 ```bash
-python3 harness/preflight.py
+python3 harness/preflight.py --id my-preflight
 ```
 
 This starts one relay per competitor and makes 12 inference calls from a worker
@@ -62,8 +132,8 @@ measurement.
 ## 4. Run the pairs
 
 ```bash
-python3 harness/run_trial.py --trial r1 --order glla,goal-x --max-seconds 2700 --thinking low --memory 6g
-python3 harness/run_trial.py --trial r2 --order goal-x,glla --max-seconds 2700 --thinking low --memory 6g
+python3 harness/run_trial.py --trial my-r1 --order glla,goal-x --max-seconds 2700 --thinking low --memory 6g
+python3 harness/run_trial.py --trial my-r2 --order goal-x,glla --max-seconds 2700 --thinking low --memory 6g
 ```
 
 Each run recreates the instance volume, starts the relay and the worker, drives
@@ -83,12 +153,10 @@ The runner records, per run:
 ## 5. Evaluate and re-derive the charts
 
 ```bash
-python3 harness/replication.py evaluate r1
-python3 harness/replication.py evaluate r2
-python3 harness/replication.py aggregate
-python3 tools/derive_phases.py
-python3 tools/make_charts.py            # rewrites assets/*.svg
-python3 tools/make_charts.py --check    # must report "identical"
+python3 harness/replication.py evaluate my-r1
+python3 harness/replication.py evaluate my-r2
+python3 harness/replication.py aggregate my-r1,my-r2 glla,goal-x
+python3 tools/make_charts.py --check    # check historical charts without rewriting them
 python3 tools/check_svg.py              # XML well-formedness of every chart
 ```
 

@@ -1,5 +1,15 @@
 # Pi goal-extension benchmark: GLLA vs pi-goal-x
 
+> **New cross-harness native-goal comparison:** the harness also supports the
+> real DeepSeek Harness native goal as `dsh`. The Pi-only charts and results
+> below remain historical; they do not include DSH. DSH is a different harness,
+> with different prompts and tools and no independent goal auditor, so this is
+> not an extension-only A/B test. See [methodology](docs/METHODOLOGY.md) and
+> [reproduction](docs/REPRODUCE.md) for commands, normalization and limits, and
+> [executed DSH results](docs/DSH-RESULTS.md) for the two valid runs, their
+> independent test outcomes and the limitations. DSH is not ranked against the
+> Pi extensions; no three-way campaign was completed.
+
 An isolated, reproducible comparison of two goal-management extensions for
 [Pi](https://github.com/earendil-works/pi), the coding agent. Both extensions are Pi
 extensions; every run used [Pi-Bolt](https://github.com/opensec-git/Pi-Bolt), Pi's
@@ -195,11 +205,11 @@ git clone https://github.com/ddawnlll/goal-extension-benchmark
 cd goal-extension-benchmark
 LOCAL_LLM_KEY='...' bash harness/fetch_inputs.sh
 export DOCKER_HOST=unix://$HOME/.colima/default/docker.sock
-python3 harness/preflight.py          # must print PREFLIGHT STABLE
-python3 harness/run_trial.py --trial r1 --order glla,goal-x --max-seconds 2700 --thinking low --memory 6g
-python3 harness/run_trial.py --trial r2 --order goal-x,glla --max-seconds 2700 --thinking low --memory 6g
-python3 harness/replication.py evaluate r1 && python3 harness/replication.py evaluate r2
-python3 tools/derive_phases.py && python3 tools/make_charts.py --check
+python3 harness/preflight.py --id my-preflight  # must print PREFLIGHT STABLE
+python3 harness/run_trial.py --trial my-r1 --order glla,goal-x --max-seconds 2700 --thinking low --memory 6g
+python3 harness/run_trial.py --trial my-r2 --order goal-x,glla --max-seconds 2700 --thinking low --memory 6g
+python3 harness/replication.py evaluate my-r1 && python3 harness/replication.py evaluate my-r2
+python3 tools/make_charts.py --check
 ```
 
 Full prerequisites and the endpoint configuration are in

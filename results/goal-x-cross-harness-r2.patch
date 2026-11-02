@@ -1,0 +1,419 @@
+diff --git a/bench/README.md b/bench/README.md
+index 566c327bb..7d5f6cb43 100644
+--- a/bench/README.md
++++ b/bench/README.md
+@@ -27,6 +27,7 @@ throwaway Pi home, so runs are isolated from your Pi configuration and from each
+ | `run-suite.sh` | Runs all of the benchmarks above into one results folder, then `report.py`: what the README and docs/BENCHMARKS.md show. |
+ | `run-suite.ps1` | The same on Windows: Pi-Bolt, Pi on stock Bun, Node 22 and Node 24; `conpty_check.py` for `tmux_check.py`, and `pauses.py` (frames and GC pauses), `long_answer.py` and `large_write.py` too. Writes `environment.txt` (CPU, Windows build, Defender, power) and `summary.md`. |
+ | `report.py` | Draws the charts (light and dark SVG) and prints the tables, from a results folder. |
++| `test_report.py` | `report.py`'s tests: the SVG it writes stays valid XML whatever text the results, `--label` or the command line supply. `python3 -m unittest bench.test_report` from the repository root. |
+ | `fake_model.py`, `fake_model_tools.py`, `fake_model_stress.py` | The scripted OpenAI-compatible model servers the tools start. |
+ | `harness.py` | Shared pieces: build parsing, model server, Pi home, pseudo-terminal, CPU and memory readings. |
+ | `fixtures/` | Four Pi source files (MIT, from Pi) that the scripted model asks Pi to read. |
+@@ -34,6 +35,12 @@ throwaway Pi home, so runs are isolated from your Pi configuration and from each
+ 
+ `results/` holds the published runs: the raw JSONL of each tool, with a note on what was compared.
+ 
++`report.py` writes each piece of text it takes from a results file, a build name or `--label` into the SVG through
++`svg_text()` (text nodes) or `svg_attr()` (attributes, which also takes care of the quotes), so `&`, `<` and `>` are escaped
++there and only there: a label is kept as it came and never escaped twice. Unicode is left alone. A label cannot close a
++`<text>`, open an element or add an attribute, and the document parses as XML for any input; ordinary labels render as
++before. `test_report.py` checks this, adversarial labels included, and parses every SVG it draws with `xml.etree.ElementTree`.
++
+ Requires Python 3.9+; `tmux_check.py` also needs tmux. Pin runs to idle cores with `--cpus` for stable figures. See
+ [docs/BENCHMARKS.md](../docs/BENCHMARKS.md) for methodology and results.
+ 
+diff --git a/bench/report.py b/bench/report.py
+index 0b12b4e76..4d0edbc07 100755
+--- a/bench/report.py
++++ b/bench/report.py
+@@ -16,6 +16,9 @@ has the process floor (benchmark.py --floor), the Time and CPU tables add its ro
+ --label name=text names a build's column (e.g. --label "bun=Pi 1.0.3 on stock Bun 1.4.2").
+ 
+ Example: bench/report.py results/2026-10-02 --images docs/images --builds pi-bolt,bun,node
++
++Every piece of text taken from a results file, a build name or --label goes into the SVG through svg_text() or svg_attr() (see
++test_report.py), so a label cannot change the markup or the document's validity.
+ """
+ 
+ import argparse
+@@ -24,6 +27,7 @@ import re
+ import statistics
+ from collections import defaultdict
+ from pathlib import Path
++from xml.sax.saxutils import escape, quoteattr
+ 
+ LABELS = {"pi-bolt": "Pi-Bolt", "bun": "Bun 1.4.2", "node": "Node 22", "node24": "Node 24", "pi-bolt-jit": "Pi-Bolt (JIT on)"}
+ # Pi-Bolt is the accent; every other build (an earlier Pi-Bolt release too) is the same neutral, so the eye goes to Pi-Bolt and
+@@ -78,6 +82,17 @@ def is_release(build):
+     return build.startswith("pi-bolt-") and build[8:9].isdigit()
+ 
+ 
++def svg_text(value):
++    """A value for an SVG text node: &, < and > escaped, everything else (Unicode, quotes) left as it is.
++    Escaping happens only here, as the value is written: a label is stored raw, so it is never escaped twice."""
++    return escape(str(value))
++
++
++def svg_attr(value):
++    """A value for an SVG attribute, with its quotes: quoteattr picks the quote character, escapes it and &, <, >."""
++    return quoteattr(str(value))
++
++
+ def text_width(text, size):
+     """About how wide a line of the system sans is: 0.56 em a character (digits and lowercase), enough to place a note."""
+     return 0.53 * size * len(text)
+@@ -112,14 +127,14 @@ def chart(title, subtitle, panels, builds, theme, path):
+     head = 78
+     height = head + rows * panel_h
+     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
+-           f'aria-label="{title}: {subtitle}">',
++           f'aria-label={svg_attr(f"{title}: {subtitle}")}>',
+            f'<style>text{{font-family:{FONT}}}</style>',
+-           f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{title}</text>',
+-           f'<text x="{pad}" y="56" font-size="13.5" fill="{t["muted"]}">{subtitle}</text>']
++           f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{svg_text(title)}</text>',
++           f'<text x="{pad}" y="56" font-size="13.5" fill="{t["muted"]}">{svg_text(subtitle)}</text>']
+     for p, (name, unit, values, kind) in enumerate(panels):
+         x0 = pad + (p % columns) * (col_w + pad)
+         y0 = head + (p // columns) * panel_h
+-        out.append(f'<text x="{x0}" y="{y0 + 18}" font-size="15" font-weight="600" fill="{t["text"]}">{name}</text>')
++        out.append(f'<text x="{x0}" y="{y0 + 18}" font-size="15" font-weight="600" fill="{t["text"]}">{svg_text(name)}</text>')
+         top = max(v for v in values.values() if v is not None)
+         bar_x = x0 + label_w
+         # Room after the longest bar for its value; Pi-Bolt's ratio sits after its own, shorter bar.
+@@ -129,7 +144,7 @@ def chart(title, subtitle, panels, builds, theme, path):
+             v = values.get(b)
+             y = y0 + 36 + i * row_h
+             mid = y + bar_h / 2 + 4.5
+-            out.append(f'<text x="{bar_x - 10}" y="{mid:.1f}" font-size="{label_size}" text-anchor="end" fill="{t["muted"]}">{LABELS.get(b, b)}</text>')
++            out.append(f'<text x="{bar_x - 10}" y="{mid:.1f}" font-size="{label_size}" text-anchor="end" fill="{t["muted"]}">{svg_text(LABELS.get(b, b))}</text>')
+             if v is None:
+                 continue
+             w = max(4, bar_w * v / top)
+@@ -137,13 +152,13 @@ def chart(title, subtitle, panels, builds, theme, path):
+             out.append(f'<path d="M{bar_x},{y} h{w - 4:.1f} a4,4 0 0 1 4,4 v{bar_h - 8} a4,4 0 0 1 -4,4 h{-(w - 4):.1f} z" fill="{color_of(b, i, theme)}"/>')
+             weight = "650" if i == 0 else "400"
+             value = fmt(v, unit)
+-            out.append(f'<text x="{bar_x + w + 8:.1f}" y="{mid:.1f}" font-size="{value_size}" font-weight="{weight}" fill="{t["text"]}">{value}</text>')
++            out.append(f'<text x="{bar_x + w + 8:.1f}" y="{mid:.1f}" font-size="{value_size}" font-weight="{weight}" fill="{t["text"]}">{svg_text(value)}</text>')
+             note = ratio_text(v, base, kind) if i == 0 else None
+             if note:
+                 # (After the value, which is bold: wider than text_width says.)
+                 px = bar_x + w + 8 + text_width(value, value_size) * 1.12 + 12
+                 if px + text_width(note, 12.5) <= x0 + col_w:  # (only where it fits in its panel)
+-                    out.append(f'<text x="{px:.1f}" y="{mid:.1f}" font-size="12.5" fill="{t["muted"]}">{note}</text>')
++                    out.append(f'<text x="{px:.1f}" y="{mid:.1f}" font-size="12.5" fill="{t["muted"]}">{svg_text(note)}</text>')
+         out.append(f'<line x1="{bar_x}" y1="{y0 + 30}" x2="{bar_x}" y2="{y0 + 36 + len(builds) * row_h - 8}" stroke="{t["rule"]}"/>')
+     out.append("</svg>")
+     path.write_text("\n".join(out) + "\n")
+@@ -169,11 +184,11 @@ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+     tile_h = bars_y + 30 * len(builds)
+     height = top + tile_h + 10
+     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
+-           f'aria-label="{title or "Pi-Bolt compared with Bun and Node"}">',
++           f'aria-label={svg_attr(title or "Pi-Bolt compared with Bun and Node")}>',
+            f'<style>text{{font-family:{FONT}}}</style>']
+     if title:
+-        out.append(f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{title}</text>')
+-        out.append(f'<text x="{pad}" y="54" font-size="13.5" fill="{t["muted"]}">{subtitle or ""}</text>')
++        out.append(f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{svg_text(title)}</text>')
++        out.append(f'<text x="{pad}" y="54" font-size="13.5" fill="{t["muted"]}">{svg_text(subtitle or "")}</text>')
+ 
+     def compared(mine, other, better, name):
+         if not mine or not other:
+@@ -190,28 +205,30 @@ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+         y = top + 4
+         if i:
+             out.append(f'<line x1="{x - gap / 2:.1f}" y1="{y + 6}" x2="{x - gap / 2:.1f}" y2="{y + tile_h - 6}" stroke="{t["rule"]}"/>')
+-        out.append(f'<text x="{x:.1f}" y="{y + 18}" font-size="13" font-weight="600" fill="{t["muted"]}">{name}</text>')
++        out.append(f'<text x="{x:.1f}" y="{y + 18}" font-size="13" font-weight="600" fill="{t["muted"]}">{svg_text(name)}</text>')
+         mine = values.get(builds[0])
+         shown = fmt(mine, unit)
+         figure, _, unit_text = shown.rpartition(" ") if " " in shown else (shown, "", "")
++        # (Escaped before the tspan is appended: the markup between the two is ours, the text of each is not.)
++        figure = svg_text(figure)
+         if unit_text:
+-            figure += f'<tspan font-size="16" font-weight="600" fill="{t["muted"]}" dx="5">{unit_text}</tspan>'
++            figure += f'<tspan font-size="16" font-weight="600" fill="{t["muted"]}" dx="5">{svg_text(unit_text)}</tspan>'
+         out.append(f'<text x="{x:.1f}" y="{y + 58}" font-size="36" font-weight="700" fill="{t["text"]}">{figure}</text>')
+         for k, (other, other_name) in enumerate(compare):
+             line = compared(mine, values.get(other), better, other_name)
+             if line:
+                 style = f'font-weight="600" fill="{t["text"]}"' if k == 0 else f'fill="{t["muted"]}"'
+-                out.append(f'<text x="{x:.1f}" y="{y + 84 + 18 * k}" font-size="13" {style}>{line}</text>')
++                out.append(f'<text x="{x:.1f}" y="{y + 84 + 18 * k}" font-size="13" {style}>{svg_text(line)}</text>')
+         most = max(v for v in values.values() if v)
+         for j, b in enumerate(builds):
+             v = values.get(b)
+             yy = y + bars_y + j * 30
+             weight = "650" if j == 0 else "400"
+             ink = t["text"] if j == 0 else t["muted"]
+-            out.append(f'<text x="{x:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" fill="{ink}">{LABELS.get(b, b)}</text>')
++            out.append(f'<text x="{x:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" fill="{ink}">{svg_text(LABELS.get(b, b))}</text>')
+             if not v:
+                 continue
+-            out.append(f'<text x="{x + tile_w:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" text-anchor="end" fill="{ink}">{fmt(v, unit)}</text>')
++            out.append(f'<text x="{x + tile_w:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" text-anchor="end" fill="{ink}">{svg_text(fmt(v, unit))}</text>')
+             bw = max(6, tile_w * v / most)
+             out.append(f'<rect x="{x:.1f}" y="{yy + 7}" width="{bw:.1f}" height="6" rx="3" fill="{color_of(b, j, theme)}"/>')
+     out.append("</svg>")
+diff --git a/bench/test_report.py b/bench/test_report.py
+new file mode 100644
+index 000000000..5b2e080af
+--- /dev/null
++++ b/bench/test_report.py
+@@ -0,0 +1,253 @@
++#!/usr/bin/env python3
++"""Tests for bench/report.py: the SVG it writes stays valid XML whatever text results, --label and the command line supply.
++
++Run from the repository root:
++    python3 -m unittest bench.test_report
++or
++    python3 bench/test_report.py
++"""
++
++import importlib.util
++import json
++import subprocess
++import sys
++import tempfile
++import unittest
++import xml.etree.ElementTree as ET
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++REPORT = HERE / "report.py"
++_spec = importlib.util.spec_from_file_location("bench_report", REPORT)
++report = importlib.util.module_from_spec(_spec)
++_spec.loader.exec_module(report)
++
++DEFAULT_LABELS = dict(report.LABELS)
++SVG = "{http://www.w3.org/2000/svg}"
++# Everything report.py draws. A label that turns into anything else has injected markup.
++ALLOWED = {"svg", "style", "text", "tspan", "path", "line", "rect"}
++HOSTILE = "</text><script>alert('pwned')</script><rect onload=\"x\"/>"
++QUOTED = 'A & B "quoted" \'singled\' <tag> &amp; done'
++UNICODE = "Pi-Bolt – 2.9× faster, 日本語, 🧪"
++GOLDEN = """<svg xmlns="http://www.w3.org/2000/svg" width="880" height="198" viewBox="0 0 880 198" role="img" aria-label="Time: Wall-clock time, lower is better.">
++<style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
++<text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">Time</text>
++<text x="24" y="56" font-size="13.5" fill="#59636e">Wall-clock time, lower is better.</text>
++<text x="24" y="96" font-size="15" font-weight="600" fill="#1f2328">Launch to interactive (TUI)</text>
++<text x="94" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">Pi-Bolt</text>
++<path d="M104,114 h80.7 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-80.7 z" fill="#2a78d6"/>
++<text x="196.7" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">120 ms</text>
++<text x="256.8" y="126.5" font-size="12.5" fill="#59636e">2.8× faster</text>
++<text x="94" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
++<path d="M104,144 h236.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-236.0 z" fill="#848d97"/>
++<text x="352.0" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">340 ms</text>
++<line x1="104" y1="108" x2="104" y2="166" stroke="#d1d9e0"/>
++</svg>
++"""
++
++
++def tags(root):
++    return [el.tag.removeprefix(SVG) for el in root.iter()]
++
++
++def texts(root):
++    """The text of every leaf text node, in document order."""
++    return [el.text for el in root.iter() if el.tag in (f"{SVG}text", f"{SVG}tspan") and el.text is not None]
++
++
++def chart_svg(path, title="Time", subtitle="Lower is better.",
++              panels=None, builds=("pi-bolt", "bun"), theme="light"):
++    panels = panels or [("Launch", "ms", {"pi-bolt": 120.0, "bun": 340.0})]
++    report.chart(title, subtitle, panels, list(builds), theme, path)
++    return path.read_text(encoding="utf-8")
++
++
++def hero_svg(path, tiles=None, builds=("pi-bolt", "bun"), theme="light", **kw):
++    tiles = tiles or [("Ready to type", "ms", {"pi-bolt": 120.0, "bun": 340.0}, "faster")]
++    report.hero(tiles, list(builds), theme, path, **kw)
++    return path.read_text(encoding="utf-8")
++
++
++class SvgCase(unittest.TestCase):
++    def setUp(self):
++        report.LABELS.clear()
++        report.LABELS.update(DEFAULT_LABELS)
++        report.PI_VERSION[0] = "1.0.0"
++        self._tmp = tempfile.TemporaryDirectory()
++        self.tmp = Path(self._tmp.name)
++
++    def tearDown(self):
++        self._tmp.cleanup()
++        report.LABELS.clear()
++        report.LABELS.update(DEFAULT_LABELS)
++
++    def draw_chart(self, **kw):
++        svg = chart_svg(self.tmp / "chart.svg", **kw)
++        return svg, ET.fromstring(svg)
++
++    def draw_hero(self, **kw):
++        svg = hero_svg(self.tmp / "hero.svg", **kw)
++        return svg, ET.fromstring(svg)
++
++    def assertOnlySvgMarkup(self, root):
++        """No element report.py does not draw, and no attribute that could run anything."""
++        self.assertEqual([], [t for t in tags(root) if t not in ALLOWED], "label injected markup")
++        for el in root.iter():
++            for name in el.attrib:
++                self.assertFalse(name.lower().startswith("on"), f"event handler on {el.tag}: {name}")
++                self.assertNotIn(name, ("href", "xlink:href", "src", "style"), f"{el.tag} gained {name}")
++
++
++class HelperTest(SvgCase):
++    def test_plain_text_is_untouched(self):
++        for plain in ("Pi-Bolt 1.0.3", "Bun 1.4.2", "Node 22", "Pi-Bolt (JIT on)", UNICODE):
++            self.assertEqual(plain, report.svg_text(plain))
++            self.assertEqual(f'"{plain}"', report.svg_attr(plain))
++
++    def test_text_node_escapes_markup_characters(self):
++        self.assertEqual("A &amp; B &lt;x&gt;", report.svg_text("A & B <x>"))
++
++    def test_attribute_escapes_quotes(self):
++        self.assertEqual("\"a 'b' &amp; &lt;c&gt;\"", report.svg_attr("a 'b' & <c>"))
++        # (A value holding a double quote is wrapped in single quotes instead: both are valid, either is escaped.)
++        self.assertEqual('\'a "b" &amp; &lt;c&gt;\'', report.svg_attr('a "b" & <c>'))
++
++
++class ChartTest(SvgCase):
++    def test_ordinary_chart_is_byte_identical_to_before(self):
++        self.assertEqual(GOLDEN, chart_svg(self.tmp / "golden.svg", subtitle="Wall-clock time, lower is better.",
++                                          panels=[("Launch to interactive (TUI)", "ms", {"pi-bolt": 120.0, "bun": 340.0})]))
++
++    def test_hostile_build_label_cannot_inject(self):
++        report.LABELS["bun"] = HOSTILE
++        svg, root = self.draw_chart()
++        self.assertOnlySvgMarkup(root)
++        self.assertIn(HOSTILE, texts(root))
++        self.assertNotIn("<script", svg)
++
++    def test_hostile_title_subtitle_and_panel_name(self):
++        svg, root = self.draw_chart(title=HOSTILE, subtitle=QUOTED,
++                                    panels=[(HOSTILE, "ms", {"pi-bolt": 120.0, "bun": 340.0})])
++        self.assertOnlySvgMarkup(root)
++        self.assertEqual(f"{HOSTILE}: {QUOTED}", root.get("aria-label"))
++        self.assertIn(HOSTILE, texts(root))
++        self.assertIn(QUOTED, texts(root))
++        self.assertNotIn("<script", svg)
++
++    def test_no_double_escaping(self):
++        report.LABELS["bun"] = "AT&T <b>"
++        svg, root = self.draw_chart()
++        self.assertIn("AT&T <b>", texts(root))
++        self.assertEqual(1, svg.count("AT&amp;T"))
++        self.assertNotIn("&amp;amp;", svg)
++        self.assertNotIn("&amp;lt;", svg)
++
++    def test_unicode_is_preserved(self):
++        report.LABELS["bun"] = UNICODE
++        svg, root = self.draw_chart(title=UNICODE, subtitle=UNICODE,
++                                    panels=[(UNICODE, "ms", {"pi-bolt": 120.0, "bun": 340.0})])
++        self.assertIn(UNICODE, texts(root))
++        self.assertEqual(f"{UNICODE}: {UNICODE}", root.get("aria-label"))
++        self.assertIn("2.9×", svg)
++
++    def test_quotes_in_attribute_stay_in_the_attribute(self):
++        title = 'He said "go" & <left> '
++        svg = chart_svg(self.tmp / "q.svg", title=title)
++        root = ET.fromstring(svg)
++        self.assertEqual(f"{title}: Lower is better.", root.get("aria-label"))
++        self.assertNotIn("<left>", svg)
++        self.assertIn("&lt;left&gt;", svg)
++
++    def test_dark_theme_document_parses(self):
++        svg = chart_svg(self.tmp / "dark.svg", title=HOSTILE, theme="dark")
++        self.assertOnlySvgMarkup(ET.fromstring(svg))
++
++
++class HeroTest(SvgCase):
++    def test_ordinary_hero_parses_and_keeps_its_tspan(self):
++        svg = hero_svg(self.tmp / "hero.svg")
++        root = ET.fromstring(svg)
++        self.assertOnlySvgMarkup(root)
++        figures = [el for el in root.findall(f".//{SVG}text") if el.find(f"{SVG}tspan") is not None]
++        self.assertEqual(1, len(figures), "the unit tspan is still markup")
++        self.assertEqual("ms", figures[0].find(f"{SVG}tspan").text)
++        self.assertEqual("120", figures[0].text)
++
++    def test_hostile_hero_title_subtitle_and_labels(self):
++        report.LABELS["pi-bolt"] = HOSTILE
++        report.LABELS["bun"] = QUOTED
++        svg = hero_svg(self.tmp / "hero.svg", title=HOSTILE, subtitle=QUOTED)
++        root = ET.fromstring(svg)
++        self.assertOnlySvgMarkup(root)
++        self.assertEqual(HOSTILE, root.get("aria-label"))
++        self.assertIn(HOSTILE, texts(root))
++        self.assertIn(QUOTED, texts(root))
++        self.assertNotIn("<script", svg)
++
++    def test_hostile_compare_name_cannot_inject(self):
++        report.LABELS["pi-bolt"] = "Pi-Bolt"
++        report.LABELS["bun"] = HOSTILE
++        svg = hero_svg(self.tmp / "hero.svg", compare=[("bun", HOSTILE), ("bun", UNICODE)])
++        root = ET.fromstring(svg)
++        self.assertOnlySvgMarkup(root)
++        self.assertTrue(any("faster than " in t for t in texts(root)))
++        self.assertIn(UNICODE, " ".join(texts(root)))
++        self.assertNotIn("<script", svg)
++
++    def test_dark_hero_parses_with_hostile_input(self):
++        report.LABELS["bun"] = HOSTILE
++        svg = hero_svg(self.tmp / "hero-dark.svg", title=HOSTILE, theme="dark")
++        self.assertOnlySvgMarkup(ET.fromstring(svg))
++
++
++class CommandLineTest(SvgCase):
++    """The whole path: a results folder, --label on the command line, every SVG written."""
++
++    def run_report(self, label):
++        results = self.tmp / "results"
++        results.mkdir()
++        (results / "environment.txt").write_text(
++            "pi-bolt: 1.0.0 (Pi-Bolt 0.8.5, linux-x64, JIT off)\nbun: Pi 1.0.0 on stock Bun 1.4.2\nnode: v22.11.0\n",
++            encoding="utf-8")
++        rows = [{"build": b, "scenario": s, "ok": True, "tti_ms": tti, "wall_ms": tti, "cpu_ms": tti * 4,
++                 "peak_mb": 90.0, "peak_fp_mb": 60.0}
++                for b, tti in (("pi-bolt", 120.0), ("bun", 340.0), ("node", 410.0))
++                for s in ("interactive", "startup", "headless")]
++        (results / "benchmark.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
++        long_rows = [{"build": b, "prompt": 1, "ms_per_prompt": 12.0, "cpu_ms_per_prompt": 8.0, "own_mb": 70.0}
++                     for b in ("pi-bolt", "bun", "node")]
++        (results / "long.jsonl").write_text("".join(json.dumps(r) + "\n" for r in long_rows), encoding="utf-8")
++        terminal_rows = [{"build": b, "prompt_cpu_ms": 30.0, "frame_ms_p99": 16.0, "memory_at_end": {"own": 70.0}}
++                         for b in ("pi-bolt", "bun", "node")]
++        (results / "tmux.jsonl").write_text("".join(json.dumps(r) + "\n" for r in terminal_rows), encoding="utf-8")
++        images = self.tmp / "images"
++        proc = subprocess.run([sys.executable, str(REPORT), str(results), "--images", str(images),
++                               "--builds", "pi-bolt,bun,node", "--label", f"pi-bolt={label}"],
++                              capture_output=True, text=True)
++        return proc, images
++
++    def test_hostile_label_from_the_command_line(self):
++        proc, images = self.run_report(HOSTILE)
++        self.assertEqual(0, proc.returncode, proc.stderr)
++        svgs = sorted(images.glob("*.svg"))
++        self.assertTrue(svgs, "no charts were written")
++        for path in svgs:
++            with self.subTest(svg=path.name):
++                text = path.read_text(encoding="utf-8")
++                root = ET.fromstring(text)
++                self.assertOnlySvgMarkup(root)
++                self.assertNotIn("<script", text)
++                self.assertIn(HOSTILE, texts(root))
++
++    def test_unicode_label_from_the_command_line(self):
++        proc, images = self.run_report(UNICODE)
++        self.assertEqual(0, proc.returncode, proc.stderr)
++        for path in sorted(images.glob("*.svg")):
++            with self.subTest(svg=path.name):
++                root = ET.fromstring(path.read_text(encoding="utf-8"))
++                self.assertOnlySvgMarkup(root)
++                self.assertIn(UNICODE, texts(root))
++
++
++if __name__ == "__main__":
++    unittest.main(verbosity=2)

@@ -1,0 +1,20 @@
+{
+  "name": "dsh",
+  "trial": "dsh-smoke04",
+  "session_id": "session-1530fd74-68b0-4642-a4f4-37ea09fbc6b6",
+  "exit_reason": "wall_clock_limit",
+  "native_goal": {
+    "id": "goal-de4a9a82-61d1-40f1-b2f8-19fe0d4ec5d4",
+    "revision": 1,
+    "objective": "Reply with the single word OK. Do not use any tools. Then finish the goal.",
+    "phase": "active",
+    "maxGoalRounds": 256,
+    "roundsStarted": 71,
+    "createdAt": 1793659365263,
+    "updatedAt": 1793659365263,
+    "activation": "armed"
+  },
+  "objective_matches_normalized_task": true,
+  "auditor": "not_applicable",
+  "elapsed_seconds": 120.401
+}

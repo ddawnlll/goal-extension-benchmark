@@ -1,0 +1,6 @@
+benchmark goal adapter: TypeError: (intermediate value)?.commit is not a function
+    at file:///opt/dsh/node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js:1931:90
+    at async file:///opt/dsh/node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js:1946:13
+    at async file:///opt/dsh/node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js:835:12
+    at async Proxy.initializeAgent (file:///opt/dsh/node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js:1944:11)
+    at async Proxy.setupAndPublish (file:///opt/dsh/node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js:1930:11)

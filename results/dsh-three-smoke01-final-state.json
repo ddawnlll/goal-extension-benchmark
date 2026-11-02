@@ -1,0 +1,20 @@
+{
+  "name": "dsh",
+  "trial": "three-smoke01",
+  "session_id": "session-92dbdf78-07b6-47b8-a1e4-09423a280f4d",
+  "exit_reason": "goal_complete",
+  "native_goal": {
+    "id": "goal-4b3213ff-6c54-4185-ad77-beccb7fde7fc",
+    "revision": 2,
+    "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+    "phase": "complete",
+    "maxGoalRounds": 256,
+    "roundsStarted": 1,
+    "createdAt": 1793659854757,
+    "updatedAt": 1793659859437,
+    "activation": "disarmed"
+  },
+  "objective_matches_normalized_task": true,
+  "auditor": "not_applicable",
+  "elapsed_seconds": 5.046
+}

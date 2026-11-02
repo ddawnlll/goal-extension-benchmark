@@ -1,0 +1,49 @@
+{
+ "name": "dsh",
+ "trial": "cross-harness-r1",
+ "total_elapsed_s": 300.326,
+ "exit_reason": "wall_clock_limit",
+ "native_goal": {
+  "id": "goal-04ef1ef5-66c2-4fa7-98fe-d18127bed474",
+  "revision": 1,
+  "objective": "Improve the security and reliability of SVG generation in Pi-Bolt's `bench/report.py`.\n\nThe reporting tool generates SVG charts and accepts text that can originate from benchmark metadata, labels and command-line arguments.\n\nImplement correct SVG/XML escaping for text inserted into generated SVG documents.\n\nRequirements:\n\n1. Locate all relevant paths that insert dynamic text into generated SVG markup.\n2. Ensure special XML characters are handled safely, including `&`, `<`, `>`, quotation marks and apostrophes where applicable.\n3. Preserve legitimate Unicode content.\n4. Ensure user-controlled labels cannot inject SVG elements, attributes or scripts.\n5. Avoid double escaping.\n6. Preserve the existing visual appearance for ordinary inputs.\n7. Add focused automated regression tests, including adversarial input.\n8. Validate the generated SVG with a standard XML parser.\n9. Run relevant existing tests and report their results.\n10. Document the behavior where appropriate.\n\nConstraints:\n\n- No unrelated refactoring.\n- Do not weaken existing tests.\n- Do not modify benchmark result datasets.\n- Preserve the existing command-line interface and supported functionality.\n- Prefer standard-library solutions.\n- Do not require a complete Pi-Bolt runtime rebuild unless genuinely necessary.\n\nDefinition of done:\n\nThe implementation addresses relevant SVG text-injection paths, generated SVG documents remain valid, regression tests cover malicious and ordinary inputs, existing functionality remains intact, and the result is supported by reproducible evidence.\n\nDo not claim completion without verification.",
+  "phase": "active",
+  "maxGoalRounds": 256,
+  "roundsStarted": 1,
+  "createdAt": 1793660553924,
+  "updatedAt": 1793660553924,
+  "activation": "armed"
+ },
+ "goal_changes": [
+  {
+   "time": 1793660553924,
+   "data": {
+    "kind": "goal/change",
+    "version": 1,
+    "operation": "create",
+    "goal": {
+     "id": "goal-04ef1ef5-66c2-4fa7-98fe-d18127bed474",
+     "revision": 1,
+     "objective": "Improve the security and reliability of SVG generation in Pi-Bolt's `bench/report.py`.\n\nThe reporting tool generates SVG charts and accepts text that can originate from benchmark metadata, labels and command-line arguments.\n\nImplement correct SVG/XML escaping for text inserted into generated SVG documents.\n\nRequirements:\n\n1. Locate all relevant paths that insert dynamic text into generated SVG markup.\n2. Ensure special XML characters are handled safely, including `&`, `<`, `>`, quotation marks and apostrophes where applicable.\n3. Preserve legitimate Unicode content.\n4. Ensure user-controlled labels cannot inject SVG elements, attributes or scripts.\n5. Avoid double escaping.\n6. Preserve the existing visual appearance for ordinary inputs.\n7. Add focused automated regression tests, including adversarial input.\n8. Validate the generated SVG with a standard XML parser.\n9. Run relevant existing tests and report their results.\n10. Document the behavior where appropriate.\n\nConstraints:\n\n- No unrelated refactoring.\n- Do not weaken existing tests.\n- Do not modify benchmark result datasets.\n- Preserve the existing command-line interface and supported functionality.\n- Prefer standard-library solutions.\n- Do not require a complete Pi-Bolt runtime rebuild unless genuinely necessary.\n\nDefinition of done:\n\nThe implementation addresses relevant SVG text-injection paths, generated SVG documents remain valid, regression tests cover malicious and ordinary inputs, existing functionality remains intact, and the result is supported by reproducible evidence.\n\nDo not claim completion without verification.",
+     "phase": "active",
+     "maxGoalRounds": 256
+    },
+    "roundsStarted": 0,
+    "createdAt": 1793660553924,
+    "updatedAt": 1793660553924
+   }
+  }
+ ],
+ "autonomous_rounds": 1,
+ "requests": 39,
+ "relay_tokens": {
+  "input": 63743,
+  "output": 28195,
+  "cacheRead": 1269760,
+  "reasoning": 15831,
+  "requests_with_usage": 38,
+  "cost_usd_nominal": 0.060575
+ },
+ "audit_verdicts": "not_applicable",
+ "audit_jobs": "not_applicable"
+}

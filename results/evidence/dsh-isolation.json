@@ -1,0 +1,28 @@
+{
+  "container": "gb-worker-dsh",
+  "trial": "cross-harness-r1",
+  "host_config": {
+    "NanoCpus": 2000000000,
+    "Memory": 6442450944,
+    "MemorySwap": 6442450944,
+    "PidsLimit": 512,
+    "ReadonlyRootfs": true,
+    "CapDrop": [
+      "ALL"
+    ],
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "NetworkMode": "gbnet-dsh"
+  },
+  "network_peers": [
+    "gb-relay-dsh",
+    "gb-worker-dsh"
+  ],
+  "processes": [
+    "PID                 USER                COMMAND",
+    "24334               root                /sbin/docker-init -- /usr/local/bin/goalbench-entrypoint /opt/node24/bin/node /opt/dsh/node_modules/@deepseek-ai/dsh/lib/bin.js --profile headless --patch /opt/dsh/goal.patch.yml",
+    "24357               1000                /opt/node24/bin/node /opt/dsh/node_modules/@deepseek-ai/dsh/lib/bin.js --profile headless --patch /opt/dsh/goal.patch.yml"
+  ],
+  "task_sha256": "d911abf544abd173aa191ef2c8cf761034fed795cd32e12f7456dd7452a252e9"
+}

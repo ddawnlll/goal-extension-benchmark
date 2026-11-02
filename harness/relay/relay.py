@@ -27,6 +27,12 @@ from pathlib import Path
 
 UPSTREAM_HOST = os.environ.get("UPSTREAM_HOST", "host.lima.internal")
 UPSTREAM_PORT = int(os.environ.get("UPSTREAM_PORT", "9091"))
+UPSTREAM_SCHEME = os.environ.get("UPSTREAM_SCHEME", "http")
+UPSTREAM_PREFIX = os.environ.get("UPSTREAM_PREFIX", "").rstrip("/")
+UPSTREAM_MODELS_PATH = os.environ.get("UPSTREAM_MODELS_PATH", "")
+UPSTREAM_SESSION = os.environ.get("UPSTREAM_SESSION", "")
+if UPSTREAM_SCHEME not in ("http", "https"):
+    raise ValueError("UPSTREAM_SCHEME must be http or https")
 UPSTREAM_KEY = os.environ["LOCAL_LLM_KEY"]
 LOG = Path(os.environ.get("RELAY_LOG", "/logs/relay.jsonl"))
 CONTROL = Path(os.environ.get("RELAY_CONTROL", "/logs/control.json"))
@@ -118,6 +124,11 @@ class Handler(BaseHTTPRequestHandler):
                 rec["tools"] = len(parsed.get("tools") or [])
                 rec["max_tokens"] = parsed.get("max_tokens")
                 rec["reasoning_effort"] = parsed.get("reasoning_effort")
+                sha256 = __import__("hashlib").sha256
+                systems = [m for m in parsed.get("messages", []) if m.get("role") in ("system", "developer")]
+                rec["system_messages"] = len(systems)
+                rec["system_sha256"] = sha256(json.dumps(systems, sort_keys=True).encode()).hexdigest()
+                rec["tools_sha256"] = sha256(json.dumps(parsed.get("tools", []), sort_keys=True).encode()).hexdigest()
             except Exception:
                 pass
 
@@ -126,11 +137,18 @@ class Handler(BaseHTTPRequestHandler):
                 parsed = json.loads(body)
                 rec["keys"] = sorted(parsed.keys())
                 rec["request_shape"] = {
-                    k: parsed.get(k) for k in ("max_tokens", "max_completion_tokens", "temperature",
-                                               "top_p", "stream_options", "response_format",
-                                               "parallel_tool_calls", "tool_choice", "store", "user")
-                    if k in parsed
+                    k: parsed[k] for k in ("max_tokens", "max_completion_tokens", "temperature",
+                                           "top_p", "parallel_tool_calls", "store")
+                    if isinstance(parsed.get(k), (int, float, bool))
                 }
+                if isinstance(parsed.get("stream_options"), dict):
+                    rec["request_shape"]["include_usage"] = parsed["stream_options"].get("include_usage") is True
+                if isinstance(parsed.get("response_format"), dict):
+                    kind = parsed["response_format"].get("type")
+                    if kind in ("text", "json_object", "json_schema"):
+                        rec["request_shape"]["response_format_type"] = kind
+                if parsed.get("tool_choice") in ("auto", "none", "required"):
+                    rec["request_shape"]["tool_choice"] = parsed["tool_choice"]
             except Exception:
                 pass
         if applies and mode == "slow":
@@ -159,13 +177,17 @@ class Handler(BaseHTTPRequestHandler):
             "Accept": self.headers.get("Accept", "*/*"),
 
         }
+        if UPSTREAM_SESSION:
+            headers["x-opencode-session"] = UPSTREAM_SESSION
         # Upstream flakiness is environment noise, not a competitor behaviour.
         # Retry once before any byte has been forwarded downstream, and record it.
         resp = None
         for attempt in (1, 2):
-            conn = http.client.HTTPConnection(UPSTREAM_HOST, UPSTREAM_PORT, timeout=600)
+            connection = http.client.HTTPSConnection if UPSTREAM_SCHEME == "https" else http.client.HTTPConnection
+            conn = connection(UPSTREAM_HOST, UPSTREAM_PORT, timeout=600)
             try:
-                conn.request(self.command, path, body=body or None, headers=headers)
+                upstream_path = UPSTREAM_MODELS_PATH if path == "/v1/models" and UPSTREAM_MODELS_PATH else UPSTREAM_PREFIX + path
+                conn.request(self.command, upstream_path, body=body or None, headers=headers)
                 resp = conn.getresponse()
                 if attempt == 2:
                     rec["upstream_retry"] = True
@@ -190,7 +212,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Transfer-Encoding", "chunked")
             self.end_headers()
             phase = "stream"
-            usage_line = None
+            usage = None
+            pending = b""
             forwarded = 0
             completed = False
             if "text/event-stream" in ctype:
@@ -236,8 +259,17 @@ class Handler(BaseHTTPRequestHandler):
                         return
                     phase = "stream_read"
                     forwarded += len(chunk)
-                    if b'"usage"' in chunk or b'"cost"' in chunk:
-                        usage_line = chunk[-8192:]
+                    pending += chunk
+                    lines = pending.split(b"\n")
+                    pending = lines.pop()[-65536:]
+                    for line in lines:
+                        if line.startswith(b"data: ") and b'"usage"' in line:
+                            try:
+                                u = json.loads(line[6:]).get("usage")
+                                if isinstance(u, dict):
+                                    usage = u
+                            except (ValueError, AttributeError):
+                                pass
                     if b'[DONE]' in chunk or b'"finish_reason":"stop"' in chunk or b'"finish_reason":"tool_calls"' in chunk:
                         completed = True
             else:
@@ -246,21 +278,24 @@ class Handler(BaseHTTPRequestHandler):
                 phase = "body_write"
                 self.wfile.write(b"%x\r\n%s\r\n" % (len(data), data))
                 if b'"usage"' in data:
-                    usage_line = data[-8192:]
+                    try:
+                        usage = json.loads(data).get("usage")
+                    except (ValueError, AttributeError):
+                        pass
             self.wfile.write(b"0\r\n\r\n")
             self.wfile.flush()
             rec["duration"] = time.monotonic() - started
             rec["forwarded_bytes"] = forwarded
-            if usage_line:
-                rec["usage_tail"] = usage_line.decode("utf-8", "replace")[-1200:]
+            if isinstance(usage, dict):
+                rec["usage"] = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens") if isinstance(usage.get(k), (int, float))}
+                for group, field in (("prompt_tokens_details", "cached_tokens"), ("completion_tokens_details", "reasoning_tokens")):
+                    details = usage.get(group)
+                    if isinstance(details, dict) and isinstance(details.get(field), (int, float)):
+                        rec["usage"][group] = {field: details[field]}
             log(rec)
         except Exception as exc:  # upstream/protocol failure: surface it, log it
             rec["status"] = -2
             rec["phase"] = phase
-            try:
-                (LOG.parent / f"failed-{rec['seq']}-{req_id}.json").write_bytes(body[:600000])
-            except Exception:
-                pass
             try:
                 with (LOG.parent / "failed-requests.jsonl").open("a") as fh:
                     fh.write(json.dumps({"seq": rec["seq"], "request_shape": rec.get("request_shape"),
