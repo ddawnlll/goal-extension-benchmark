@@ -112,14 +112,43 @@ outcome for an old trial.
 | `results/replication-evaluation-dsh-only-2.json` | `4d9960fb262e714ecfbbda4fd43769202da16cea1b070d0ed070caed07aea5f0` |
 | `results/comparison-dsh-only-1-dsh-only-2.json` | `106137a0452755d39a12991d6144fa75214997e77384036d8516b0489598d9cd` |
 
+## Comparison with pi-goal-x (same provider)
+
+The historical pi-goal-x pair (`r1`/`r2`) used the same provider, so a cautious
+side-by-side is possible — but it is still not a ranking: the harnesses differ
+in system prompt, tools, scheduling, warm-up accounting and auditor. Both timing
+columns are `replication.py` `total_elapsed_s`, i.e. the same computed metric.
+
+| | pi-goal-x (r1/r2) | DSH (dsh-only-1/2) |
+|---|---|---|
+| `total_elapsed_s`, median | 363.9 s (297.7–430.0) | 366.2 s (319.4–412.9) |
+| Warm-up in the timed window | no (separate process, not counted) | yes (127.1 s and 8.6 s) |
+| Model requests | 27 / 23 | 53 / 60 (one is warm-up each) |
+| Input / output tokens | 65.9k / 93.1k; 14.2k / 19.7k | 64.1k / 47.0k; 29.5k / 25.5k |
+| Frozen + adversarial | 10/10 + 6/6 | 10/10 + 6/6 |
+| CLI parity | not run in that campaign | 1 passed / 1 failed (changed `--help`) |
+| Out-of-scope edits | none | `.github/workflows/ci.yml` in both runs |
+| Audit verdicts | none recorded (`[]`) | `not_applicable` |
+
+Reading it honestly: goal-relative elapsed is essentially the same, while DSH
+spent about twice as many model requests and 1.6x the output tokens for the same
+functional outcome. DSH also carries warm-up inside the timed window, so its
+end-to-end wall clock is higher. The clear quality difference is that DSH changed
+user-visible `--help` output and touched the CI workflow, so its independent gate
+reports `independent_tests_pass: false`; pi-goal-x had no such violation. One
+pair per side cannot support a claim of superiority in either direction.
+
 ## Limitations and unverified behavior
 
 * **No three-way ranking.** Balanced ordering across three competitors exists in
   the harness and was exercised by the historical Pi runs, but no completed
   three-way campaign with DSH was executed.
-* **Provider substitution.** New runs used OpenCode Go. The model identifier is
-  the same; identical weights and serving behavior are not proven, so timings are
-  not comparable with the historical local-endpoint `r1`/`r2` numbers.
+* **Transport difference, same provider.** Both campaigns used the same
+  `deepseek-v4.1-flash` OpenAI-compatible service. Historical runs reached it
+  through a local proxy (`host.lima.internal:9091`); these runs call
+  `opencode.ai` directly. The proxy target is not recorded in the artifacts, so
+  provider identity rests on maintainer confirmation, and small timing gaps are
+  transport-sensitive.
 * **Warm-up asymmetry, different prompts and tool schemas.** DSH is a different
   harness. Any timing difference is not attributable to the goal mechanism alone.
 * **No DSH auditor.** DSH has no independent completion auditor, so

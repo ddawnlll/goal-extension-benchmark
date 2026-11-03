@@ -28,9 +28,13 @@ complete, model-reported blocked, and round-limit blocked. DSH uses a native
 warm-up in the same session before goal dispatch; Pi warms up via its own CLI
 before the timed worker. This timing asymmetry, different system/tool schemas,
 provider implementation, and lack of a DSH auditor limit causal comparison.
-The new runs may use OpenCode Go rather than the historical local endpoint;
-the same model identifier does not prove identical weights or service behavior,
-so do not compare their timing or cost directly with historical `r1`/`r2`.
+The provider is the same OpenAI-compatible `deepseek-v4.1-flash` service in the
+historical and new runs. The transport differs: historical `r1`/`r2` reached it
+through a local HTTP proxy (`host.lima.internal:9091`, the relay default) while
+the new runs call `opencode.ai` directly. That proxy hop is a transport
+difference, not a provider difference, and the proxy's forwarding target is not
+recorded in the committed artifacts; the provider identity therefore rests on
+maintainer confirmation. Treat small timing gaps as transport-sensitive.
 
 The Docker Desktop Linux kernel used for development has no usable Landlock and
 its default seccomp blocks nested user namespaces. DSH's workspace-write bash
