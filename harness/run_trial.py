@@ -16,6 +16,7 @@ No original Pi/Pi-Bolt installation, session or repository is touched.
 Usage: run_trial.py --trial s0 --order glla,goal-x [--max-seconds 3600]
 """
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -39,11 +40,12 @@ TASK = ROOT / "results" / "shared-task.md"
 EXT = {
     "glla": {"src": ROOT / "competitors" / "_glla-src", "goal_prefix": "/goal plan ", "status": "/goal status"},
     "goal-x": {"src": ROOT / "competitors" / "_goalx-src", "goal_prefix": "/goal ", "status": "/goal-status"},
+    "dsh": {"src": ROOT / "harness" / "dsh", "goal_prefix": "/goal ", "status": "/goal"},
 }
 
 
-def sh(cmd, check=True, capture=True, timeout=None):
-    return subprocess.run(cmd, check=check, text=True, env=ENV,
+def sh(cmd, check=True, capture=True, timeout=None, extra_process_env=None):
+    return subprocess.run(cmd, check=check, text=True, env={**ENV, **(extra_process_env or {})},
                           capture_output=capture, timeout=timeout)
 
 
@@ -73,10 +75,11 @@ def ensure_instance(name, max_seconds, trial, thinking, extra_env, task_override
     run_dir = ROOT / "harness" / "run-seed" / name
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "task.md").write_text(task)
+    (run_dir / "goalx-settings.json").write_text(json.dumps({"provider": "local", "model": "deepseek-v4.1-flash", "thinkingLevel": thinking}))
     sha = __import__("hashlib").sha256(task.encode()).hexdigest()
     config = {
         "name": name,
-        "extension": {"glla": "pi-goal-list-loop-audit", "goal-x": "pi-goal-x"}[name],
+        "extension": {"glla": "pi-goal-list-loop-audit", "goal-x": "pi-goal-x", "dsh": "deepseek-harness-native-goal"}[name],
         "trial": trial,
         "provider": "local",
         "model": "deepseek-v4.1-flash",
@@ -89,7 +92,8 @@ def ensure_instance(name, max_seconds, trial, thinking, extra_env, task_override
         "status_poll_seconds": 0,
         "relay_log": "/var/log/relay/relay.jsonl",
         "env": {"PI_CODING_AGENT_DIR": "/home/agent/.pi/agent", "HOME": "/home/agent",
-                "GIT_TERMINAL_PROMPT": "0", "GIT_ASKPASS": "/bin/false", **extra_env},
+                "GIT_TERMINAL_PROMPT": "0", "GIT_ASKPASS": "/bin/false",
+                "PI_GOAL_SETTINGS_FILE": "/home/agent/run/goalx-settings.json", **extra_env},
         "extra_args": ["--no-approve"],
     }
     (run_dir / "config.json").write_text(json.dumps(config, indent=1))
@@ -109,15 +113,19 @@ def setup_networks(name):
     relay_vol = f"gb-{name}-relay"
     docker("volume", "rm", "-f", relay_vol, check=False)
     docker("volume", "create", relay_vol, check=True)
-    key = (SECRETS / "local_api_key").read_text().strip()
+    key = Path(os.environ.get("BENCH_RELAY_UPSTREAM_KEY_FILE", SECRETS / "local_api_key")).read_text().strip()
     docker("run", "-d", "--name", relay, "--restart", "no",
            "--network", net,
            "--add-host", "host.lima.internal:host-gateway",
-           "-e", "LOCAL_LLM_KEY=" + key,
+           "-e", "LOCAL_LLM_KEY",
+           *sum((["-e", f"{var}={os.environ[var]}"] for var in
+                  ("UPSTREAM_HOST", "UPSTREAM_PORT", "UPSTREAM_SCHEME", "UPSTREAM_PREFIX", "UPSTREAM_MODELS_PATH")
+                  if var in os.environ), []),
+           "-e", f"UPSTREAM_SESSION=goalbench-{name}-{time.time_ns()}",
            "-e", "RELAY_LOG=/logs/relay.jsonl",
            "-e", "RELAY_CONTROL=/logs/control.json",
            "-v", f"{relay_vol}:/logs",
-           "goalbench/relay:1")
+           "goalbench/relay:1", extra_process_env={"LOCAL_LLM_KEY": key})
     # The relay also needs the default bridge for the single allowed upstream.
     docker("network", "connect", "bridge", relay)
     docker("run", "--rm", "--entrypoint", "/bin/sh", "-v", f"{relay_vol}:/logs", "goalbench/relay:1", "-c",
@@ -191,7 +199,7 @@ def warm_session(name, net):
                  "-e", "HOME=/home/agent",
                  "-w", "/home/agent/work",
                  IMAGE, "bash", "-lc",
-                 "timeout 180 pi -p --provider local --model deepseek-v4.1-flash --thinking off "
+                 "timeout 180 pi -p --provider local --model deepseek-v4.1-flash --thinking low "
                  "--name benchmark-warmup --no-approve "
                  "'Session initialisation check. Reply with OK and nothing else.' "
                  "2>&1 | tail -3", check=False)
@@ -201,6 +209,7 @@ def warm_session(name, net):
 def launch_worker(name, net, relay_vol, trial, max_seconds, memory="6g"):
     cname = f"gb-worker-{name}"
     docker("rm", "-f", cname, check=False)
+    dsh = name == "dsh"
     cmd = [
         "run", "-d", "--name", cname,
         "--network", net,
@@ -209,6 +218,7 @@ def launch_worker(name, net, relay_vol, trial, max_seconds, memory="6g"):
         "--tmpfs", "/tmp:rw,exec,size=2g",
         "--cpus", "2", "--memory", memory, "--memory-swap", memory, "--pids-limit", "512",
         "--security-opt", "no-new-privileges",
+        "--security-opt", f"seccomp={ROOT / 'harness' / 'docker' / 'worker-seccomp.json'}",
         "--cap-drop", "ALL",
         "--cap-add", "CHOWN", "--cap-add", "SETUID", "--cap-add", "SETGID",
         "--cap-add", "DAC_OVERRIDE", "--cap-add", "FOWNER",
@@ -218,8 +228,13 @@ def launch_worker(name, net, relay_vol, trial, max_seconds, memory="6g"):
         "-v", f"{ROOT / 'harness' / 'runner'}:/opt/runner:ro",
         "-e", "PI_CODING_AGENT_DIR=/home/agent/.pi/agent",
         "-e", "HOME=/home/agent",
+        "-e", f"INSTANCE_NAME={name}",
+        "-e", "BENCH_RELAY_KEY=benchmark-local-relay",
+        "-e", "DSH_HOME=/home/agent/.dsh",
+        "-e", f"DSH_GOAL_MAX_ROUNDS={os.environ.get('DSH_GOAL_MAX_ROUNDS', '256')}",
         "-w", "/home/agent/work",
-        IMAGE, "python3", "/opt/runner/runner.py",
+        *(["goalbench/dsh:1", "/opt/node24/bin/node", "/opt/dsh/node_modules/@deepseek-ai/dsh/lib/bin.js", "--profile", "headless", "--patch", "/opt/dsh/goal.patch.yml"]
+          if dsh else [IMAGE, "python3", "/opt/runner/runner.py"]),
     ]
     docker(*cmd)
     return cname
@@ -230,6 +245,44 @@ def worker_alive(cname):
     return out.stdout.strip() == "true"
 
 
+def wire_violations(chat, thinking):
+    problems = []
+    if not chat:
+        problems.append("no_model_requests")
+    if any(r.get("model") != "deepseek-v4.1-flash" for r in chat):
+        problems.append("wire_model_mismatch")
+    if any(r.get("reasoning_effort") != thinking for r in chat):
+        problems.append("wire_reasoning_effort_mismatch")
+    return problems
+
+
+def validate_native_evidence(directory, final, task):
+    events = []
+    for path in (directory / "sessions").rglob("session.v4.jsonl"):
+        for line in path.read_text().splitlines():
+            events.append(json.loads(line))
+    problems = []
+    commands = [e for e in events if e.get("type") == "command/run" and e.get("data", {}).get("name") == "goal"]
+    done = [e for e in events if e.get("type") == "command/done" and e.get("data", {}).get("kind") == "success"]
+    changes = [e for e in events if e.get("type") == "goal/change"]
+    rounds = [e for e in events if e.get("type") == "user/message" and e.get("data", {}).get("source", {}).get("kind") == "goal"]
+    goal = final.get("native_goal") or {}
+    if any(e.get("type") == "tool/result" and
+           'no sandbox backend is usable' in json.dumps(e.get("data", {})).lower() for e in events):
+        problems.append("native_sandbox_unavailable")
+    if not commands or not any(e["data"].get("commandId") == commands[0]["data"].get("commandId") for e in done):
+        problems.append("native_command_not_dispatched")
+    if not changes or changes[0].get("data", {}).get("operation") != "create":
+        problems.append("native_goal_not_persisted")
+    if not rounds or goal.get("roundsStarted") != len(rounds):
+        problems.append("native_round_evidence_missing")
+    if goal.get("objective") != (task[:-1] if task.endswith("\n") else task):
+        problems.append("native_objective_mismatch")
+    if not changes or changes[-1].get("data", {}).get("goal", {}).get("phase") != goal.get("phase"):
+        problems.append("native_terminal_not_persisted")
+    return problems
+
+
 def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, memory="6g"):
     print(f"\n=== {name} / {trial} ===", flush=True)
     started = time.time()
@@ -237,13 +290,26 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
     net, relay, relay_vol = setup_networks(name)
     if not wait_relay(name):
         raise SystemExit(f"relay for {name} cannot reach the model endpoint")
-    warm = warm_session(name, net)
+    warm = warm_session(name, net) if name != "dsh" else "performed inside DSH session before goal dispatch"
     print(f"  warm-up session: {warm.splitlines()[-1] if warm else 'no output'}", flush=True)
     verifier = start_verifier(name, relay_vol)
     cname = launch_worker(name, net, relay_vol, trial, max_seconds, memory)
+    inspection = json.loads(docker("inspect", cname).stdout)[0]
+    host = inspection["HostConfig"]
+    worker_isolation = {key: host.get(key) for key in
+                        ("NanoCpus", "Memory", "MemorySwap", "PidsLimit", "ReadonlyRootfs", "CapDrop", "NetworkMode")}
+    security = host.get("SecurityOpt") or []
+    worker_isolation["security_opt"] = ["no-new-privileges" if "no-new-privileges" in o else
+                                        "seccomp=custom" if o.startswith("seccomp=") else o.split("=")[0] + "=custom"
+                                        for o in security]
+    worker_isolation["seccomp_profile_sha256"] = hashlib.sha256(
+        (ROOT / "harness" / "docker" / "worker-seccomp.json").read_bytes()).hexdigest()
+    worker_isolation["network_peers"] = sorted(
+        peer["Name"] for peer in json.loads(docker("network", "inspect", net).stdout)[0].get("Containers", {}).values())
 
     verified_at = None
     verify_log = []
+    resource_samples = []
     sleep_events = []
     docker_gaps = []
     baseline_sleep = set(sleep_lines())
@@ -251,6 +317,15 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
     deadline = started + max_seconds + 300
     while worker_alive(cname) and time.time() < deadline:
         time.sleep(20)
+        stats = docker("stats", "--no-stream", "--format", "{{json .}}", cname, check=False)
+        try:
+            sample = {"t": round(time.time() - started, 1), **json.loads(stats.stdout)}
+            top = docker("top", cname, "-eo", "pid,user,rss", check=False)
+            processes = [line.split() for line in top.stdout.splitlines()[1:]]
+            sample["agent_process_rss_kb"] = sum(int(p[2]) for p in processes if len(p) >= 3 and p[1] in ("1000", "agent") and p[2].isdigit())
+            resource_samples.append(sample)
+        except (ValueError, TypeError):
+            pass
         # host sleep/wake monitoring: a sleep that overlaps the run invalidates it
         for line in sleep_lines():
             if line not in baseline_sleep:
@@ -278,8 +353,9 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
     insp = docker("inspect", "-f", "{{.State.OOMKilled}} {{.State.ExitCode}} {{.State.Error}}", cname, check=False).stdout.strip()
     oom_killed = insp.split()[0] == "true" if insp else None
     exit_code = insp.split()[1] if len(insp.split()) > 1 else None
-    logs = docker("logs", cname, check=False).stdout
-    (RESULTS / f"{name}-{trial}-container.log").write_text(logs or "")
+    container_logs = docker("logs", cname, check=False)
+    logs = (container_logs.stdout or "") + (container_logs.stderr or "")
+    (RESULTS / f"{name}-{trial}-container.log").write_text(logs)
     tmp = RESULTS / f"{name}-{trial}-final-state.json"
     docker("cp", f"{cname}:/home/agent/logs/final-state.json", str(tmp), check=False)
     final = tmp.read_text() if tmp.exists() else ""
@@ -297,7 +373,7 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
         except Exception:
             pass
     chat = [r for r in reqs if r.get("path", "").endswith("chat/completions")]
-    failed = [r for r in chat if r.get("status") not in (200, None)]
+    failed = [r for r in chat if r.get("status") != 200 or r.get("client_abort")]
     failure_rate = (len(failed) / len(chat)) if chat else None
     final_state = {}
     try:
@@ -312,6 +388,11 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
         invalid.append("docker_daemon_interruption")
     if failure_rate is not None and failure_rate > 0.10:
         invalid.append(f"relay_failure_rate_{failure_rate:.0%}")
+    if not final_state:
+        invalid.append("missing_final_state")
+    if exit_code not in ("0",):
+        invalid.append(f"container_exit_{exit_code}")
+    invalid.extend(wire_violations(chat, thinking))
     if oom_killed:
         invalid.append("container_oom_killed")
     if final_state.get("exit_reason") in ("wall_clock_limit", "token_budget_exceeded"):
@@ -323,6 +404,16 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
         "started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(started)),
         "ended_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(end)),
         "wall_seconds": round(end - started, 1),
+        "task_sha256": sha,
+        "baseline_commit": sh(["git", "-C", str(ROOT / "baseline" / "pi-bolt"), "rev-parse", "HEAD"]).stdout.strip(),
+        "model": "deepseek-v4.1-flash", "reasoning_effort": thinking,
+        "upstream_scheme": os.environ.get("UPSTREAM_SCHEME", "http"),
+        "effective_model_config": {"api": "openai-completions", "context_window": 1000000, "max_tokens": 32768,
+                                   "provider": "local", "base_url": f"http://gb-relay-{name}:9091/v1"},
+        "native_runtime": {"package": "@deepseek-ai/dsh", "version": "0.2.1-rc.5", "node_version": docker("run", "--rm", "--entrypoint", "/opt/node24/bin/node", "goalbench/dsh:1", "--version").stdout.strip(), "image_id": docker("image", "inspect", "goalbench/dsh:1", "--format", "{{.Id}}").stdout.strip(), "integrity": "sha512-WkyJZv4zl9sCAxSzRctGm58m0rilGqwR6pniBiLOz5CPDfHfDuAUicg0AAazXI7oj/Cph6/cjNTncA/rpLTXpw=="} if name == "dsh" else None,
+        "resource_samples": resource_samples, "worker_isolation": worker_isolation,
+        "preflight_evidence": None,
+        "wire": [{k: r.get(k) for k in ("t_wall", "path", "model", "reasoning_effort", "request_shape", "system_messages", "system_sha256", "tools", "tools_sha256", "usage")} for r in chat],
         "externally_verified_at_s": verified_at, "verifier_samples": verify_log,
         "sleep_events": sleep_events, "docker_gaps": docker_gaps,
         "relay": {"requests": len(chat), "failed": len(failed),
@@ -334,12 +425,19 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
     }
     (RESULTS / f"{name}-{trial}-runmeta.json").write_text(json.dumps(meta, indent=1))
     # Snapshot the instance volume now: the next run recreates it in place.
-    snap = sh([sys.executable, str(ROOT / "harness" / "replication.py"), "collect-one", name, trial])
+    snap = sh([sys.executable, str(ROOT / "harness" / "replication.py"), "collect-one", name, trial], check=False)
     if snap.returncode != 0:
         print(f"  !! artifact collection failed for {name} {trial}: {snap.stderr[-300:]}", flush=True)
         meta["invalid_reasons"] = list(meta.get("invalid_reasons", [])) + ["artifact_collection_failed"]
         meta["valid"] = False
         (RESULTS / f"{name}-{trial}-runmeta.json").write_text(json.dumps(meta, indent=1))
+    if name == "dsh" and final_state and snap.returncode == 0:
+        problems = validate_native_evidence(ROOT / "competitors" / name / trial, final_state, task_override or TASK.read_text())
+        meta["invalid_reasons"].extend(problems)
+        meta["valid"] = not meta["invalid_reasons"]
+        (RESULTS / f"{name}-{trial}-runmeta.json").write_text(json.dumps(meta, indent=1))
+    docker("rm", "-f", relay, check=False)
+    docker("network", "rm", net, check=False)
     print(f"  wall {meta['wall_seconds']}s; final-state present: {bool(final)}", flush=True)
     return meta
 
@@ -347,7 +445,7 @@ def run_one(name, trial, max_seconds, thinking, extra_env, task_override=None, m
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--trial", default="s0")
-    ap.add_argument("--order", default="glla,goal-x")
+    ap.add_argument("--order", default="glla,goal-x,dsh")
     ap.add_argument("--max-seconds", type=float, default=3600)
     ap.add_argument("--thinking", default="low")
     ap.add_argument("--memory", default="6g")
@@ -355,11 +453,25 @@ def main():
     ap.add_argument("--smoke", action="store_true", help="plumbing check with a trivial task")
     a = ap.parse_args()
     RESULTS.mkdir(exist_ok=True)
+    import re
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", a.trial):
+        ap.error("trial ID must contain only letters, digits, underscores or hyphens")
+    names = a.order.split(",")
+    if not names or len(set(names)) != len(names) or any(n not in EXT for n in names):
+        ap.error("order must list distinct known competitors: glla,goal-x,dsh")
+    if a.only and a.only not in names:
+        ap.error("--only must name a competitor in --order")
+    if "dsh" in names and a.thinking != "low":
+        ap.error("the DSH profile currently supports only low reasoning effort")
+    if ((RESULTS / f"trial-{a.trial}-runmeta.json").exists() or
+            any((RESULTS / f"{name}-{a.trial}-runmeta.json").exists() or
+                (ROOT / "competitors" / name / a.trial).exists() for name in names)):
+        ap.error(f"trial {a.trial!r} already has evidence; choose a fresh trial ID")
     meta = {"trial": a.trial, "order": a.order, "runs": []}
     for name in a.order.split(","):
         if a.only and name != a.only:
             continue
-        override = ("Reply with the single word OK. Do not use any tools. Then finish the goal."
+        override = ("Reply with OK, then use your native goal mechanism to mark this goal complete."
                     if a.smoke else None)
         m = run_one(name, a.trial, min(a.max_seconds, 300) if a.smoke else a.max_seconds,
                     a.thinking, {}, override, a.memory)

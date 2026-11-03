@@ -1,0 +1,24 @@
+{
+  "name": "dsh",
+  "trial": "dsh-fixture-blocked01",
+  "session_id": "session-6147a164-5a47-4e4a-aff5-80e647fd37e5",
+  "exit_reason": "goal_blocked",
+  "native_goal": {
+    "id": "goal-c1df6533-eae0-4da8-8c72-26b6c7b2eed5",
+    "revision": 2,
+    "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+    "phase": "blocked",
+    "maxGoalRounds": 5,
+    "blockedReason": {
+      "code": "model-reported",
+      "message": "Fixture dependency remains unavailable."
+    },
+    "roundsStarted": 3,
+    "createdAt": 1793660101192,
+    "updatedAt": 1793660101427,
+    "activation": "disarmed"
+  },
+  "objective_matches_normalized_task": true,
+  "auditor": "not_applicable",
+  "elapsed_seconds": 0.503
+}

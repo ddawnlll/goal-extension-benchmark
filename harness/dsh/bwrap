@@ -1,0 +1,17 @@
+#!/bin/bash
+# Docker already supplies a private PID namespace and proc mount. Nested proc
+# mounts are denied by Docker Desktop's VM; keep bwrap's filesystem policy
+# while reusing that outer PID namespace. Only rewrite bwrap options before --.
+set -euo pipefail
+args=()
+while (($#)); do
+  case "$1" in
+    --) args+=("$@"); break ;;
+    --unshare-pid) shift ;;
+    --proc)
+      [[ "${2:-}" == /proc ]] || { echo 'unexpected bwrap proc target' >&2; exit 2; }
+      shift 2 ;;
+    *) args+=("$1"); shift ;;
+  esac
+done
+exec /usr/bin/bwrap "${args[@]}"

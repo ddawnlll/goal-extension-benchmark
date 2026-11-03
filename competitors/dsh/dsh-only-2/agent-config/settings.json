@@ -1,0 +1,9 @@
+{
+  "sessionDir": "/home/agent/.pi/agent/sessions",
+  "quietStartup": true,
+  "defaultProjectTrust": "never",
+  "extensions": [],
+  "skills": [],
+  "promptTemplates": [],
+  "themes": []
+}

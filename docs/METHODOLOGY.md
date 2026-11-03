@@ -1,5 +1,67 @@
 # Methodology
 
+## Cross-harness native-goal extension
+
+The original Pi-only `s0`, `r1`, and `r2` measurements below remain historical.
+The new DSH competitor is a **cross-harness native-goal comparison**, not an
+isolated extension A/B: DSH has different system prompts, tools, scheduling and
+no independent completion auditor (`not_applicable`, not zero). Its native
+`goal`, `tool-goal`, `command-goal` and `goal-round-driver` run unmodified; a
+thin adapter dispatches `/goal` through DSH's command registry and observes the
+persisted goal. It does not simulate continuation or treat prose as completion.
+
+All workers receive the same task file, baseline, model, low reasoning effort,
+resource limits, isolated relay and independent evaluator. DSH's goal domain
+trims surrounding whitespace when creating its objective; the stored objective
+therefore omits the task file's final newline. The original task bytes and hash
+are unchanged, and the adapter checks equality after this native normalization.
+The difference must be disclosed rather than described as byte-identical goal
+storage. The relay captures actual model and effort, request-shape fields,
+system/tool hashes and usage without recording message bodies or credentials;
+any missing or mismatched effort or model invalidates a run. Completion reported
+by a harness is not the independent quality gate.
+
+The adapter keeps DSH alive through native rounds until a persisted terminal
+state or time limit; a timeout is invalid and is not proof of clean cancellation
+or a terminal native state. Deterministic fixture tests exercise two rounds and
+complete, model-reported blocked, and round-limit blocked. DSH uses a native
+warm-up in the same session before goal dispatch; Pi warms up via its own CLI
+before the timed worker. This timing asymmetry, different system/tool schemas,
+provider implementation, and lack of a DSH auditor limit causal comparison.
+The provider is the same OpenAI-compatible `deepseek-v4.1-flash` service in the
+historical and new runs. The transport differs: historical `r1`/`r2` reached it
+through a local HTTP proxy (`host.lima.internal:9091`, the relay default) while
+the new runs call `opencode.ai` directly. That proxy hop is a transport
+difference, not a provider difference, and the proxy's forwarding target is not
+recorded in the committed artifacts; the provider identity therefore rests on
+maintainer confirmation. Treat small timing gaps as transport-sensitive.
+
+The Docker Desktop Linux kernel used for development has no usable Landlock and
+its default seccomp blocks nested user namespaces. DSH's workspace-write bash
+therefore failed closed in the first run; that run is invalid for comparison.
+For subsequent runs all workers use the same checked-in seccomp profile, based
+on Moby's default with `clone`, `unshare`, `mount`, `umount2` and `pivot_root`
+allowed so unprivileged bubblewrap can create its inner filesystem namespace.
+The host sleep monitor relies on macOS `pmset`; it does not establish sleep
+coverage on Linux. This is a **weaker syscall filter than Docker's default**, not an identical
+security profile to historical runs. Non-root execution, no-new-privileges,
+cap-drop, read-only root and the per-worker internal network remain in force.
+Docker already supplies the PID namespace; the DSH image's bwrap wrapper omits
+only its nested PID/proc setup because that mount is refused on Docker Desktop.
+A filesystem probe confirmed writes inside the workspace and denial outside it;
+this is not a comprehensive container escape audit. Use the same profile for
+all three competitors and do not compare the first run's timings as controlled.
+
+Use fresh trial IDs; the original charts and summary are not updated by these
+runs. The maintained campaign executed here is **DSH-only** (see `results/`),
+because the Pi competitors did not reach a terminal state inside the fixed
+300-second smoke limit. Three-way order support exists in `run_trial.py` and
+`replication.py`, but ordering/rotation controls are only exercised by the
+historical Pi results, not by a completed three-way DSH campaign. Report a
+DSH-only result as a DSH result, never as a three-way ranking. The two executed
+trials and their independent pass/fail counts are in
+[`docs/DSH-RESULTS.md`](DSH-RESULTS.md).
+
 Two goal-management extensions for **Pi** were run on an identical coding task in
 isolated containers. The runtime was **Pi-Bolt 1.0.8**, a compiled fork of Pi 1.4.0
 that the extensions load into unchanged; Pi-Bolt is what makes the environment

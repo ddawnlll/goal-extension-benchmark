@@ -1,0 +1,431 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 45d17da03..9ec45b2ec 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -99,7 +99,9 @@ jobs:
+           tar -C "$RUNNER_TEMP" -xzf "$RUNNER_TEMP/actionlint.tar.gz" actionlint
+           "$RUNNER_TEMP/actionlint"
+       - name: Python
+-        run: python3 -m py_compile bench/*.py scripts/lib/*.py
++        run: |
++          python3 -m py_compile bench/*.py scripts/lib/*.py
++          python3 bench/test_report.py
+       - name: Versions agree
+         run: |
+           python3 -c 'import json; json.load(open("sources.json"))'
+diff --git a/bench/README.md b/bench/README.md
+index 566c327bb..9a0730b4a 100644
+--- a/bench/README.md
++++ b/bench/README.md
+@@ -26,7 +26,8 @@ throwaway Pi home, so runs are isolated from your Pi configuration and from each
+ | `aot_coverage.py` | What of a Pi-Bolt build runs outside its compiled code, scenario by scenario (headless, interactive, a long answer, tool calls, the three APIs, a long session): the functions that ran without code in the image (interpreted, with the JIT off), the regular expressions compiled at run time (those missing from the training profile), and the inline cache slots filled. From the runtime's own log (`BUN_JSC_verboseAOTCompilation=1`). |
+ | `run-suite.sh` | Runs all of the benchmarks above into one results folder, then `report.py`: what the README and docs/BENCHMARKS.md show. |
+ | `run-suite.ps1` | The same on Windows: Pi-Bolt, Pi on stock Bun, Node 22 and Node 24; `conpty_check.py` for `tmux_check.py`, and `pauses.py` (frames and GC pauses), `long_answer.py` and `large_write.py` too. Writes `environment.txt` (CPU, Windows build, Defender, power) and `summary.md`. |
+-| `report.py` | Draws the charts (light and dark SVG) and prints the tables, from a results folder. |
++| `report.py` | Draws the charts (light and dark SVG) and prints the tables, from a results folder. Text that goes into an SVG (titles, `--label` text, build and step names from the results) is escaped first, so `&`, `<`, `>` and quotes are drawn as characters and a label cannot add elements or attributes; the files are UTF-8. |
++| `test_report.py` | Regression tests for `report.py`'s SVG output: hostile and ordinary labels, read back with an XML parser. Run with `python3 bench/test_report.py`. |
+ | `fake_model.py`, `fake_model_tools.py`, `fake_model_stress.py` | The scripted OpenAI-compatible model servers the tools start. |
+ | `harness.py` | Shared pieces: build parsing, model server, Pi home, pseudo-terminal, CPU and memory readings. |
+ | `fixtures/` | Four Pi source files (MIT, from Pi) that the scripted model asks Pi to read. |
+diff --git a/bench/report.py b/bench/report.py
+index 0b12b4e76..aa1989619 100755
+--- a/bench/report.py
++++ b/bench/report.py
+@@ -15,6 +15,10 @@ peak working set, private working set, private bytes (commit) and the rise of th
+ has the process floor (benchmark.py --floor), the Time and CPU tables add its rows and each build's figures over it.
+ --label name=text names a build's column (e.g. --label "bun=Pi 1.0.3 on stock Bun 1.4.2").
+ 
++Everything that reaches an SVG as text (titles, labels, build and step names from the results and the command line) is escaped
++first: `&`, `<`, `>` and both quotes become character references, so a label is drawn as text and cannot add elements,
++attributes or scripts. The files are written as UTF-8, other characters kept as they are.
++
+ Example: bench/report.py results/2026-10-02 --images docs/images --builds pi-bolt,bun,node
+ """
+ 
+@@ -24,6 +28,7 @@ import re
+ import statistics
+ from collections import defaultdict
+ from pathlib import Path
++from xml.sax.saxutils import escape as xml_escape
+ 
+ LABELS = {"pi-bolt": "Pi-Bolt", "bun": "Bun 1.4.2", "node": "Node 22", "node24": "Node 24", "pi-bolt-jit": "Pi-Bolt (JIT on)"}
+ # Pi-Bolt is the accent; every other build (an earlier Pi-Bolt release too) is the same neutral, so the eye goes to Pi-Bolt and
+@@ -45,7 +50,25 @@ FLOOR = "floor"  # benchmark.py --floor's runs: the process floor
+ 
+ 
+ def load(path):
+-    return [json.loads(line) for line in open(path)] if path.exists() else []
++    if not path.exists():
++        return []
++    with open(path, encoding="utf-8") as f:  # (closed before the results folder is removed, as tests and Windows require)
++        return [json.loads(line) for line in f]
++
++
++# XML 1.0 has no way to write these characters, escaped or not: a label that carries one would make the whole document
++# unparsable, so they are dropped. Every other character, Unicode included, is kept as it is.
++NOT_XML = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f\ud800-\udfff\ufffe\uffff]")
++
++
++def esc(text):
++    """Text for SVG markup: a label is data, never an element or an attribute.
++
++    `&`, `<`, `>` and both quotes become character references, so `</text><script>alert(1)</script>` in a label is drawn as
++    those characters and cannot close the text element or add an element or an attribute. Escape once, where a value is
++    written into the markup; a value built from others (a ratio's "2.9× faster than Bun") is escaped whole there, not before.
++    """
++    return xml_escape(NOT_XML.sub("", str(text)), {'"': "&quot;", "'": "&apos;"})
+ 
+ 
+ def med(values):
+@@ -112,14 +135,14 @@ def chart(title, subtitle, panels, builds, theme, path):
+     head = 78
+     height = head + rows * panel_h
+     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
+-           f'aria-label="{title}: {subtitle}">',
++           f'aria-label="{esc(title)}: {esc(subtitle)}">',
+            f'<style>text{{font-family:{FONT}}}</style>',
+-           f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{title}</text>',
+-           f'<text x="{pad}" y="56" font-size="13.5" fill="{t["muted"]}">{subtitle}</text>']
++           f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{esc(title)}</text>',
++           f'<text x="{pad}" y="56" font-size="13.5" fill="{t["muted"]}">{esc(subtitle)}</text>']
+     for p, (name, unit, values, kind) in enumerate(panels):
+         x0 = pad + (p % columns) * (col_w + pad)
+         y0 = head + (p // columns) * panel_h
+-        out.append(f'<text x="{x0}" y="{y0 + 18}" font-size="15" font-weight="600" fill="{t["text"]}">{name}</text>')
++        out.append(f'<text x="{x0}" y="{y0 + 18}" font-size="15" font-weight="600" fill="{t["text"]}">{esc(name)}</text>')
+         top = max(v for v in values.values() if v is not None)
+         bar_x = x0 + label_w
+         # Room after the longest bar for its value; Pi-Bolt's ratio sits after its own, shorter bar.
+@@ -129,7 +152,7 @@ def chart(title, subtitle, panels, builds, theme, path):
+             v = values.get(b)
+             y = y0 + 36 + i * row_h
+             mid = y + bar_h / 2 + 4.5
+-            out.append(f'<text x="{bar_x - 10}" y="{mid:.1f}" font-size="{label_size}" text-anchor="end" fill="{t["muted"]}">{LABELS.get(b, b)}</text>')
++            out.append(f'<text x="{bar_x - 10}" y="{mid:.1f}" font-size="{label_size}" text-anchor="end" fill="{t["muted"]}">{esc(LABELS.get(b, b))}</text>')
+             if v is None:
+                 continue
+             w = max(4, bar_w * v / top)
+@@ -137,16 +160,16 @@ def chart(title, subtitle, panels, builds, theme, path):
+             out.append(f'<path d="M{bar_x},{y} h{w - 4:.1f} a4,4 0 0 1 4,4 v{bar_h - 8} a4,4 0 0 1 -4,4 h{-(w - 4):.1f} z" fill="{color_of(b, i, theme)}"/>')
+             weight = "650" if i == 0 else "400"
+             value = fmt(v, unit)
+-            out.append(f'<text x="{bar_x + w + 8:.1f}" y="{mid:.1f}" font-size="{value_size}" font-weight="{weight}" fill="{t["text"]}">{value}</text>')
++            out.append(f'<text x="{bar_x + w + 8:.1f}" y="{mid:.1f}" font-size="{value_size}" font-weight="{weight}" fill="{t["text"]}">{esc(value)}</text>')
+             note = ratio_text(v, base, kind) if i == 0 else None
+             if note:
+                 # (After the value, which is bold: wider than text_width says.)
+                 px = bar_x + w + 8 + text_width(value, value_size) * 1.12 + 12
+                 if px + text_width(note, 12.5) <= x0 + col_w:  # (only where it fits in its panel)
+-                    out.append(f'<text x="{px:.1f}" y="{mid:.1f}" font-size="12.5" fill="{t["muted"]}">{note}</text>')
++                    out.append(f'<text x="{px:.1f}" y="{mid:.1f}" font-size="12.5" fill="{t["muted"]}">{esc(note)}</text>')
+         out.append(f'<line x1="{bar_x}" y1="{y0 + 30}" x2="{bar_x}" y2="{y0 + 36 + len(builds) * row_h - 8}" stroke="{t["rule"]}"/>')
+     out.append("</svg>")
+-    path.write_text("\n".join(out) + "\n")
++    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+ 
+ 
+ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+@@ -169,11 +192,11 @@ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+     tile_h = bars_y + 30 * len(builds)
+     height = top + tile_h + 10
+     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
+-           f'aria-label="{title or "Pi-Bolt compared with Bun and Node"}">',
++           f'aria-label="{esc(title or "Pi-Bolt compared with Bun and Node")}">',
+            f'<style>text{{font-family:{FONT}}}</style>']
+     if title:
+-        out.append(f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{title}</text>')
+-        out.append(f'<text x="{pad}" y="54" font-size="13.5" fill="{t["muted"]}">{subtitle or ""}</text>')
++        out.append(f'<text x="{pad}" y="32" font-size="21" font-weight="650" fill="{t["text"]}">{esc(title)}</text>')
++        out.append(f'<text x="{pad}" y="54" font-size="13.5" fill="{t["muted"]}">{esc(subtitle or "")}</text>')
+ 
+     def compared(mine, other, better, name):
+         if not mine or not other:
+@@ -190,32 +213,33 @@ def hero(tiles, builds, theme, path, title=None, subtitle=None, compare=None):
+         y = top + 4
+         if i:
+             out.append(f'<line x1="{x - gap / 2:.1f}" y1="{y + 6}" x2="{x - gap / 2:.1f}" y2="{y + tile_h - 6}" stroke="{t["rule"]}"/>')
+-        out.append(f'<text x="{x:.1f}" y="{y + 18}" font-size="13" font-weight="600" fill="{t["muted"]}">{name}</text>')
++        out.append(f'<text x="{x:.1f}" y="{y + 18}" font-size="13" font-weight="600" fill="{t["muted"]}">{esc(name)}</text>')
+         mine = values.get(builds[0])
+         shown = fmt(mine, unit)
+         figure, _, unit_text = shown.rpartition(" ") if " " in shown else (shown, "", "")
++        figure = esc(figure)
+         if unit_text:
+-            figure += f'<tspan font-size="16" font-weight="600" fill="{t["muted"]}" dx="5">{unit_text}</tspan>'
++            figure += f'<tspan font-size="16" font-weight="600" fill="{t["muted"]}" dx="5">{esc(unit_text)}</tspan>'
+         out.append(f'<text x="{x:.1f}" y="{y + 58}" font-size="36" font-weight="700" fill="{t["text"]}">{figure}</text>')
+         for k, (other, other_name) in enumerate(compare):
+             line = compared(mine, values.get(other), better, other_name)
+             if line:
+                 style = f'font-weight="600" fill="{t["text"]}"' if k == 0 else f'fill="{t["muted"]}"'
+-                out.append(f'<text x="{x:.1f}" y="{y + 84 + 18 * k}" font-size="13" {style}>{line}</text>')
++                out.append(f'<text x="{x:.1f}" y="{y + 84 + 18 * k}" font-size="13" {style}>{esc(line)}</text>')
+         most = max(v for v in values.values() if v)
+         for j, b in enumerate(builds):
+             v = values.get(b)
+             yy = y + bars_y + j * 30
+             weight = "650" if j == 0 else "400"
+             ink = t["text"] if j == 0 else t["muted"]
+-            out.append(f'<text x="{x:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" fill="{ink}">{LABELS.get(b, b)}</text>')
++            out.append(f'<text x="{x:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" fill="{ink}">{esc(LABELS.get(b, b))}</text>')
+             if not v:
+                 continue
+-            out.append(f'<text x="{x + tile_w:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" text-anchor="end" fill="{ink}">{fmt(v, unit)}</text>')
++            out.append(f'<text x="{x + tile_w:.1f}" y="{yy}" font-size="12.5" font-weight="{weight}" text-anchor="end" fill="{ink}">{esc(fmt(v, unit))}</text>')
+             bw = max(6, tile_w * v / most)
+             out.append(f'<rect x="{x:.1f}" y="{yy + 7}" width="{bw:.1f}" height="6" rx="3" fill="{color_of(b, j, theme)}"/>')
+     out.append("</svg>")
+-    path.write_text("\n".join(out) + "\n")
++    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+ 
+ 
+ def read_tables(results, pattern):
+diff --git a/bench/test_report.py b/bench/test_report.py
+new file mode 100644
+index 000000000..9088661b8
+--- /dev/null
++++ b/bench/test_report.py
+@@ -0,0 +1,243 @@
++#!/usr/bin/env python3
++"""Regression tests for report.py's SVG output: a label from the results or the command line is text, never markup.
++
++Each generated SVG is read back with the standard library's XML parser (xml.etree.ElementTree), so a label that closes an
++element, opens one, or adds an attribute fails the test as malformed XML or as an element that should not be there.
++
++Run with: python3 bench/test_report.py
++"""
++
++import contextlib
++import io
++import json
++import sys
++import tempfile
++import unittest
++import xml.etree.ElementTree as ET
++from pathlib import Path
++
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++import report  # noqa: E402
++
++SVG = "{http://www.w3.org/2000/svg}"
++# Closes the <text> element, opens a script, and tries an attribute on the element that follows.
++EVIL = '</text><script>alert(1)</script><text x="0" onload="alert(2)">'
++# The same, as a build name: --label splits name=text at the first '=', so a name cannot carry one.
++EVIL_BUILD = '</text><script>alert(1)</script><text>'
++ALLOWED_TAGS = {SVG + t for t in ("svg", "style", "text", "tspan", "path", "line", "rect")}
++
++
++def parse(path):
++    """The SVG as an XML parser reads it: raises ParseError on markup a label has broken."""
++    return ET.parse(path).getroot()
++
++
++def texts(root):
++    """Every <text> element's content, after the parser has turned character references back into characters."""
++    return [t.text or "" for t in root.iter(SVG + "text")]
++
++
++def tags(root):
++    return {el.tag for el in root.iter()}
++
++
++class ReportTestCase(unittest.TestCase):
++    """A temporary image folder, and the module's label state put back after each test (main() fills LABELS from --label)."""
++
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory()
++        self.images = Path(self.tmp.name) / "images"
++        self.images.mkdir()
++        self.labels = dict(report.LABELS)
++        self.pi_version = report.PI_VERSION[0]
++
++    def tearDown(self):
++        report.LABELS.clear()
++        report.LABELS.update(self.labels)
++        report.PI_VERSION[0] = self.pi_version
++        self.tmp.cleanup()
++
++    def svg(self, name):
++        return self.images / f"{name}.svg"
++
++
++class EscapeTests(ReportTestCase):
++    def test_special_characters_become_references(self):
++        self.assertEqual(report.esc('&<>"\''), "&amp;&lt;&gt;&quot;&apos;")
++
++    def test_ordinary_text_is_unchanged(self):
++        for text in ("Pi-Bolt", "Pi 1.0.3 on stock Bun 1.4.2", "Node 22", "1,234 ms", "2.9× faster"):
++            self.assertEqual(report.esc(text), text)
++
++    def test_unicode_is_kept(self):
++        text = "Pi-Bolt – café 日本語 ×"
++        self.assertEqual(report.esc(text), text)
++
++    def test_characters_xml_cannot_carry_are_dropped(self):
++        self.assertEqual(report.esc("a\x00b\x1fc\uffffd"), "abcd")
++
++    def test_whole_values_are_escaped_once(self):
++        # (A label that is itself a reference is data: its & becomes &amp; and is not left as a reference.)
++        self.assertEqual(report.esc("A &amp; B"), "A &amp;amp; B")
++
++
++class ChartTests(ReportTestCase):
++    def test_adversarial_label_cannot_inject_markup(self):
++        report.chart(EVIL, EVIL, [(EVIL, "ms", {"pi-bolt": 10, EVIL: 20})], ["pi-bolt", EVIL], "light", self.svg("evil"))
++        root = parse(self.svg("evil"))
++        self.assertEqual(root.tag, SVG + "svg")
++        self.assertEqual(tags(root) - ALLOWED_TAGS, set(), "an element not of the chart: an injected one")
++        self.assertEqual(root.get("aria-label"), f"{EVIL}: {EVIL}")
++        self.assertEqual(set(root.attrib), {"width", "height", "viewBox", "role", "aria-label"})
++        self.assertIn(EVIL, texts(root))
++        self.assertNotIn("&amp;lt;", self.svg("evil").read_text(encoding="utf-8"))
++        self.assertIn("&lt;script&gt;", self.svg("evil").read_text(encoding="utf-8"))
++
++    def test_ordinary_labels_draw_the_same_text(self):
++        report.chart("Time", "Lower is better.", [("Panel", "ms", {"pi-bolt": 10, "bun": 20})],
++                     ["pi-bolt", "bun"], "light", self.svg("ordinary"))
++        root = parse(self.svg("ordinary"))
++        self.assertEqual(texts(root), ["Time", "Lower is better.", "Panel", "Pi-Bolt", "10 ms", "2.0× faster",
++                                       "Bun 1.4.2", "20 ms"])
++        self.assertEqual(root.get("aria-label"), "Time: Lower is better.")
++        self.assertNotIn("&amp;", self.svg("ordinary").read_text(encoding="utf-8"))
++
++    def test_a_single_ampersand_is_escaped_once(self):
++        report.chart("Q&A", "A & B", [("Panel", "ms", {"pi-bolt": 10, "bun": 20})],
++                     ["pi-bolt", "bun"], "light", self.svg("amp"))
++        content = self.svg("amp").read_text(encoding="utf-8")
++        self.assertIn(">Q&amp;A<", content)
++        self.assertIn(">A &amp; B<", content)
++        self.assertNotIn("&amp;amp;", content)
++        self.assertIn("Q&A", texts(parse(self.svg("amp"))))
++
++    def test_unicode_label_survives_the_parser(self):
++        label = "Pi-Bolt – café 日本語 ×"
++        report.LABELS["café"] = label
++        report.chart("Title", "Sub", [("Panel", "ms", {"café": 10})], ["café"], "dark", self.svg("unicode"))
++        self.assertIn(label, texts(parse(self.svg("unicode"))))
++
++    def test_control_characters_do_not_break_the_document(self):
++        report.LABELS["ctl"] = "a\x00b\x1fc"
++        report.chart("Title", "Sub", [("Panel", "ms", {"ctl": 10})], ["ctl"], "light", self.svg("control"))
++        self.assertIn("abc", texts(parse(self.svg("control"))))
++
++
++class HeroTests(ReportTestCase):
++    def test_adversarial_label_cannot_inject_markup(self):
++        report.hero([(EVIL, "ms", {"pi-bolt": 10, EVIL: 20}, "faster")], ["pi-bolt", EVIL], "light", self.svg("hero"),
++                    EVIL, EVIL, [(EVIL, EVIL)])
++        root = parse(self.svg("hero"))
++        self.assertEqual(tags(root) - ALLOWED_TAGS, set(), "an element not of the tile: an injected one")
++        self.assertEqual(root.get("aria-label"), EVIL)
++        self.assertIn(EVIL, texts(root))
++        # The large figure's unit keeps its <tspan> markup, and the text reads as before.
++        tspan = next(root.iter(SVG + "tspan"))
++        self.assertEqual(tspan.text, "ms")
++        self.assertEqual("".join(next(t for t in root.iter(SVG + "text") if len(t)).itertext()), "10ms")
++
++    def test_ordinary_hero_is_unchanged(self):
++        report.hero([("Ready to type", "ms", {"pi-bolt": 100, "bun": 250}, "faster")], ["pi-bolt", "bun"], "light",
++                    self.svg("ordinary"), "Title", "Subtitle", [("bun", "Bun")])
++        root = parse(self.svg("ordinary"))
++        figure = next(t for t in root.iter(SVG + "text") if len(t))
++        self.assertEqual("".join(figure.itertext()), "100ms")
++        self.assertIn("2.5× faster than Bun", texts(root))
++        self.assertEqual([s.text for s in root.iter(SVG + "tspan")], ["ms"])
++
++
++class MainTests(ReportTestCase):
++    """run-suite.sh's call: a results folder whose build, step, plugin and --label text is hostile."""
++
++    def write_fixture(self):
++        self.results = Path(self.tmp.name) / "results"
++        self.results.mkdir()
++        self.label = "<cross-build & 'quoted'>"
++        builds = ["pi-bolt", EVIL_BUILD]
++        rows = []
++        for build in builds:
++            rows += [
++                {"build": build, "scenario": "startup", "ok": True, "wall_ms": 40, "cpu_ms": 30},
++                {"build": build, "scenario": "headless", "ok": True, "wall_ms": 60, "cpu_ms": 50},
++                {"build": build, "scenario": "interactive", "ok": True, "tti_ms": 100, "cpu_ms": 200,
++                 "peak_mb": 80, "peak_own_mb": 40},
++            ]
++        (self.results / "benchmark.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
++        long_rows = [{"build": b, "prompt": p, "ms_per_prompt": 12, "cpu_ms_per_prompt": 10, "own_mb": 50,
++                      "tokens_m": 4.2, "exit": 0} for b in builds for p in (1, 2)]
++        (self.results / "long.jsonl").write_text("".join(json.dumps(r) + "\n" for r in long_rows))
++        tmux_rows = [{"build": b, "terminal": "tmux", "prompt_cpu_ms": 900, "memory_at_end": {"own": 70},
++                      "frame_ms_p99": 20} for b in builds]
++        (self.results / "tmux.jsonl").write_text("".join(json.dumps(r) + "\n" for r in tmux_rows))
++        pause_rows = []
++        for b in builds:
++            pause_rows += [
++                {"build": b, "step": "write:200", "gc_logged": False, "frame_ms_p99": 25, "longest_ms": 60},
++                {"build": b, "step": EVIL, "gc_logged": False, "frame_ms_p99": 30},
++                {"build": b, "step": "write:200", "gc_logged": True, "gc": {"p99_ms": 5, "max_ms": 9}},
++            ]
++        (self.results / "pauses.jsonl").write_text("".join(json.dumps(r) + "\n" for r in pause_rows))
++        plugin_rows = [{"build": b, "plugin": "compiled", "loop_ms": [9, 1, 1], "launch_ms": 120} for b in builds]
++        (self.results / "plugins.jsonl").write_text("".join(json.dumps(r) + "\n" for r in plugin_rows))
++        (self.results / "environment.txt").write_text(
++            "pi-bolt: 1.0.0 (Pi-Bolt 0.9.0, linux-x64, JIT off)\nbun: 1.4.2\nnode: v22.0.0\n")
++        (self.results / "long_answer-1.txt").write_text(
++            "build chars wall cpu\n"
++            f"pi-bolt 20000 3.0 2.5\n{EVIL_BUILD} 20000 4.0 3.5\npi-bolt 60000 9.0 7.0\n{EVIL_BUILD} 60000 12.0 9.0\n")
++        (self.results / "large_write-1.txt").write_text(
++            f"build size wall cpu\npi-bolt 200 0.2 0.1\n{EVIL_BUILD} 200 0.3 0.2\n")
++
++    def run_main(self, label=None):
++        argv = [str(Path(report.__file__)), str(self.results), "--images", str(self.images),
++                "--builds", f"pi-bolt,{EVIL_BUILD},bun"]
++        if label:
++            argv += ["--label", f"{EVIL_BUILD}={label}"]
++        old, sys.argv = sys.argv, argv
++        try:
++            with contextlib.redirect_stdout(io.StringIO()):
++                report.main()
++        finally:
++            sys.argv = old
++
++    def test_generated_svgs_are_well_formed_and_free_of_injected_markup(self):
++        self.write_fixture()
++        self.run_main()
++        files = sorted(self.images.glob("*.svg"))
++        self.assertIn("bench-speed-light.svg", [f.name for f in files])
++        self.assertIn("bench-hero-dark.svg", [f.name for f in files])
++        self.assertIn("bench-plugins-light.svg", [f.name for f in files])
++        self.assertIn("bench-long-light.svg", [f.name for f in files])
++        for f in files:
++            with self.subTest(svg=f.name):
++                root = parse(f)  # (raises ParseError on a label that broke the markup)
++                self.assertEqual(root.tag, SVG + "svg")
++                self.assertEqual(tags(root) - ALLOWED_TAGS, set())
++                self.assertTrue(root.get("aria-label"))
++
++    def test_hostile_label_is_drawn_as_text(self):
++        self.write_fixture()
++        self.run_main(label=self.label)
++        speed = parse(self.images / "bench-speed-light.svg")
++        # (--label's text, where a build's name is drawn.)
++        self.assertIn(self.label, texts(speed))
++        # (The step name from pauses.jsonl, in a panel of the memory chart.)
++        self.assertIn(f"Frame time p99, {EVIL}", texts(parse(self.images / "bench-memory-light.svg")))
++        # (The plugin's build name, in the plugins chart.)
++        self.assertIn(f"{self.label}, compiled in", texts(parse(self.images / "bench-plugins-light.svg")))
++        for f in self.images.glob("*.svg"):
++            content = f.read_text(encoding="utf-8")
++            self.assertNotIn("<script>", content)
++            self.assertNotIn("&amp;lt;", content)
++
++    def test_hostile_build_name_from_the_results_is_text(self):
++        self.write_fixture()
++        self.run_main()  # (no --label: the build's name as the results and --builds give it)
++        speed = parse(self.images / "bench-speed-light.svg")
++        self.assertIn(EVIL_BUILD, texts(speed))
++        self.assertIn(EVIL_BUILD, texts(parse(self.images / "bench-hero-light.svg")))
++        for f in self.images.glob("*.svg"):
++            self.assertEqual(tags(parse(f)) - ALLOWED_TAGS, set(), f.name)
++
++
++if __name__ == "__main__":
++    unittest.main()

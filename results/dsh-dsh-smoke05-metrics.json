@@ -1,0 +1,59 @@
+{
+ "name": "dsh",
+ "trial": "dsh-smoke05",
+ "total_elapsed_s": 4.539,
+ "exit_reason": "goal_complete",
+ "native_goal": {
+  "id": "goal-3fa68fcd-be0a-491b-b5a4-6ec0703da8cc",
+  "revision": 2,
+  "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+  "phase": "complete",
+  "maxGoalRounds": 256,
+  "roundsStarted": 1,
+  "createdAt": 1793659538400,
+  "updatedAt": 1793659542654,
+  "activation": "disarmed"
+ },
+ "goal_changes": [
+  {
+   "time": 1793659538400,
+   "data": {
+    "kind": "goal/change",
+    "version": 1,
+    "operation": "create",
+    "goal": {
+     "id": "goal-3fa68fcd-be0a-491b-b5a4-6ec0703da8cc",
+     "revision": 1,
+     "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+     "phase": "active",
+     "maxGoalRounds": 256
+    },
+    "roundsStarted": 0,
+    "createdAt": 1793659538400,
+    "updatedAt": 1793659538400
+   }
+  },
+  {
+   "time": 1793659542654,
+   "data": {
+    "kind": "goal/change",
+    "version": 1,
+    "operation": "complete",
+    "goal": {
+     "id": "goal-3fa68fcd-be0a-491b-b5a4-6ec0703da8cc",
+     "revision": 2,
+     "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+     "phase": "complete",
+     "maxGoalRounds": 256
+    },
+    "roundsStarted": 1,
+    "createdAt": 1793659538400,
+    "updatedAt": 1793659542654
+   }
+  }
+ ],
+ "autonomous_rounds": 0,
+ "requests": 3,
+ "audit_verdicts": "not_applicable",
+ "audit_jobs": "not_applicable"
+}

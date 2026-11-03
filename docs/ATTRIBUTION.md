@@ -14,10 +14,20 @@ here.
 | [Pi-Bolt](https://github.com/opensec-git/Pi-Bolt) | **the runtime used for these runs**: a compiled fork of Pi, pinned so both competitors share one isolated binary; its `bench/report.py` is the task's subject | MIT | commit `fd4530c9611f0cffc18aa226c985fcc2603d2577`, release `bolt-v1.0.8` |
 | [pi-goal-list-loop-audit (GLLA)](https://github.com/DraconDev/pi-goal-list-loop-audit) | benchmarked extension | GPL-3.0 | `0.39.54`, commit `b1c36dc7389077f8b3409183277d12588cc60dae` |
 | [pi-goal-x](https://github.com/tmonk/pi-goal-x) | benchmarked extension | MIT | `0.34.1`, commit `b0fc15ebb658a1e9ea60ae65496717a780080f37` |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | separate runtime and native goal competitor | MIT | npm `@deepseek-ai/dsh@0.2.1-rc.5`, integrity `sha512-WkyJZv4zl9sCAxSzRctGm58m0rilGqwR6pniBiLOz5CPDfHfDuAUicg0AAazXI7oj/Cph6/cjNTncA/rpLTXpw==`; transitive dependencies pinned in `harness/dsh/package-lock.json` |
 
 The extensions are installed from their pinned commits into a disposable volume,
 never vendored into this repository. If you redistribute a run's workspace tree
 you are redistributing that extension's code and its license applies.
+
+## Docker seccomp profile
+
+`harness/docker/worker-seccomp.json` is adapted from the Moby profiles default
+seccomp policy at commit `4b8214fc4971e06172938a1f1554ccff6647ee80`
+(original SHA-256 `6416b47770785a41ac59073cdc77d9fe98517df2799dc83ef207e622de3053f6`).
+The original is Apache-2.0; its license is reproduced in
+`harness/docker/MOBY-PROFILES-LICENSE`. The added syscall rule is documented
+in the methodology and the profile itself.
 
 ## Fixtures
 
@@ -37,5 +47,5 @@ reproduced verbatim so that both runs can be checked against the same bytes
 ## No affiliation
 
 This is an independent evaluation. It is not affiliated with, endorsed by, or
-sponsored by the authors of Pi, Pi-Bolt, GLLA or pi-goal-x. Both extensions are
+sponsored by the authors of Pi, Pi-Bolt, GLLA, pi-goal-x or DeepSeek Harness. Both extensions are
 described from their public documentation and from what was observed in the runs.

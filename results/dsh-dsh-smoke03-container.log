@@ -1,0 +1,2 @@
+benchmark goal adapter: Error: cannot get property "permissionPresets" without inject
+    at run (file:///opt/dsh/adapter.mjs:24:7)

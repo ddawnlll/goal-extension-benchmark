@@ -1,0 +1,235 @@
+{
+ "trial": "fixture-blocked-2",
+ "order": "dsh",
+ "runs": [
+  {
+   "name": "dsh",
+   "trial": "fixture-blocked-2",
+   "baseline_sha": "800d9f7d6e1eb3042d0f9b20c658394be952abbaf1a80e757fb3b2725f5ecd53",
+   "warmup": "performed inside DSH session before goal dispatch",
+   "started_wall": 1793662854.667551,
+   "ended_wall": 1793662884.8598552,
+   "started_utc": "2026-11-02T23:40:54Z",
+   "ended_utc": "2026-11-02T23:41:24Z",
+   "wall_seconds": 30.2,
+   "task_sha256": "800d9f7d6e1eb3042d0f9b20c658394be952abbaf1a80e757fb3b2725f5ecd53",
+   "baseline_commit": "fd4530c9611f0cffc18aa226c985fcc2603d2577",
+   "model": "deepseek-v4.1-flash",
+   "reasoning_effort": "low",
+   "upstream_scheme": "http",
+   "effective_model_config": {
+    "api": "openai-completions",
+    "context_window": 1000000,
+    "max_tokens": 32768,
+    "provider": "local",
+    "base_url": "http://gb-relay-dsh:9091/v1"
+   },
+   "native_runtime": {
+    "package": "@deepseek-ai/dsh",
+    "version": "0.2.1-rc.5",
+    "node_version": "v24.22.2",
+    "image_id": "sha256:1e01b82b91bc4689c55c64050d4577c4bbfe9cb1c00b1099b1e5e191b6b48334",
+    "integrity": "sha512-WkyJZv4zl9sCAxSzRctGm58m0rilGqwR6pniBiLOz5CPDfHfDuAUicg0AAazXI7oj/Cph6/cjNTncA/rpLTXpw=="
+   },
+   "resource_samples": [
+    {
+     "t": 28.5,
+     "BlockIO": "0B / 0B",
+     "CPUPerc": "0.00%",
+     "Container": "gb-worker-dsh",
+     "ID": "6edbb2f63d95",
+     "MemPerc": "0.00%",
+     "MemUsage": "0B / 0B",
+     "Name": "gb-worker-dsh",
+     "NetIO": "0B / 0B",
+     "PIDs": "0",
+     "agent_process_rss_kb": 0
+    }
+   ],
+   "worker_isolation": {
+    "NanoCpus": 2000000000,
+    "Memory": 6442450944,
+    "MemorySwap": 6442450944,
+    "PidsLimit": 512,
+    "ReadonlyRootfs": true,
+    "CapDrop": [
+     "ALL"
+    ],
+    "NetworkMode": "gbnet-dsh",
+    "security_opt": [
+     "no-new-privileges",
+     "seccomp=custom"
+    ],
+    "seccomp_profile_sha256": "511ac3c84c361a8ca7f75184dfbf93d7a61d1e620851990954826c9c58779795",
+    "network_peers": [
+     "gb-relay-dsh",
+     "gb-worker-dsh"
+    ]
+   },
+   "preflight_evidence": null,
+   "wire": [
+    {
+     "t_wall": 1793662862.0124588,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.0123508,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 4096,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "1ce8e0a80988ef5fc08cbcae408f3bd767d44902ede28d00831e27c6083d0782",
+     "tools": 0,
+     "tools_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.0489564,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.1097167,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.1694696,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.227059,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.2836366,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.3465555,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "t_wall": 1793662862.4081764,
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "store": false,
+      "include_usage": true
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    }
+   ],
+   "externally_verified_at_s": null,
+   "verifier_samples": [],
+   "sleep_events": [],
+   "docker_gaps": [],
+   "relay": {
+    "requests": 9,
+    "failed": 0,
+    "failure_rate": 0.0
+   },
+   "exit_reason": "goal_blocked",
+   "oom_killed": false,
+   "container_exit_code": "1",
+   "memory_limit": "6g",
+   "invalid_reasons": [
+    "container_exit_1"
+   ],
+   "valid": false
+  }
+ ]
+}

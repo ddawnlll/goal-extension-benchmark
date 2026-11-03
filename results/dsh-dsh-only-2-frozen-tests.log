@@ -1,0 +1,28 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-7.2.1, pluggy-1.0.0+repack -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /eval
+collecting ... collected 10 items
+
+../eval/test_report_svg.py::ChartEscaping::test_apostrophe_and_quote_in_text PASSED [ 10%]
+../eval/test_report_svg.py::ChartEscaping::test_attributes_cannot_be_broken_out_of PASSED [ 20%]
+../eval/test_report_svg.py::ChartEscaping::test_escaping_happens_exactly_once PASSED [ 30%]
+../eval/test_report_svg.py::ChartEscaping::test_title_subtitle_labels_and_values PASSED [ 40%]
+../eval/test_report_svg.py::ChartEscaping::test_unicode_preserved PASSED [ 50%]
+../eval/test_report_svg.py::HeroEscaping::test_hero_text_paths PASSED    [ 60%]
+../eval/test_report_svg.py::OrdinaryOutputUnchanged::test_cli_preserved PASSED [ 70%]
+../eval/test_report_svg.py::OrdinaryOutputUnchanged::test_full_pipeline_matches_baseline_bytes PASSED [ 80%]
+../eval/test_report_svg.py::AdversarialPipeline::test_cli_build_name_cannot_inject PASSED [ 90%]
+../eval/test_report_svg.py::RegressionEvidence::test_candidate_added_tests_exist_and_pass PASSED [100%]
+
+=============================== warnings summary ===============================
+../usr/lib/python3/dist-packages/_pytest/cacheprovider.py:433
+  /usr/lib/python3/dist-packages/_pytest/cacheprovider.py:433: PytestCacheWarning: could not create cache path /eval/.pytest_cache/v/cache/nodeids
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../usr/lib/python3/dist-packages/_pytest/stepwise.py:56
+  /usr/lib/python3/dist-packages/_pytest/stepwise.py:56: PytestCacheWarning: could not create cache path /eval/.pytest_cache/v/cache/stepwise
+    session.config.cache.set(STEPWISE_CACHE_DIR, [])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 10 passed, 2 warnings in 0.43s ========================

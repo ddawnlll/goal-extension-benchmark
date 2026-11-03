@@ -1,0 +1,211 @@
+{
+ "trial": "dsh-fixture-blocked01",
+ "order": "dsh",
+ "runs": [
+  {
+   "name": "dsh",
+   "trial": "dsh-fixture-blocked01",
+   "baseline_sha": "800d9f7d6e1eb3042d0f9b20c658394be952abbaf1a80e757fb3b2725f5ecd53",
+   "warmup": "performed inside DSH session before goal dispatch",
+   "started_wall": 1793660093.0101418,
+   "ended_wall": 1793660123.586001,
+   "started_utc": "2026-11-02T22:54:53Z",
+   "ended_utc": "2026-11-02T22:55:23Z",
+   "wall_seconds": 30.6,
+   "task_sha256": "800d9f7d6e1eb3042d0f9b20c658394be952abbaf1a80e757fb3b2725f5ecd53",
+   "model": "deepseek-v4.1-flash",
+   "reasoning_effort": "low",
+   "native_runtime": {
+    "package": "@deepseek-ai/dsh",
+    "version": "0.2.1-rc.5",
+    "integrity": "sha512-WkyJZv4zl9sCAxSzRctGm58m0rilGqwR6pniBiLOz5CPDfHfDuAUicg0AAazXI7oj/Cph6/cjNTncA/rpLTXpw=="
+   },
+   "resource_samples": [
+    {
+     "t": 29.1,
+     "BlockIO": "0B / 0B",
+     "CPUPerc": "0.00%",
+     "Container": "gb-worker-dsh",
+     "ID": "630b6ed302f0",
+     "MemPerc": "0.00%",
+     "MemUsage": "0B / 0B",
+     "Name": "gb-worker-dsh",
+     "NetIO": "0B / 0B",
+     "PIDs": "0"
+    }
+   ],
+   "wire": [
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 4096,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "1ce8e0a80988ef5fc08cbcae408f3bd767d44902ede28d00831e27c6083d0782",
+     "tools": 0,
+     "tools_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    },
+    {
+     "path": "/v1/chat/completions",
+     "model": "deepseek-v4.1-flash",
+     "reasoning_effort": "low",
+     "request_shape": {
+      "max_completion_tokens": 32768,
+      "stream_options": {
+       "include_usage": true
+      },
+      "store": false
+     },
+     "system_messages": 1,
+     "system_sha256": "9473f5b1cb40ff4b126ed4bbf528dc5925085bae13b8008d02ddcc14b204d613",
+     "tools": 25,
+     "tools_sha256": "83487a220ea2baff9159c824a51bcd4cfc6e9dddf6d5a69b0432db45628dbee2",
+     "usage": null
+    }
+   ],
+   "externally_verified_at_s": null,
+   "verifier_samples": [],
+   "sleep_events": [],
+   "docker_gaps": [],
+   "relay": {
+    "requests": 9,
+    "failed": 0,
+    "failure_rate": 0.0
+   },
+   "exit_reason": "goal_blocked",
+   "oom_killed": false,
+   "container_exit_code": "1",
+   "memory_limit": "6g",
+   "invalid_reasons": [
+    "container_exit_1"
+   ],
+   "valid": false
+  }
+ ]
+}

@@ -1,0 +1,36 @@
+{
+ "trial": "dsh-smoke02",
+ "order": "dsh",
+ "runs": [
+  {
+   "name": "dsh",
+   "trial": "dsh-smoke02",
+   "baseline_sha": "69e42a7a3adf5b006197843808b61e340132ad6e866aff60ca7bb9a20154f39a",
+   "warmup": "not run: DSH uses native goal session",
+   "started_wall": 1793659321.131247,
+   "ended_wall": 1793659326.265931,
+   "started_utc": "2026-11-02T22:42:01Z",
+   "ended_utc": "2026-11-02T22:42:06Z",
+   "wall_seconds": 5.1,
+   "externally_verified_at_s": null,
+   "verifier_samples": [],
+   "sleep_events": [],
+   "docker_gaps": [],
+   "relay": {
+    "requests": 0,
+    "failed": 0,
+    "failure_rate": null
+   },
+   "exit_reason": null,
+   "oom_killed": false,
+   "container_exit_code": "1",
+   "memory_limit": "6g",
+   "invalid_reasons": [
+    "missing_final_state",
+    "container_exit_1",
+    "no_model_requests"
+   ],
+   "valid": false
+  }
+ ]
+}

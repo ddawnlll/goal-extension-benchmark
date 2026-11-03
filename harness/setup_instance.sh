@@ -65,6 +65,12 @@ JSON
   rm -rf /home/agent/.pi/agent/skills /home/agent/.pi/agent/prompts /home/agent/.pi/agent/extensions
 ' >/dev/null
 
+# DSH uses its own pinned runtime image and has no Pi extension to install.
+if [ "$NAME" = dsh ]; then
+  echo "instance $NAME ready: volume $VOL, baseline ${SUM7}"
+  exit 0
+fi
+
 # Install the extension package (local folder; no registry access needed).
 docker run --rm -v "$VOL:/home/agent" \
   -v "$HERE/runtime/pi-bolt-linux-arm64:/opt/pi-bolt:ro" \

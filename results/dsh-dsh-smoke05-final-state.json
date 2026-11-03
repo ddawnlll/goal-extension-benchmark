@@ -1,0 +1,20 @@
+{
+  "name": "dsh",
+  "trial": "dsh-smoke05",
+  "session_id": "session-f6af212e-4d33-463d-848b-63ba02ba297a",
+  "exit_reason": "goal_complete",
+  "native_goal": {
+    "id": "goal-3fa68fcd-be0a-491b-b5a4-6ec0703da8cc",
+    "revision": 2,
+    "objective": "Reply with OK, then use your native goal mechanism to mark this goal complete.",
+    "phase": "complete",
+    "maxGoalRounds": 256,
+    "roundsStarted": 1,
+    "createdAt": 1793659538400,
+    "updatedAt": 1793659542654,
+    "activation": "disarmed"
+  },
+  "objective_matches_normalized_task": true,
+  "auditor": "not_applicable",
+  "elapsed_seconds": 4.539
+}

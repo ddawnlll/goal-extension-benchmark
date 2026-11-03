@@ -1,0 +1,146 @@
+{
+ "name": "goal-x",
+ "extension": "pi-goal-x",
+ "trial": "three-smoke01",
+ "exit_reason": "wall_clock_limit",
+ "duration_seconds": 91.471,
+ "pi_exit_code": 0,
+ "milestones": {
+  "name": "goal-x",
+  "extension": "pi-goal-x",
+  "trial": "three-smoke01",
+  "started_wall": 1793659748.860466,
+  "started_utc": "2026-11-02T22:49:08Z",
+  "limit_seconds": 90.0,
+  "thinking": "low",
+  "process_launch": {
+   "t": 0.003,
+   "wall": 1793659748.862,
+   "utc": "2026-11-02T22:49:08Z",
+   "cmd": [
+    "pi",
+    "--mode",
+    "rpc",
+    "--provider",
+    "local",
+    "--model",
+    "deepseek-v4.1-flash",
+    "--thinking",
+    "low",
+    "--session-dir",
+    "/home/agent/.pi/agent/sessions",
+    "--continue",
+    "--name",
+    "goal-x-three-smoke01",
+    "--no-approve"
+   ]
+  },
+  "pi_pid": {
+   "t": 0.004,
+   "wall": 1793659748.863,
+   "utc": "2026-11-02T22:49:08Z",
+   "pid": 10
+  },
+  "goal_submitted": {
+   "t": 0.005,
+   "wall": 1793659748.864,
+   "utc": "2026-11-02T22:49:08Z",
+   "prompt_sha256": "800d9f7d6e1eb3042d0f9b20c658394be952abbaf1a80e757fb3b2725f5ecd53",
+   "chars": 84
+  },
+  "run_started": {
+   "t": 0.578,
+   "wall": 1793659749.437,
+   "utc": "2026-11-02T22:49:09Z"
+  },
+  "first_ui_question": {
+   "t": 2.079,
+   "wall": 1793659750.938,
+   "utc": "2026-11-02T22:49:10Z",
+   "method": "select",
+   "text": "Completion auditor (currently enabled)   Enabled \u2014 require independent approval | Disabled \u2014 skip the completion audit"
+  },
+  "first_ui_answer": {
+   "t": 2.08,
+   "wall": 1793659750.939,
+   "utc": "2026-11-02T22:49:10Z",
+   "method": "select"
+  },
+  "goal_confirmed": {
+   "t": 2.081,
+   "wall": 1793659750.94,
+   "utc": "2026-11-02T22:49:10Z",
+   "method": "select",
+   "via": "extension_ui_select"
+  },
+  "first_status_complete": {
+   "t": 2.102,
+   "wall": 1793659750.961,
+   "utc": "2026-11-02T22:49:10Z",
+   "source": "notify",
+   "text": "\u25cf Goal running\n\u251c\u2500 \u27e1 Reply with OK, then mark this goal complete via the native goal mechanism. Success criter...\n\u2514\u2500 auto-continue on\nBudget: none"
+  },
+  "agent_settled": {
+   "t": 2.115,
+   "wall": 1793659750.974,
+   "utc": "2026-11-02T22:49:10Z"
+  },
+  "settled_count": 2,
+  "first_audit_request": {
+   "t": 4.959,
+   "wall": 1793659753.818,
+   "utc": "2026-11-02T22:49:13Z",
+   "id": "e34534a8"
+  },
+  "run_stopped": {
+   "t": 90.402,
+   "wall": 1793659839.261,
+   "utc": "2026-11-02T22:50:39Z",
+   "reason": "wall_clock_limit"
+  }
+ },
+ "counters": {
+  "ui_questions": 37,
+  "ui_answers": 2,
+  "ui_deviations": 0,
+  "turns": 3,
+  "tool_calls": 3,
+  "test_runs": 0,
+  "test_runs_ok": 0,
+  "audit_requests": 17,
+  "audit_completions": 17,
+  "audit_failures": 0,
+  "completion_claims": 0,
+  "status_polls": 0,
+  "compactions": 0,
+  "retries": 0,
+  "agent_end_events": 2
+ },
+ "claims": [],
+ "status_log": [
+  {
+   "t": 0.578,
+   "source": "notify",
+   "text": "Goal draft started: Reply with OK, then use your native goal mechanism to mark t. The agent will clarify, propose a goal and tasks where useful, then ask you to confirm."
+  },
+  {
+   "t": 2.102,
+   "source": "notify",
+   "text": "\u25cf Goal running\n\u251c\u2500 \u27e1 Reply with OK, then mark this goal complete via the native goal mechanism. Success criter...\n\u2514\u2500 auto-continue on\nBudget: none"
+  },
+  {
+   "t": 69.545,
+   "source": "notify",
+   "text": "Goal archived.\nFile: .pi/goals/archived/goal_2026110222501838_mvzupdek-hypu15.md"
+  }
+ ],
+ "git": {
+  "first_change": null,
+  "changed_files": []
+ },
+ "last_rss_kb": 0,
+ "surviving_children": [],
+ "task_sha256": "800d9f7d6e1eb3042d0f9b20c658394be952abbaf1a80e757fb3b2725f5ecd53",
+ "prompt_sha256": "edfd03e8a76c6da72ff43aadac131bf7cc60bb2db4fe5b984a2630c4d8e012fe",
+ "finished_wall": 1793659840.337791
+}

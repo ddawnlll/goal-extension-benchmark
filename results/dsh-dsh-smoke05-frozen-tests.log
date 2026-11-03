@@ -1,0 +1,374 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-7.2.1, pluggy-1.0.0+repack -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /eval
+collecting ... collected 10 items
+
+../eval/test_report_svg.py::ChartEscaping::test_apostrophe_and_quote_in_text FAILED [ 10%]
+../eval/test_report_svg.py::ChartEscaping::test_attributes_cannot_be_broken_out_of PASSED [ 20%]
+../eval/test_report_svg.py::ChartEscaping::test_escaping_happens_exactly_once FAILED [ 30%]
+../eval/test_report_svg.py::ChartEscaping::test_title_subtitle_labels_and_values FAILED [ 40%]
+../eval/test_report_svg.py::ChartEscaping::test_unicode_preserved PASSED [ 50%]
+../eval/test_report_svg.py::HeroEscaping::test_hero_text_paths FAILED    [ 60%]
+../eval/test_report_svg.py::OrdinaryOutputUnchanged::test_cli_preserved PASSED [ 70%]
+../eval/test_report_svg.py::OrdinaryOutputUnchanged::test_full_pipeline_matches_baseline_bytes PASSED [ 80%]
+../eval/test_report_svg.py::AdversarialPipeline::test_cli_build_name_cannot_inject FAILED [ 90%]
+../eval/test_report_svg.py::RegressionEvidence::test_candidate_added_tests_exist_and_pass FAILED [100%]
+
+=================================== FAILURES ===================================
+_______________ ChartEscaping.test_apostrophe_and_quote_in_text ________________
+
+self = <test_report_svg.ChartEscaping testMethod=test_apostrophe_and_quote_in_text>
+path = PosixPath('/tmp/svg-accept-_h2acopx/quotes.svg')
+
+    def parse(self, path):
+        try:
+>           return ET.parse(path).getroot()
+
+/eval/test_report_svg.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = PosixPath('/tmp/svg-accept-_h2acopx/quotes.svg'), parser = None
+
+    def parse(source, parser=None):
+        """Parse XML document into element tree.
+    
+        *source* is a filename or file object containing XML data,
+        *parser* is an optional parser instance defaulting to XMLParser.
+    
+        Return an ElementTree instance.
+    
+        """
+        tree = ElementTree()
+>       tree.parse(source, parser)
+
+/usr/lib/python3.11/xml/etree/ElementTree.py:1218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0xffffa9343790>
+source = <_io.BufferedReader name='/tmp/svg-accept-_h2acopx/quotes.svg'>
+parser = <xml.etree.ElementTree.XMLParser object at 0xffffa89ad240>
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+            source = open(source, "rb")
+            close_source = True
+        try:
+            if parser is None:
+                # If no parser was specified, create a default XMLParser
+                parser = XMLParser()
+                if hasattr(parser, '_parse_whole'):
+                    # The default XMLParser, when it comes from an accelerator,
+                    # can define an internal _parse_whole API for efficiency.
+                    # It can be used to parse the whole source without feeding
+                    # it with chunks.
+>                   self._root = parser._parse_whole(source)
+E                   xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 6, column 89
+
+/usr/lib/python3.11/xml/etree/ElementTree.py:580: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_report_svg.ChartEscaping testMethod=test_apostrophe_and_quote_in_text>
+
+    def test_apostrophe_and_quote_in_text(self):
+        label = "O'Brien \"Ltd\" & Sons <co>"
+        path = self.tmp / "quotes.svg"
+        self.mod.chart("t", "s", [("CPU", "ms", {label: 1.0, "bun": 2.0})], [label, "bun"], "dark", path)
+>       root = self.parse(path)
+
+/eval/test_report_svg.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/eval/test_report_svg.py:51: in parse
+    self.fail(f"generated SVG is not well-formed XML: {exc}\n--- file ---\n{path.read_text()[:3000]}")
+E   AssertionError: generated SVG is not well-formed XML: not well-formed (invalid token): line 6, column 89
+E   --- file ---
+E   <svg xmlns="http://www.w3.org/2000/svg" width="880" height="198" viewBox="0 0 880 198" role="img" aria-label="t: s">
+E   <style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
+E   <text x="24" y="32" font-size="21" font-weight="650" fill="#f0f6fc">t</text>
+E   <text x="24" y="56" font-size="13.5" fill="#9198a1">s</text>
+E   <text x="24" y="96" font-size="15" font-weight="600" fill="#f0f6fc">CPU</text>
+E   <text x="208" y="126.5" font-size="13.5" text-anchor="end" fill="#9198a1">O'Brien "Ltd" & Sons <co></text>
+E   <path d="M218,114 h273.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-273.0 z" fill="#6e7681"/>
+E   <text x="503.0" y="126.5" font-size="13.5" font-weight="650" fill="#f0f6fc">1.0 ms</text>
+E   <text x="563.1" y="126.5" font-size="12.5" fill="#9198a1">2.0× less</text>
+E   <text x="208" y="156.5" font-size="13.5" text-anchor="end" fill="#9198a1">Bun 1.4.2</text>
+E   <path d="M218,144 h550.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-550.0 z" fill="#6e7681"/>
+E   <text x="780.0" y="156.5" font-size="13.5" font-weight="400" fill="#f0f6fc">2.0 ms</text>
+E   <line x1="218" y1="108" x2="218" y2="166" stroke="#3d444d"/>
+E   </svg>
+_______________ ChartEscaping.test_escaping_happens_exactly_once _______________
+
+self = <test_report_svg.ChartEscaping testMethod=test_escaping_happens_exactly_once>
+
+    def test_escaping_happens_exactly_once(self):
+        """A label that already looks like an entity must survive as literal text.
+    
+        Escaping once turns "&amp;" into "&amp;amp;", which parses back to
+        "&amp;". Escaping twice would parse back to "&", losing the text.
+        """
+        label = "A&amp;B &amp; C"
+        path = self.tmp / "double.svg"
+        self.mod.chart("t &amp; t", "s", [("CPU", "ms", {label: 3.0, "bun": 5.0})], [label, "bun"], "light", path)
+        root = self.parse(path)
+        joined = "\n".join(self.texts(root))
+>       self.assertIn(label, joined)          # exactly one round of escaping
+E       AssertionError: 'A&amp;B &amp; C' not found in "\n\ntext{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}\nt & t\ns\nCPU\nA&B & C\n3.0 ms\n1.7× less\nBun 1.4.2\n5.0 ms"
+
+/eval/test_report_svg.py:113: AssertionError
+_____________ ChartEscaping.test_title_subtitle_labels_and_values ______________
+
+self = <test_report_svg.ChartEscaping testMethod=test_title_subtitle_labels_and_values>
+path = PosixPath('/tmp/svg-accept-_h2acopx/chart.svg')
+
+    def parse(self, path):
+        try:
+>           return ET.parse(path).getroot()
+
+/eval/test_report_svg.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = PosixPath('/tmp/svg-accept-_h2acopx/chart.svg'), parser = None
+
+    def parse(source, parser=None):
+        """Parse XML document into element tree.
+    
+        *source* is a filename or file object containing XML data,
+        *parser* is an optional parser instance defaulting to XMLParser.
+    
+        Return an ElementTree instance.
+    
+        """
+        tree = ElementTree()
+>       tree.parse(source, parser)
+
+/usr/lib/python3.11/xml/etree/ElementTree.py:1218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0xffffa886dcd0>
+source = <_io.BufferedReader name='/tmp/svg-accept-_h2acopx/chart.svg'>
+parser = <xml.etree.ElementTree.XMLParser object at 0xffffa88ec310>
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+            source = open(source, "rb")
+            close_source = True
+        try:
+            if parser is None:
+                # If no parser was specified, create a default XMLParser
+                parser = XMLParser()
+                if hasattr(parser, '_parse_whole'):
+                    # The default XMLParser, when it comes from an accelerator,
+                    # can define an internal _parse_whole API for efficiency.
+                    # It can be used to parse the whole source without feeding
+                    # it with chunks.
+>                   self._root = parser._parse_whole(source)
+E                   xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 111
+
+/usr/lib/python3.11/xml/etree/ElementTree.py:580: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_report_svg.ChartEscaping testMethod=test_title_subtitle_labels_and_values>
+
+    def test_title_subtitle_labels_and_values(self):
+        title = 'T<script>alert(1)</script> & "quoted"'
+        subtitle = "sub & <tag> 'apos' \"dquote\""
+        panel = 'CPU <b>&</b>'
+        build = 'evil"><script>alert(2)</script>'
+        path = self.tmp / "chart.svg"
+        self.mod.chart(title, subtitle, [(panel, "ms", {build: 12.5, "bun": 30.0})], [build, "bun"], "light", path)
+>       root = self.parse(path)
+
+/eval/test_report_svg.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/eval/test_report_svg.py:51: in parse
+    self.fail(f"generated SVG is not well-formed XML: {exc}\n--- file ---\n{path.read_text()[:3000]}")
+E   AssertionError: generated SVG is not well-formed XML: not well-formed (invalid token): line 1, column 111
+E   --- file ---
+E   <svg xmlns="http://www.w3.org/2000/svg" width="880" height="198" viewBox="0 0 880 198" role="img" aria-label="T<script>alert(1)</script> & "quoted": sub & <tag> 'apos' "dquote"">
+E   <style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
+E   <text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">T<script>alert(1)</script> & "quoted"</text>
+E   <text x="24" y="56" font-size="13.5" fill="#59636e">sub & <tag> 'apos' "dquote"</text>
+E   <text x="24" y="96" font-size="15" font-weight="600" fill="#1f2328">CPU <b>&</b></text>
+E   <text x="251" y="126.5" font-size="13.5" text-anchor="end" fill="#59636e">evil"><script>alert(2)</script></text>
+E   <path d="M261,114 h208.9 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-208.9 z" fill="#848d97"/>
+E   <text x="481.9" y="126.5" font-size="13.5" font-weight="650" fill="#1f2328">12 ms</text>
+E   <text x="534.0" y="126.5" font-size="12.5" fill="#59636e">2.4× less</text>
+E   <text x="251" y="156.5" font-size="13.5" text-anchor="end" fill="#59636e">Bun 1.4.2</text>
+E   <path d="M261,144 h507.0 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-507.0 z" fill="#848d97"/>
+E   <text x="780.0" y="156.5" font-size="13.5" font-weight="400" fill="#1f2328">30 ms</text>
+E   <line x1="261" y1="108" x2="261" y2="166" stroke="#d1d9e0"/>
+E   </svg>
+______________________ HeroEscaping.test_hero_text_paths _______________________
+
+self = <test_report_svg.HeroEscaping testMethod=test_hero_text_paths>
+path = PosixPath('/tmp/svg-accept-7qo1l9zb/hero.svg')
+
+    def parse(self, path):
+        try:
+>           return ET.parse(path).getroot()
+
+/eval/test_report_svg.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = PosixPath('/tmp/svg-accept-7qo1l9zb/hero.svg'), parser = None
+
+    def parse(source, parser=None):
+        """Parse XML document into element tree.
+    
+        *source* is a filename or file object containing XML data,
+        *parser* is an optional parser instance defaulting to XMLParser.
+    
+        Return an ElementTree instance.
+    
+        """
+        tree = ElementTree()
+>       tree.parse(source, parser)
+
+/usr/lib/python3.11/xml/etree/ElementTree.py:1218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0xffffa8a21750>
+source = <_io.BufferedReader name='/tmp/svg-accept-7qo1l9zb/hero.svg'>
+parser = <xml.etree.ElementTree.XMLParser object at 0xffffa8aa7760>
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+            source = open(source, "rb")
+            close_source = True
+        try:
+            if parser is None:
+                # If no parser was specified, create a default XMLParser
+                parser = XMLParser()
+                if hasattr(parser, '_parse_whole'):
+                    # The default XMLParser, when it comes from an accelerator,
+                    # can define an internal _parse_whole API for efficiency.
+                    # It can be used to parse the whole source without feeding
+                    # it with chunks.
+>                   self._root = parser._parse_whole(source)
+E                   xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 113
+
+/usr/lib/python3.11/xml/etree/ElementTree.py:580: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_report_svg.HeroEscaping testMethod=test_hero_text_paths>
+
+    def test_hero_text_paths(self):
+        title = "T & <x>"
+        name = "CPU <script>alert(1)</script>"
+        build = 'b"><img src=x onerror=alert(1)>'
+        path = self.tmp / "hero.svg"
+        self.mod.hero([(name, "s", {build: 1.0, "bun": 2.0}, "less")], [build, "bun"], "light", path, title, "sub & sub")
+>       root = self.parse(path)
+
+/eval/test_report_svg.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/eval/test_report_svg.py:51: in parse
+    self.fail(f"generated SVG is not well-formed XML: {exc}\n--- file ---\n{path.read_text()[:3000]}")
+E   AssertionError: generated SVG is not well-formed XML: not well-formed (invalid token): line 1, column 113
+E   --- file ---
+E   <svg xmlns="http://www.w3.org/2000/svg" width="880" height="250" viewBox="0 0 880 250" role="img" aria-label="T & <x>">
+E   <style>text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}</style>
+E   <text x="24" y="32" font-size="21" font-weight="650" fill="#1f2328">T & <x></text>
+E   <text x="24" y="54" font-size="13.5" fill="#59636e">sub & sub</text>
+E   <text x="24.0" y="88" font-size="13" font-weight="600" fill="#59636e">CPU <script>alert(1)</script></text>
+E   <text x="24.0" y="128" font-size="36" font-weight="700" fill="#1f2328">1.0<tspan font-size="16" font-weight="600" fill="#59636e" dx="5">s</tspan></text>
+E   <text x="24.0" y="154" font-size="13" font-weight="600" fill="#1f2328">2.0× less than Bun</text>
+E   <text x="24.0" y="184" font-size="12.5" font-weight="650" fill="#1f2328">b"><img src=x onerror=alert(1)></text>
+E   <text x="856.0" y="184" font-size="12.5" font-weight="650" text-anchor="end" fill="#1f2328">1.0 s</text>
+E   <rect x="24.0" y="191" width="416.0" height="6" rx="3" fill="#848d97"/>
+E   <text x="24.0" y="214" font-size="12.5" font-weight="400" fill="#59636e">Bun 1.4.2</text>
+E   <text x="856.0" y="214" font-size="12.5" font-weight="400" text-anchor="end" fill="#59636e">2.0 s</text>
+E   <rect x="24.0" y="221" width="832.0" height="6" rx="3" fill="#848d97"/>
+E   </svg>
+____________ AdversarialPipeline.test_cli_build_name_cannot_inject _____________
+
+self = <test_report_svg.AdversarialPipeline testMethod=test_cli_build_name_cannot_inject>
+
+    def test_cli_build_name_cannot_inject(self):
+        out = self.tmp / "svgs-adversarial"
+        hostile = 'x<script>alert(1)</script>'
+        proc = subprocess.run(
+            [sys.executable, str(REPORT), str(FIXTURE), "--images", str(out),
+             "--builds", "pi-bolt,bun,node", "--label", f"bun={hostile}"],
+            capture_output=True, text=True, timeout=600,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr[-3000:])
+        files = sorted(out.glob("*.svg"))
+        self.assertTrue(files)
+        for path in files:
+            root = self.parse(path)
+            self.assert_no_injection(root, ["script"])
+>           self.assertIn(hostile, "\n".join(self.texts(root)) + " " + " ".join(
+                el.get("aria-label") or "" for el in root.iter()))
+E           AssertionError: 'x<script>alert(1)</script>' not found in "\n\ntext{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif}\nCPU time\nAll threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.1.0, medians.\nInteractive session: 5 prompts\nPi-Bolt 0.7.3\n309 ms\n3.0× less\nx\nalert(1)\n913 ms\nNode 24\n1,312 ms\npi -p: one prompt\nPi-Bolt 0.7.3\n85 ms\n3.9× less\nx\nalert(1)\n333 ms\nNode 24\n645 ms\npi --version\nPi-Bolt 0.7.3\n14 ms\n11× less\nx\nalert(1)\n150 ms\nNode 24\n322 ms\nPer prompt, 4.2M-token session\nPi-Bolt 0.7.3\n301 ms\n1.8× less\nx\nalert(1)\n548 ms\nNode 24\n794 ms CPU time: All threads, lower is better. Ratios compare Pi-Bolt with Bun. Pi 1.1.0, medians.                                                       "
+
+/eval/test_report_svg.py:190: AssertionError
+_________ RegressionEvidence.test_candidate_added_tests_exist_and_pass _________
+
+self = <test_report_svg.RegressionEvidence testMethod=test_candidate_added_tests_exist_and_pass>
+
+    def test_candidate_added_tests_exist_and_pass(self):
+        croot = CAND_ROOT
+        candidates = [p for p in croot.rglob("*test*.py") if p.is_file()]
+>       self.assertTrue(candidates, "no Python test files found in the candidate tree")
+E       AssertionError: [] is not true : no Python test files found in the candidate tree
+
+/eval/test_report_svg.py:200: AssertionError
+=============================== warnings summary ===============================
+../usr/lib/python3/dist-packages/_pytest/cacheprovider.py:433
+  /usr/lib/python3/dist-packages/_pytest/cacheprovider.py:433: PytestCacheWarning: could not create cache path /eval/.pytest_cache/v/cache/nodeids
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../usr/lib/python3/dist-packages/_pytest/cacheprovider.py:387
+  /usr/lib/python3/dist-packages/_pytest/cacheprovider.py:387: PytestCacheWarning: could not create cache path /eval/.pytest_cache/v/cache/lastfailed
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+../usr/lib/python3/dist-packages/_pytest/stepwise.py:56
+  /usr/lib/python3/dist-packages/_pytest/stepwise.py:56: PytestCacheWarning: could not create cache path /eval/.pytest_cache/v/cache/stepwise
+    session.config.cache.set(STEPWISE_CACHE_DIR, [])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../eval/test_report_svg.py::ChartEscaping::test_apostrophe_and_quote_in_text
+FAILED ../eval/test_report_svg.py::ChartEscaping::test_escaping_happens_exactly_once
+FAILED ../eval/test_report_svg.py::ChartEscaping::test_title_subtitle_labels_and_values
+FAILED ../eval/test_report_svg.py::HeroEscaping::test_hero_text_paths - Asser...
+FAILED ../eval/test_report_svg.py::AdversarialPipeline::test_cli_build_name_cannot_inject
+FAILED ../eval/test_report_svg.py::RegressionEvidence::test_candidate_added_tests_exist_and_pass
+=================== 6 failed, 4 passed, 3 warnings in 0.33s ====================
